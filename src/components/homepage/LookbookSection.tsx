@@ -58,7 +58,7 @@ export function LookbookSection() {
         {/* Parallax Background Image */}
         <Parallax speed={-15} className="absolute inset-0">
           <Image
-            src="/images/pant.avif"
+            src="/images/shirt.png"
             alt="Classy Mart Lookbook Background"
             fill
             className="object-cover"

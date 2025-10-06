@@ -20,6 +20,9 @@ const satoshi = localFont({
 export const metadata: Metadata = {
   title: "Classy Mart",
   description: "The new standard in modern apparel.",
+  icons: {
+    icon: '/logo.png',
+  },
 };
 
 export default function RootLayout({
