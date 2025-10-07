@@ -45,7 +45,7 @@ export function HeroSlider() {
   });
 
   return (
-    <section className="bg-background px-4">
+    <section className="bg-light-bg dark:bg-dark-bg px-4">
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex gap-4">
           {promoSlides.map((slide) => (
@@ -70,10 +70,10 @@ export function HeroSlider() {
 
                 {/* Content */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                  <h2 className="mb-4 font-heading text-3xl font-bold text-white sm:text-4xl">
+                  <h2 className="mb-4 font-heading text-3xl font-bold text-dark-text sm:text-4xl">
                     {slide.title}
                   </h2>
-                  <button className="rounded-full bg-primary px-8 py-3 font-sans text-sm font-bold uppercase tracking-wide text-white transition-transform hover:scale-105 active:scale-95">
+                  <button className="rounded-full bg-brand-red text-white dark:bg-brand-green dark:text-dark-bg px-8 py-3 font-sans text-sm font-bold uppercase tracking-wide transition-transform hover:scale-105 active:scale-95">
                     {slide.ctaText}
                   </button>
                 </div>

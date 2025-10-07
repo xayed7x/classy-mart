@@ -11,39 +11,21 @@ const config: Config = {
     // container settings can be added here if needed
     extend: {
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "#FFFFFF", // Pure White
-        foreground: "#111111", // Rich Black (for text)
-        primary: {
-          DEFAULT: "#FF0000", // Brand Red
-          foreground: "#FFFFFF", // Text on primary
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "#E5E5E5", // Light Grey
-          foreground: "#111111", // Text on accent
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
+        // Light Mode Palette ("Showroom")
+        'light-bg': '#FFFFFF',
+        'light-text': '#111111',
+        'light-accent': '#E5E5E5',
+        'light-accent-text': '#505050',
+
+        // Dark Mode Palette ("Aura Lookbook")
+        'dark-bg': '#121212',
+        'dark-text': '#E5E5E5',
+        'dark-accent': '#222222',
+        'dark-accent-text': '#808080',
+
+        // Universal Brand Colors
+        'brand-red': '#FF0000',
+        'brand-green': '#14DCA0',
       },
       fontFamily: {
         sans: ["var(--font-inter)"],

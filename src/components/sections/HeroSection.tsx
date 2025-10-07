@@ -44,18 +44,18 @@ export function HeroSection({
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-white">
-        <h1 className="font-heading text-4xl font-bold uppercase tracking-tighter text-white sm:text-5xl md:text-6xl lg:text-7xl">
+      <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-dark-text">
+        <h1 className="font-heading text-4xl font-bold uppercase tracking-tighter text-dark-text sm:text-5xl md:text-6xl lg:text-7xl">
           {headline}
         </h1>
-        <p className="font-sans mt-4 max-w-xl text-lg text-gray-200">
+        <p className="font-sans mt-4 max-w-xl text-lg text-dark-text/90">
           {subheading}
         </p>
         <Link
           href={ctaLink}
           className={cn(
             buttonVariants({ variant: "default", size: "lg" }),
-            "mt-8 bg-primary text-primary-foreground hover:bg-primary/90" // Explicitly using our Brand Red
+            "mt-8 bg-brand-red text-white dark:bg-brand-green dark:text-dark-bg" // Explicitly using our Brand Red
           )}
         >
           {ctaText}

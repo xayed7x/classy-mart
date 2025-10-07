@@ -37,15 +37,15 @@ export function LookbookSection() {
 
           {/* Content */}
           <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
-            <h2 className="font-heading text-3xl font-bold text-white">
+            <h2 className="font-heading text-3xl font-bold text-dark-text">
               Engineered for the Modern Wardrobe
             </h2>
-            <p className="mt-4 font-sans text-base text-white/90">
+            <p className="mt-4 font-sans text-base text-dark-text/90">
               Where timeless design meets contemporary living.
             </p>
             <Link
               href="/about"
-              className="mt-6 rounded-full bg-white px-8 py-3 font-sans text-sm font-bold uppercase tracking-wide text-foreground transition-transform hover:scale-105 active:scale-95"
+              className="mt-6 rounded-full bg-dark-text px-8 py-3 font-sans text-sm font-bold uppercase tracking-wide text-dark-bg transition-transform hover:scale-105 active:scale-95"
             >
               Discover Our Story
             </Link>
@@ -72,15 +72,15 @@ export function LookbookSection() {
 
         {/* Floating Content */}
         <div className="relative z-10 flex h-full flex-col items-center justify-center px-8 text-center">
-          <h2 className="font-heading text-6xl font-bold text-white lg:text-7xl">
+          <h2 className="font-heading text-6xl font-bold text-dark-text lg:text-7xl">
             Engineered for the Modern Wardrobe
           </h2>
-          <p className="mt-6 max-w-2xl font-sans text-xl text-white/90">
+          <p className="mt-6 max-w-2xl font-sans text-xl text-dark-text/90">
             Where timeless design meets contemporary living. Experience fashion that transcends trends.
           </p>
           <Link
             href="/about"
-            className="mt-8 rounded-full bg-white px-10 py-4 font-sans text-base font-bold uppercase tracking-wide text-foreground transition-transform hover:scale-105 active:scale-95"
+            className="mt-8 rounded-full bg-dark-text px-10 py-4 font-sans text-base font-bold uppercase tracking-wide text-dark-bg transition-transform hover:scale-105 active:scale-95"
           >
             Discover Our Story
           </Link>

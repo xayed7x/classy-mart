@@ -1,3 +1,4 @@
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import localFont from "next/font/local";
@@ -31,14 +32,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${satoshi.variable}`}>
-        <ParallaxProviderWrapper>
-          <Header />
-          {children}
-          <Footer />
-          <BottomNavBar />
-        </ParallaxProviderWrapper>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          disableTransitionOnChange
+        >
+          <ParallaxProviderWrapper>
+            <Header />
+            {children}
+            <Footer />
+            <BottomNavBar />
+          </ParallaxProviderWrapper>
+        </ThemeProvider>
       </body>
     </html>
   );

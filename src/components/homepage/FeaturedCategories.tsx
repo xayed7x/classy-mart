@@ -37,12 +37,12 @@ const FeaturedCategories = () => {
       <div className="lg:hidden mt-8">
         <div className="px-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold font-heading text-text">
+            <h2 className="text-xl font-bold font-heading text-light-text dark:text-dark-text">
               Categories
             </h2>
             <Link
               href="/collection"
-              className="text-sm font-sans text-muted-foreground transition-colors hover:text-text"
+              className="text-sm font-sans text-light-accent-text dark:text-dark-accent-text transition-colors hover:text-light-text dark:hover:text-dark-text"
             >
               See all
             </Link>
@@ -52,7 +52,7 @@ const FeaturedCategories = () => {
               <Link
                 key={category.id}
                 href={`/collection/${category.slug}`}
-                className="block whitespace-nowrap rounded-full border border-accent bg-background px-4 py-2 text-sm font-medium text-text transition-colors hover:bg-accent/50"
+                className="block whitespace-nowrap rounded-full border border-light-accent dark:border-dark-accent bg-light-bg dark:bg-dark-bg px-4 py-2 text-sm font-medium font-sans text-light-text dark:text-dark-text transition-colors hover:bg-light-accent/50 dark:hover:bg-dark-accent/50"
               >
                 {category.name}
               </Link>
@@ -63,10 +63,10 @@ const FeaturedCategories = () => {
 
       <div className="hidden lg:block">
         <div className="text-center">
-          <h2 className="text-4xl font-bold font-heading text-text sm:text-5xl">
+          <h2 className="text-4xl font-bold font-heading text-light-text dark:text-dark-text sm:text-5xl">
             Shop by Collection
           </h2>
-          <p className="mt-4 font-sans text-base text-muted-foreground">
+          <p className="mt-4 font-sans text-base text-light-accent-text dark:text-dark-accent-text">
             Explore our curated collections, designed with purpose and passion.
           </p>
         </div>
@@ -87,7 +87,7 @@ const FeaturedCategories = () => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 <div className="absolute bottom-0 p-6">
-                  <h3 className="text-xl font-bold font-heading text-white">
+                  <h3 className="text-xl font-bold font-heading text-dark-text">
                     {category.name}
                   </h3>
                 </div>

@@ -23,7 +23,7 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps): React.ReactElement {
   return (
     <Link href={`/products/${product.handle}`} className="group">
-      <div className="overflow-hidden rounded-md bg-gray-100">
+      <div className="overflow-hidden rounded-md bg-light-accent dark:bg-dark-accent">
         <div className="aspect-square w-full">
           <Image
             src={product.imageUrl}
@@ -35,10 +35,10 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
         </div>
       </div>
       <div className="mt-3 flex justify-between">
-        <h3 className="font-sans text-sm font-medium text-text">
+        <h3 className="font-sans text-sm font-medium text-light-text dark:text-dark-text">
           {product.name}
         </h3>
-        <p className="font-sans text-sm font-medium text-text">
+        <p className="font-sans text-sm font-medium text-light-text dark:text-dark-text">
           ${product.price.toFixed(2)}
         </p>
       </div>

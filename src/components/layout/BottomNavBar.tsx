@@ -13,13 +13,13 @@ import { Home, LayoutGrid, ShoppingBag, User } from "lucide-react";
 export function BottomNavBar() {
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-accent bg-background px-2 py-3 pb-6 lg:hidden"
+      className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-light-accent dark:border-dark-accent bg-light-bg dark:bg-dark-bg px-2 py-3 pb-6 lg:hidden"
       aria-label="Mobile navigation"
     >
       {/* Home */}
       <Link
         href="/"
-        className="flex flex-col items-center gap-1 text-foreground transition-colors hover:text-primary active:text-primary"
+        className="flex flex-col items-center gap-1 text-light-text dark:text-dark-text hover:text-brand-red dark:hover:text-brand-green active:text-brand-red dark:active:text-brand-green"
       >
         <Home strokeWidth={1.5} size={24} />
         <span className="text-xs font-medium">Home</span>
@@ -28,7 +28,7 @@ export function BottomNavBar() {
       {/* Categories */}
       <Link
         href="/categories"
-        className="flex flex-col items-center gap-1 text-foreground transition-colors hover:text-primary active:text-primary"
+        className="flex flex-col items-center gap-1 text-light-text dark:text-dark-text hover:text-brand-red dark:hover:text-brand-green active:text-brand-red dark:active:text-brand-green"
       >
         <LayoutGrid strokeWidth={1.5} size={24} />
         <span className="text-xs font-medium">Categories</span>
@@ -37,12 +37,12 @@ export function BottomNavBar() {
       {/* Cart with Badge */}
       <Link
         href="/cart"
-        className="relative flex flex-col items-center gap-1 text-foreground transition-colors hover:text-primary active:text-primary"
+        className="relative flex flex-col items-center gap-1 text-light-text dark:text-dark-text hover:text-brand-red dark:hover:text-brand-green active:text-brand-red dark:active:text-brand-green"
       >
         <div className="relative">
           <ShoppingBag strokeWidth={1.5} size={24} />
           {/* Cart Badge - Notification Counter */}
-          <div className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">
+          <div className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-brand-red text-[10px] font-bold text-white dark:bg-brand-green dark:text-dark-bg">
             0
           </div>
         </div>
@@ -52,7 +52,7 @@ export function BottomNavBar() {
       {/* Account */}
       <Link
         href="/account"
-        className="flex flex-col items-center gap-1 text-foreground transition-colors hover:text-primary active:text-primary"
+        className="flex flex-col items-center gap-1 text-light-text dark:text-dark-text hover:text-brand-red dark:hover:text-brand-green active:text-brand-red dark:active:text-brand-green"
       >
         <User strokeWidth={1.5} size={24} />
         <span className="text-xs font-medium">Account</span>
