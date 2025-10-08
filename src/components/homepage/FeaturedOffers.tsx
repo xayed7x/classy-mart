@@ -41,7 +41,7 @@ export function FeaturedOffers() {
 
   return (
     <div className="hidden lg:block">
-      <section className="py-12 bg-light-accent/50 dark:bg-dark-accent/50">
+      <section className="py-12 bg-light-accent/50 dark:bg-aura-accent-border/50">
         <div className="container mx-auto">
             <div className="overflow-hidden" ref={emblaRef}>
               <div className="flex">
@@ -56,11 +56,11 @@ export function FeaturedOffers() {
                           className="object-cover transition-transform duration-500 group-hover:scale-105"
                         />
                         <div className="absolute inset-0 bg-black/40" />
-                        <div className="relative z-10 h-full flex flex-col justify-end p-6 text-dark-text">
+                        <div className="relative z-10 h-full flex flex-col justify-end p-6 text-aura-soft-white">
                           <h2 className="font-bold text-2xl">
                             {card.title}
                           </h2>
-                          <div className="mt-2 inline-block self-start bg-dark-text text-dark-bg text-sm font-semibold px-4 py-2 rounded-full">
+                          <div className="mt-2 inline-block self-start bg-aura-soft-white text-aura-black text-sm font-semibold px-4 py-2 rounded-full">
                             {card.cta}
                           </div>
                         </div>

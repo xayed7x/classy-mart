@@ -17,11 +17,12 @@ const config: Config = {
         'light-accent': '#E5E5E5',
         'light-accent-text': '#505050',
 
-        // Dark Mode Palette ("Aura Lookbook")
-        'dark-bg': '#121212',
-        'dark-text': '#E5E5E5',
-        'dark-accent': '#222222',
-        'dark-accent-text': '#808080',
+        // "Aura Lookbook" Dark Mode Palette
+        'aura-black': '#111111',
+        'aura-soft-white': '#F0EBE3', // The crucial "goldish tint" text
+        'aura-gold': '#B4A284',      // The accent for icons and links
+        'aura-green': '#009B77',     // The primary CTA color
+        'aura-accent-border': '#222222', // For subtle borders
 
         // Universal Brand Colors
         'brand-red': '#FF0000',

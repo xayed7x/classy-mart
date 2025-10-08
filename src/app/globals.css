@@ -7,6 +7,6 @@
     @apply bg-light-bg text-light-text;
   }
   .dark body {
-    @apply bg-dark-bg text-dark-text;
+    @apply bg-aura-black text-aura-soft-white;
   }
 }

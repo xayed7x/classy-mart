@@ -61,11 +61,11 @@ export function HeroSection() {
                     className="object-cover"
                   />
                   <div className="absolute inset-0 bg-black/40" />
-                  <div className="relative z-10 h-full flex flex-col justify-end p-6 text-dark-text">
+                  <div className="relative z-10 h-full flex flex-col justify-end p-6 text-aura-soft-white">
                     <h2 className="font-bold text-2xl md:text-3xl">
                       {card.title}
                     </h2>
-                    <div className="mt-2 inline-block self-start bg-dark-text text-dark-bg text-sm font-semibold font-sans px-4 py-2 rounded-full">
+                    <div className="mt-2 inline-block self-start bg-aura-soft-white text-aura-black text-sm font-semibold font-sans px-4 py-2 rounded-full">
                       {card.cta}
                     </div>
                   </div>
@@ -89,7 +89,7 @@ export function HeroSection() {
           />
           <div className="absolute inset-0 bg-black/50 z-10" />
           <div className="relative z-20 h-full flex flex-col justify-center items-center py-12">
-            <h1 className="text-6xl font-heading text-center text-dark-text">
+            <h1 className="text-6xl font-heading text-center text-aura-soft-white">
               Style, Redefined.
             </h1>
           </div>

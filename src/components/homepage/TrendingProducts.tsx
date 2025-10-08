@@ -115,7 +115,7 @@ const products = [
 
 function ProductCard({ product }: { product: typeof products[0] }) {
   return (
-    <div className="group rounded-lg border border-light-accent dark:border-dark-accent p-2">
+    <div className="group rounded-lg border border-light-accent dark:border-aura-accent-border p-2">
       <div className="relative aspect-[3/4] overflow-hidden rounded-lg">
         <Image
           src={product.image1}
@@ -132,12 +132,12 @@ function ProductCard({ product }: { product: typeof products[0] }) {
           sizes="(max-width: 640px) 85vw, (max-width: 1024px) 50vw, 25vw"
         />
         {product.salePercentage && (
-          <div className="absolute left-2 top-2 rounded-full bg-brand-red px-3 py-1 text-xs font-bold text-white dark:bg-brand-green dark:text-dark-bg">
+          <div className="absolute left-2 top-2 rounded-full bg-brand-red px-3 py-1 text-xs font-bold text-white dark:bg-aura-green dark:text-aura-black">
             -{product.salePercentage}%
           </div>
         )}
         <button
-          className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-light-bg/90 dark:bg-dark-bg/90 text-light-text dark:text-dark-text transition-colors hover:bg-light-bg dark:hover:bg-dark-bg hover:text-brand-red dark:hover:text-brand-green"
+          className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-light-bg/90 dark:bg-aura-black/90 text-light-text dark:text-aura-gold transition-colors hover:bg-light-bg dark:hover:bg-aura-black hover:text-brand-red dark:hover:text-aura-soft-white"
           aria-label="Add to wishlist"
           onClick={(e) => e.stopPropagation()}
         >
@@ -145,7 +145,7 @@ function ProductCard({ product }: { product: typeof products[0] }) {
         </button>
       </div>
       <Link href={`/product/${product.slug}`} className="mt-2 block text-left">
-        <h3 className="font-heading text-base font-bold text-light-text dark:text-dark-text text-left">
+        <h3 className="font-heading text-base font-bold text-light-text dark:text-aura-soft-white text-left">
           {product.name}
         </h3>
         <div className="mt-1 flex items-center gap-1 text-left">
@@ -156,30 +156,30 @@ function ProductCard({ product }: { product: typeof products[0] }) {
                 size={14}
                 className={
                   i < Math.floor(product.rating)
-                    ? "fill-brand-red text-brand-red dark:fill-brand-green dark:text-brand-green"
+                    ? "fill-brand-red text-brand-red dark:fill-aura-gold dark:text-aura-gold"
                     : "fill-none text-light-accent-text dark:text-dark-accent-text"
                 }
               />
             ))}
           </div>
-          <span className="text-xs text-light-accent-text dark:text-dark-accent-text">
+          <span className="text-xs text-light-accent-text dark:text-aura-gold">
             ({product.reviewCount})
           </span>
         </div>
       </Link>
       <div className="mt-2 flex items-center justify-between">
         <div>
-          <p className="font-sans text-lg font-bold text-light-text dark:text-dark-text">
+          <p className="font-sans text-lg font-bold text-light-text dark:text-aura-soft-white">
             ${product.price.toFixed(2)}
           </p>
           {product.originalPrice && (
-            <p className="text-sm text-light-accent-text dark:text-dark-accent-text line-through">
+            <p className="text-sm text-light-accent-text dark:text-aura-gold line-through">
               ${product.originalPrice.toFixed(2)}
             </p>
           )}
         </div>
         <button
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-light-text dark:bg-dark-text text-light-bg dark:text-dark-bg transition-transform hover:scale-110 active:scale-95"
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-light-text dark:bg-aura-soft-white text-light-bg dark:text-aura-black transition-transform hover:scale-110 active:scale-95"
           aria-label="Quick add to cart"
           onClick={(e) => {
             e.stopPropagation();
@@ -200,14 +200,14 @@ export function TrendingProducts() {
   });
 
   return (
-    <section className="w-full bg-light-accent/50 dark:bg-dark-accent/50 mt-0 lg:mt-24 pb-12 md:pb-24 lg:pb-32">
+    <section className="w-full bg-light-accent/50 dark:bg-aura-accent-border/50 mt-0 lg:mt-24 pb-12 md:pb-24 lg:pb-32">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col lg:items-center">
           <div className="space-y-2">
             <h2 className="text-3xl font-bold font-heading tracking-tighter sm:text-5xl mb-2 lg:text-center">
               Trending Now
             </h2>
-            <p className="hidden lg:block max-w-[900px] text-light-accent-text dark:text-dark-accent-text md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed lg:text-center">
+            <p className="hidden lg:block max-w-[900px] text-light-accent-text dark:text-aura-gold md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed lg:text-center">
               Discover our most popular and best-selling items.
             </p>
           </div>
