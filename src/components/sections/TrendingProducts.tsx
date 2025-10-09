@@ -3,28 +3,40 @@ import { ProductCard, Product } from "@/components/products/ProductCard";
 // This mock data would eventually come from an API call.
 const trendingProducts: Product[] = [
   {
+    id: 1,
     handle: "satoshi-sweatshirt",
     name: "Satoshi Sweatshirt",
     price: 120.0,
     imageUrl: "/images/shirt.png", // Placeholder image path
+    size: "M",
+    color: "Black",
   },
   {
+    id: 2,
     handle: "inter-tee-black",
     name: "Inter Tee - Black",
     price: 45.0,
     imageUrl: "/images/polo-tshirt.png", // Placeholder image path
+    size: "L",
+    color: "Black",
   },
   {
+    id: 3,
     handle: "luxe-cargo-pants",
     name: "Luxe Cargo Pants",
     price: 185.0,
     imageUrl: "/images/pant.avif", // Placeholder image path
+    size: "32",
+    color: "Khaki",
   },
   {
+    id: 4,
     handle: "classy-mart-cap",
     name: "Classy Mart Cap",
     price: 35.0,
     imageUrl: "/images/panjabi.webp", // Placeholder image path
+    size: "One Size",
+    color: "Navy",
   },
 ];
 

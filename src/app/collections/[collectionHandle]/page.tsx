@@ -19,7 +19,7 @@ const mockProducts: Product[] = [
 const CollectionPage = () => {
   const [products, setProducts] = useState(mockProducts);
   const [filteredProducts, setFilteredProducts] = useState(mockProducts);
-  const [activeFilters, setActiveFilters] = useState<{ size: string[]; color: string[] }>({
+  const [activeFilters, setActiveFilters] = useState<Record<string, string[]>>({
     size: [],
     color: [],
   });
