@@ -4,10 +4,13 @@ import { cn } from "@/lib/utils";
 
 // Define the shape of our product data
 export interface Product {
+  id: number;
   handle: string;
   name: string;
   price: number;
   imageUrl: string;
+  size: string;
+  color: string;
 }
 
 interface ProductCardProps {
@@ -40,6 +43,14 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
         </h3>
         <p className="font-sans text-sm font-medium text-light-text dark:text-dark-text">
           ${product.price.toFixed(2)}
+        </p>
+      </div>
+      <div className="mt-1 flex justify-between">
+        <p className="font-sans text-sm text-light-text dark:text-dark-text">
+          {product.size}
+        </p>
+        <p className="font-sans text-sm text-light-text dark:text-dark-text">
+          {product.color}
         </p>
       </div>
     </Link>
