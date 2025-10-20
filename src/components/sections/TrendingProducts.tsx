@@ -1,44 +1,8 @@
-import { ProductCard, Product } from "@/components/products/ProductCard";
+import { ProductCard } from "@/components/products/ProductCard";
+import { Product } from "@/types/product";
 
-// This mock data would eventually come from an API call.
-const trendingProducts: Product[] = [
-  {
-    id: 1,
-    handle: "satoshi-sweatshirt",
-    name: "Satoshi Sweatshirt",
-    price: 120.0,
-    imageUrl: "/images/shirt.png", // Placeholder image path
-    size: "M",
-    color: "Black",
-  },
-  {
-    id: 2,
-    handle: "inter-tee-black",
-    name: "Inter Tee - Black",
-    price: 45.0,
-    imageUrl: "/images/polo-tshirt.png", // Placeholder image path
-    size: "L",
-    color: "Black",
-  },
-  {
-    id: 3,
-    handle: "luxe-cargo-pants",
-    name: "Luxe Cargo Pants",
-    price: 185.0,
-    imageUrl: "/images/pant.avif", // Placeholder image path
-    size: "32",
-    color: "Khaki",
-  },
-  {
-    id: 4,
-    handle: "classy-mart-cap",
-    name: "Classy Mart Cap",
-    price: 35.0,
-    imageUrl: "/images/panjabi.webp", // Placeholder image path
-    size: "One Size",
-    color: "Navy",
-  },
-];
+// TODO: Fetch trending products from Contentful
+const trendingProducts: Product[] = [];
 
 /**
  * Renders a section showcasing trending products.
@@ -46,6 +10,11 @@ const trendingProducts: Product[] = [
  * @returns {React.ReactElement} The TrendingProducts component.
  */
 export function TrendingProducts(): React.ReactElement {
+  // Don't render if no products
+  if (trendingProducts.length === 0) {
+    return <></>;
+  }
+
   return (
     <section
       aria-labelledby="trending-products-heading"
@@ -66,7 +35,7 @@ export function TrendingProducts(): React.ReactElement {
 
         <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4">
           {trendingProducts.map((product) => (
-            <ProductCard key={product.handle} product={product} />
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </div>

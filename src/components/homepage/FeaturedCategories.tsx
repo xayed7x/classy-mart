@@ -37,12 +37,12 @@ const FeaturedCategories = () => {
       <div className="lg:hidden mt-8">
         <div className="px-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold font-heading text-light-text dark:text-aura-soft-white">
+            <h2 className="text-xl font-bold font-heading text-foreground dark:text-foreground">
               Categories
             </h2>
             <Link
-              href="/collection"
-              className="text-sm font-sans text-light-accent-text dark:text-aura-gold transition-colors hover:text-light-text dark:hover:text-aura-soft-white"
+              href="/collections"
+              className="text-sm font-sans text-muted-foreground transition-colors hover:text-foreground dark:text-foreground/60"
             >
               See all
             </Link>
@@ -51,8 +51,8 @@ const FeaturedCategories = () => {
             {categories.map((category) => (
               <Link
                 key={category.id}
-                href={`/collection/${category.slug}`}
-                className="block whitespace-nowrap rounded-full border border-light-accent dark:border-aura-gold bg-light-bg dark:bg-aura-black px-4 py-2 text-sm font-medium font-sans text-light-text dark:text-aura-gold transition-colors hover:bg-light-accent/50 dark:hover:bg-dark-accent/50"
+                href={`/collections/${category.slug}`}
+                className="block whitespace-nowrap rounded-full border border-border dark:border-border bg-background px-4 py-2 text-sm font-medium font-sans text-foreground dark:text-foreground/60 transition-colors hover:bg-secondary"
               >
                 {category.name}
               </Link>
@@ -63,10 +63,10 @@ const FeaturedCategories = () => {
 
       <div className="hidden lg:block">
         <div className="text-center">
-          <h2 className="text-4xl font-bold font-heading text-light-text dark:text-aura-soft-white sm:text-5xl">
+          <h2 className="text-4xl font-bold font-heading text-foreground sm:text-5xl">
             Shop by Collection
           </h2>
-          <p className="mt-4 font-sans text-base text-light-accent-text dark:text-aura-gold">
+          <p className="mt-4 font-sans text-base text-muted-foreground">
             Explore our curated collections, designed with purpose and passion.
           </p>
         </div>
@@ -74,7 +74,7 @@ const FeaturedCategories = () => {
           {categories.map((category) => (
             <Link
               key={category.id}
-              href={`/collection/${category.slug}`}
+              href={`/collections/${category.slug}`}
               className="group relative overflow-hidden rounded-xl"
             >
               <div className="relative aspect-[3/4] w-full">
@@ -87,7 +87,7 @@ const FeaturedCategories = () => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 <div className="absolute bottom-0 p-6">
-                  <h3 className="text-xl font-bold font-heading text-aura-soft-white">
+                  <h3 className="text-xl font-bold font-heading text-white">
                     {category.name}
                   </h3>
                 </div>

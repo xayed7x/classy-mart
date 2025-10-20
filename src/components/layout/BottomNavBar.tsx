@@ -1,5 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { Home, LayoutGrid, ShoppingBag, User } from "lucide-react";
+import { useCartStore } from "@/stores/cart-store";
+import { useCartDrawerStore } from "@/stores/cart-drawer-store";
 
 /**
  * Bottom Navigation Bar Component - Mobile-First "Flow UI"
@@ -11,48 +15,52 @@ import { Home, LayoutGrid, ShoppingBag, User } from "lucide-react";
  * Design: Street-Luxe system with psychology-driven UX
  */
 export function BottomNavBar() {
+  const { cartItems } = useCartStore();
+  const { open } = useCartDrawerStore();
+
+  const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-light-accent dark:border-aura-accent-border bg-light-bg dark:bg-aura-black px-2 py-3 pb-6 lg:hidden"
+      className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-border bg-background px-2 py-3 pb-6 lg:hidden"
       aria-label="Mobile navigation"
     >
       {/* Home */}
       <Link
         href="/"
-        className="flex flex-col items-center gap-1 text-light-text dark:text-aura-gold hover:text-brand-red dark:hover:text-aura-soft-white active:text-brand-red dark:active:text-aura-soft-white"
+        className="flex flex-col items-center gap-1 text-foreground dark:text-foreground/60 hover:text-foreground dark:hover:text-foreground active:text-foreground dark:active:text-foreground"
       >
         <Home strokeWidth={1.5} size={24} />
         <span className="text-xs font-medium">Home</span>
       </Link>
 
-      {/* Categories */}
+      {/* Collections */}
       <Link
-        href="/categories"
-        className="flex flex-col items-center gap-1 text-light-text dark:text-aura-gold hover:text-brand-red dark:hover:text-aura-soft-white active:text-brand-red dark:active:text-aura-soft-white"
+        href="/collections/all"
+        className="flex flex-col items-center gap-1 text-foreground dark:text-foreground/60 hover:text-foreground dark:hover:text-foreground active:text-foreground dark:active:text-foreground"
       >
         <LayoutGrid strokeWidth={1.5} size={24} />
-        <span className="text-xs font-medium">Categories</span>
+        <span className="text-xs font-medium">Collections</span>
       </Link>
 
       {/* Cart with Badge */}
-      <Link
-        href="/cart"
-        className="relative flex flex-col items-center gap-1 text-light-text dark:text-aura-gold hover:text-brand-red dark:hover:text-aura-soft-white active:text-brand-red dark:active:text-aura-soft-white"
+      <button
+        onClick={open}
+        className="relative flex flex-col items-center gap-1 text-foreground dark:text-foreground/60 hover:text-foreground dark:hover:text-foreground active:text-foreground dark:active:text-foreground"
       >
         <div className="relative">
           <ShoppingBag strokeWidth={1.5} size={24} />
-          {/* Cart Badge - Notification Counter */}
-          <div className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-brand-red text-[10px] font-bold text-white dark:bg-aura-green dark:text-aura-black">
-            0
-          </div>
+          {totalItems > 0 && (
+                            <div className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary dark:bg-primary text-[10px] font-bold text-primary-foreground dark:text-rich-black">              {totalItems}
+            </div>
+          )}
         </div>
         <span className="text-xs font-medium">Cart</span>
-      </Link>
+      </button>
 
       {/* Account */}
       <Link
-        href="/account"
-        className="flex flex-col items-center gap-1 text-light-text dark:text-aura-gold hover:text-brand-red dark:hover:text-aura-soft-white active:text-brand-red dark:active:text-aura-soft-white"
+        href="/admin"
+        className="flex flex-col items-center gap-1 text-foreground dark:text-foreground/60 hover:text-foreground dark:hover:text-foreground active:text-foreground dark:active:text-foreground"
       >
         <User strokeWidth={1.5} size={24} />
         <span className="text-xs font-medium">Account</span>

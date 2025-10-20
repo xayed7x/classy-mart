@@ -16,7 +16,7 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-light-accent dark:border-aura-accent-border bg-light-accent/30 dark:bg-aura-accent-border/30 py-16 sm:py-24">
+    <footer className="border-t border-border dark:bg-rich-black py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4">
         {/* Main Footer Grid */}
         <div className="grid grid-cols-2 gap-8 lg:grid-cols-4 lg:gap-12">
@@ -31,7 +31,7 @@ export function Footer() {
                 className="h-8 w-auto"
               />
             </Link>
-            <p className="mt-4 font-sans text-sm text-light-accent-text dark:text-aura-gold">
+            <p className="mt-4 font-sans text-sm text-muted-foreground">
               Redefining modern fashion with curated collections for the contemporary wardrobe.
             </p>
             
@@ -41,7 +41,7 @@ export function Footer() {
                 href="https://instagram.com/classymart"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-light-text dark:text-aura-gold hover:text-brand-red dark:hover:text-aura-soft-white"
+                className="text-foreground/60 hover:text-foreground"
                 aria-label="Instagram"
               >
                 <Instagram strokeWidth={1.5} size={20} />
@@ -50,7 +50,7 @@ export function Footer() {
                 href="https://facebook.com/classymart"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-light-text dark:text-aura-gold hover:text-brand-red dark:hover:text-aura-soft-white"
+                className="text-foreground/60 hover:text-foreground"
                 aria-label="Facebook"
               >
                 <Facebook strokeWidth={1.5} size={20} />
@@ -60,14 +60,14 @@ export function Footer() {
 
           {/* Column 2: Shop */}
           <div>
-            <h3 className="font-heading text-base font-bold text-light-text dark:text-aura-soft-white">
+            <h3 className="font-heading text-base font-bold text-foreground">
               Shop
             </h3>
             <ul className="mt-4 space-y-3">
               <li>
                 <Link
                   href="/category/t-shirts"
-                  className="font-sans text-sm text-light-accent-text dark:text-aura-gold hover:text-light-text dark:hover:text-aura-soft-white"
+                  className="font-sans text-sm text-foreground/60 hover:text-foreground"
                 >
                   T-Shirts
                 </Link>
@@ -75,7 +75,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/category/shirts"
-                  className="font-sans text-sm text-light-accent-text dark:text-aura-gold hover:text-light-text dark:hover:text-aura-soft-white"
+                  className="font-sans text-sm text-foreground/60 hover:text-foreground"
                 >
                   Shirts
                 </Link>
@@ -83,7 +83,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/category/pants"
-                  className="font-sans text-sm text-light-accent-text dark:text-aura-gold hover:text-light-text dark:hover:text-aura-soft-white"
+                  className="font-sans text-sm text-foreground/60 hover:text-foreground"
                 >
                   Pants
                 </Link>
@@ -91,7 +91,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/category/panjabis"
-                  className="font-sans text-sm text-light-accent-text dark:text-aura-gold hover:text-light-text dark:hover:text-aura-soft-white"
+                  className="font-sans text-sm text-foreground/60 hover:text-foreground"
                 >
                   Panjabis
                 </Link>
@@ -101,14 +101,14 @@ export function Footer() {
 
           {/* Column 3: About */}
           <div>
-            <h3 className="font-heading text-base font-bold text-light-text dark:text-aura-soft-white">
+            <h3 className="font-heading text-base font-bold text-foreground">
               About
             </h3>
             <ul className="mt-4 space-y-3">
               <li>
                 <Link
                   href="/about"
-                  className="font-sans text-sm text-light-accent-text dark:text-aura-gold hover:text-light-text dark:hover:text-aura-soft-white"
+                  className="font-sans text-sm text-foreground/60 hover:text-foreground"
                 >
                   About Us
                 </Link>
@@ -116,7 +116,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/contact"
-                  className="font-sans text-sm text-light-accent-text dark:text-aura-gold hover:text-light-text dark:hover:text-aura-soft-white"
+                  className="font-sans text-sm text-foreground/60 hover:text-foreground"
                 >
                   Contact
                 </Link>
@@ -124,7 +124,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/journal"
-                  className="font-sans text-sm text-light-accent-text dark:text-aura-gold hover:text-light-text dark:hover:text-aura-soft-white"
+                  className="font-sans text-sm text-foreground/60 hover:text-foreground"
                 >
                   Journal
                 </Link>
@@ -134,14 +134,14 @@ export function Footer() {
 
           {/* Column 4: Support */}
           <div>
-            <h3 className="font-heading text-base font-bold text-light-text dark:text-aura-soft-white">
+            <h3 className="font-heading text-base font-bold text-foreground">
               Support
             </h3>
             <ul className="mt-4 space-y-3">
               <li>
                 <Link
                   href="/faq"
-                  className="font-sans text-sm text-light-accent-text dark:text-aura-gold hover:text-light-text dark:hover:text-aura-soft-white"
+                  className="font-sans text-sm text-foreground/60 hover:text-foreground"
                 >
                   FAQ
                 </Link>
@@ -149,7 +149,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/shipping-returns"
-                  className="font-sans text-sm text-light-accent-text dark:text-aura-gold hover:text-light-text dark:hover:text-aura-soft-white"
+                  className="font-sans text-sm text-foreground/60 hover:text-foreground"
                 >
                   Shipping & Returns
                 </Link>
@@ -157,7 +157,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/track-order"
-                  className="font-sans text-sm text-light-accent-text dark:text-aura-gold hover:text-light-text dark:hover:text-aura-soft-white"
+                  className="font-sans text-sm text-foreground/60 hover:text-foreground"
                 >
                   Track Order
                 </Link>
@@ -167,23 +167,23 @@ export function Footer() {
         </div>
 
         {/* Copyright Section */}
-        <hr className="mt-12 border-light-accent dark:border-aura-accent-border" />
+        <hr className="mt-12 border-border" />
         <div className="mt-8 flex flex-col items-center justify-between gap-4 sm:flex-row">
           {/* Copyright Notice */}
-          <p className="font-sans text-sm text-light-accent-text dark:text-aura-gold">
+          <p className="font-sans text-sm text-muted-foreground">
             © {currentYear} Classy Mart. All Rights Reserved.
           </p>
 
           {/* Payment Methods */}
           <div className="flex items-center gap-3">
-            <span className="font-sans text-xs text-light-accent-text dark:text-aura-gold">
+            <span className="font-sans text-xs text-muted-foreground">
               We Accept:
             </span>
-            <div className="flex gap-2 font-sans text-xs font-medium text-light-text dark:text-aura-soft-white">
-              <span className="rounded border border-light-accent dark:border-aura-accent-border px-2 py-1">Visa</span>
-              <span className="rounded border border-light-accent dark:border-aura-accent-border px-2 py-1">Mastercard</span>
-              <span className="rounded border border-light-accent dark:border-aura-accent-border px-2 py-1">bKash</span>
-              <span className="rounded border border-light-accent dark:border-aura-accent-border px-2 py-1">Nagad</span>
+            <div className="flex gap-2 font-sans text-xs font-medium text-foreground">
+              <span className="rounded border border-border px-2 py-1">Visa</span>
+              <span className="rounded border border-border px-2 py-1">Mastercard</span>
+              <span className="rounded border border-border px-2 py-1">bKash</span>
+              <span className="rounded border border-border px-2 py-1">Nagad</span>
             </div>
           </div>
         </div>

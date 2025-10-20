@@ -1,12 +1,40 @@
 @tailwind base;
- @tailwind components;
- @tailwind utilities;
+@tailwind components;
+@tailwind utilities;
 
- @layer base {
-  body {
-    @apply bg-light-bg text-light-text;
+@layer base {
+  :root {
+    --radius: 0.5rem; /* Default border radius for rounded-lg */
+    /* Light Mode ("Showroom") Variables */
+    --background: 0 0% 100%; /* #FFFFFF */
+    --foreground: 0 0% 7%;   /* #111111 */
+    --primary: 0 100% 50%;    /* #FF0000 - Brand Red */
+    --primary-foreground: 0 0% 100%; /* White text for on top of red */
+    --secondary: 0 0% 96.1%; /* #F5F5F5 */
+    --secondary-foreground: 0 0% 7%; /* #111111 */
+    --accent: 0 0% 89.8%;    /* #E5E5E5 */
+    --accent-foreground: 0 0% 7%; /* #111111 */
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --border: 0 0% 89.8%;    /* #E5E5E5 */
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 7%;
   }
-  .dark body {
-    @apply bg-aura-black text-aura-soft-white;
+
+  .dark {
+  --background: 0 0% 7%;          /* #111111 -> rich-black */
+  --foreground: 39 23% 92%;       /* #F0EBE3 -> soft-white */
+  --muted-foreground: 34 23% 61%; /* #B4A284 -> muted-gold */
+  /* --- VERIFY ALL OTHER VARIABLES ARE CORRECT --- */
+  --primary: 165 100% 30%;        /* #009B77 -> emerald-green */
+  --primary-foreground: 0 0% 100%; /* White text for on top of green */
+  --shipped-bg: 210 100% 50%;
+  --border: 40 5% 14%;           /* Matches Aura's muted-gold/20 style */
+  --card: 0 0% 7%;                /* #111111 -> Same as background */
+  --card-foreground: 39 23% 92%;  /* #F0EBE3 -> Same as foreground */
+}
+
+  body {
+    @apply bg-background text-foreground;
   }
 }

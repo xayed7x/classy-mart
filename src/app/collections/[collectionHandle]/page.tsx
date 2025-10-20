@@ -1,118 +1,190 @@
 "use client";
-import { useState, useEffect } from "react";
-import FilterSidebar from "@/components/collections/FilterSidebar";
-import { ProductCard, Product } from "@/components/products/ProductCard";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/Sheet";
-import { Button } from "@/components/ui/button";
-import { SlidersHorizontal } from "lucide-react";
 
-// Mock product data
-const mockProducts: Product[] = [
-  { id: 1, name: "Classic White T-Shirt", size: "M", color: "White", handle: "classic-white-t-shirt", price: 25, imageUrl: "/images/shirt1.png" },
-  { id: 2, name: "Black Denim Jeans", size: "32", color: "Black", handle: "black-denim-jeans", price: 75, imageUrl: "/images/pant.avif" },
-  { id: 3, name: "Blue Striped Shirt", size: "L", color: "Blue", handle: "blue-striped-shirt", price: 45, imageUrl: "/images/shirt2.png" },
-  { id: 4, name: "Red Polo Shirt", size: "M", color: "Red", handle: "red-polo-shirt", price: 35, imageUrl: "/images/polo-tshirt.png" },
-  { id: 5, name: "Gray Chinos", size: "34", color: "Gray", handle: "gray-chinos", price: 60, imageUrl: "/images/shirt3.png" },
-  { id: 6, name: "White Sneakers", size: "10", color: "White", handle: "white-sneakers", price: 80, imageUrl: "/images/tshirt2.png" },
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { Filter } from "lucide-react";
+import { ProductGrid } from "@/components/collections/ProductGrid";
+import FilterSidebar from "@/components/collections/FilterSidebar";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/Sheet";
+import { cn } from "@/lib/utils";
+import { Product } from "@/types/product";
+
+// Category configuration
+const CATEGORIES = [
+  { name: "All", slug: "all" },
+  { name: "T-Shirts", slug: "t-shirts" },
+  { name: "Shirts", slug: "shirts" },
+  { name: "Pants", slug: "pants" },
+  { name: "Panjabis", slug: "panjabis" },
 ];
 
-const CollectionPage = () => {
-  const [products, setProducts] = useState(mockProducts);
-  const [filteredProducts, setFilteredProducts] = useState(mockProducts);
-  const [activeFilters, setActiveFilters] = useState<Record<string, string[]>>({
-    size: [],
-    color: [],
-  });
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
+export default function CollectionPage() {
+  const params = useParams();
+  const collectionHandle = params.collectionHandle as string;
 
-  const handleFilterChange = (filterType: string, value: string) => {
-    setActiveFilters((prevFilters) => {
-      const newFilters = { ...prevFilters };
-      const filterValues = newFilters[filterType];
-      if (filterValues.includes(value)) {
-        newFilters[filterType] = filterValues.filter((item) => item !== value);
-      } else {
-        filterValues.push(value);
+  // State management
+  const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [activeFilters, setActiveFilters] = useState<{ sizes: string[]; colors: string[] }>({ sizes: [], colors: [] });
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Data fetching
+  useEffect(() => {
+    if (!collectionHandle) return;
+
+    async function fetchProducts() {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`/api/collections/${collectionHandle}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
+        }
+        const result = await response.json();
+        setProducts(result.data);
+        setFilteredProducts(result.data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
       }
-      return newFilters;
+    }
+
+    fetchProducts();
+  }, [collectionHandle]);
+
+  // Filter logic
+  useEffect(() => {
+    let result = [...products];
+    if (activeFilters.sizes.length > 0) {
+      result = result.filter(p => p.sizes.some(s => activeFilters.sizes.includes(s)));
+    }
+    if (activeFilters.colors.length > 0) {
+      result = result.filter(p => p.colors.some(c => activeFilters.colors.includes(c)));
+    }
+    setFilteredProducts(result);
+  }, [activeFilters, products]);
+
+  // Filter change handler
+  const handleFilterChange = (filterType: string, value: string) => {
+    setActiveFilters(prev => {
+      const key = filterType === "size" ? "sizes" : "colors";
+      const currentValues = prev[key];
+      const newValues = currentValues.includes(value)
+        ? currentValues.filter(v => v !== value)
+        : [...currentValues, value];
+      return { ...prev, [key]: newValues };
     });
   };
 
-  useEffect(() => {
-    let tempProducts = [...products];
-
-    if (activeFilters.size.length > 0) {
-      tempProducts = tempProducts.filter((product) =>
-        activeFilters.size.includes(product.size)
-      );
-    }
-
-    if (activeFilters.color.length > 0) {
-      tempProducts = tempProducts.filter((product) =>
-        activeFilters.color.includes(product.color)
-      );
-    }
-
-    setFilteredProducts(tempProducts);
-  }, [activeFilters, products]);
-
-  const filterOptions = {
-    size: ["M", "L", "32", "34", "10"],
-    color: ["White", "Black", "Blue", "Red", "Gray"],
+  const getCollectionTitle = () => {
+    if (collectionHandle === "all") return "All Products";
+    const category = CATEGORIES.find(c => c.slug === collectionHandle);
+    return category?.name || collectionHandle;
   };
 
+  const getAllSizes = () => [...new Set(products.flatMap(p => p.sizes))];
+  const getAllColors = () => [...new Set(products.flatMap(p => p.colors))];
+
+  if (isLoading) {
+    return <div>Loading...</div>; // Replace with a proper skeleton loader
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
-    <div>
-      <div className="container mx-auto">
-        {/* Mobile Header */}
-        <div className="lg:hidden p-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Products</h1>
-          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-            <SheetTrigger asChild>
-              <Button variant="outline">
-                <SlidersHorizontal className="h-5 w-5 mr-2" />
-                Filter
-              </Button>
-            </SheetTrigger>
-            <SheetContent position="left" size="sm">
-              <FilterSidebar
-                filterOptions={filterOptions}
-                onFilterChange={handleFilterChange}
-                onClose={() => setIsSheetOpen(false)}
-              />
-            </SheetContent>
-          </Sheet>
-        </div>
-
-        {/* Desktop Layout */}
-        <div className="hidden lg:grid lg:grid-cols-4 gap-4 p-4">
-          <div className="col-span-1">
-            <FilterSidebar
-              filterOptions={filterOptions}
-              onFilterChange={handleFilterChange}
-              onClose={() => {}}
-            />
-          </div>
-          <div className="col-span-3">
-            <div className="grid grid-cols-3 gap-4">
-              {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Product Grid */}
-        <div className="lg:hidden p-4">
-          <div className="grid grid-cols-2 gap-4">
-            {filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+    <main className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Category Pills */}
+        <div className="mb-8 overflow-x-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="flex gap-2 min-w-max">
+            {CATEGORIES.map((category) => (
+              <Link
+                key={category.slug}
+                href={`/collections/${category.slug}`}
+                className={cn(
+                  "whitespace-nowrap rounded-full border px-6 py-2 text-sm font-medium font-sans transition-colors",
+                  collectionHandle === category.slug
+                    ? "bg-primary text-primary-foreground dark:bg-primary dark:text-rich-black border-primary"
+                    : "bg-background text-foreground border-border hover:bg-secondary"
+                )}
+              >
+                {category.name}
+              </Link>
             ))}
           </div>
         </div>
-      </div>
-    </div>
-  );
-};
 
-export default CollectionPage;
+        {/* Page Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-heading text-foreground">
+            {getCollectionTitle()}
+          </h1>
+          <p className="mt-2 text-muted-foreground font-sans">
+            {filteredProducts.length} {filteredProducts.length === 1 ? "product" : "products"}
+          </p>
+        </div>
+
+        {/* Mobile Filter Button */}
+        <div className="lg:hidden mb-6">
+          <button
+            onClick={() => setIsSheetOpen(true)}
+            className="flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary transition-colors"
+          >
+            <Filter size={16} />
+            Filters
+            {(activeFilters.sizes.length > 0 || activeFilters.colors.length > 0) && (
+              <span className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+                {activeFilters.sizes.length + activeFilters.colors.length}
+              </span>
+            )}
+          </button>
+        </div>
+
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8">
+          {/* Desktop Sidebar */}
+          <aside className="hidden lg:block">
+            <div className="sticky top-24">
+              <FilterSidebar
+                filterOptions={{
+                  size: getAllSizes(),
+                  color: getAllColors(),
+                }}
+                onFilterChange={handleFilterChange}
+                onClose={() => {}}
+              />
+            </div>
+          </aside>
+
+          {/* Product Grid */}
+          <div>
+            <ProductGrid products={filteredProducts} />
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Filter Sheet */}
+      <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+        <SheetContent position="left" size="lg">
+          <SheetHeader>
+            <SheetTitle>Filters</SheetTitle>
+          </SheetHeader>
+          <FilterSidebar
+            filterOptions={{
+              size: getAllSizes(),
+              color: getAllColors(),
+            }}
+            onFilterChange={handleFilterChange}
+            onClose={() => setIsSheetOpen(false)}
+          />
+        </SheetContent>
+      </Sheet>
+    </main>
+  );
+}

@@ -1,11 +1,15 @@
+"use client"; // Convert to a Client Component
+
+import { usePathname } from "next/navigation"; // Import the hook
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import { ParallaxProviderWrapper } from "@/components/providers/ParallaxProviderWrapper";
 import { Header } from "@/components/layout/Header";
 import { BottomNavBar } from "@/components/layout/BottomNavBar";
 import { Footer } from "@/components/layout/Footer";
+import { CartController } from "@/components/cart/CartController";
+import { ImmersiveSearch } from "@/components/layout/ImmersiveSearch";
 import "./globals.css";
 
 const inter = Inter({
@@ -14,23 +18,18 @@ const inter = Inter({
 });
 
 const satoshi = localFont({
-  src: "../fonts/Satoshi-Variable.ttf", // We will add this font file later
+  src: "../fonts/Satoshi-Variable.ttf",
   variable: "--font-satoshi",
 });
-
-export const metadata: Metadata = {
-  title: "Classy Mart",
-  description: "The new standard in modern apparel.",
-  icons: {
-    icon: '/logo.png',
-  },
-};
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
+  const isProductPage = pathname.startsWith("/products");
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${satoshi.variable}`}>
@@ -40,10 +39,12 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ParallaxProviderWrapper>
-            <Header />
+            <CartController />
+            <ImmersiveSearch />
+            {!isProductPage && <Header />}
             {children}
             <Footer />
-            <BottomNavBar />
+            {!isProductPage && <BottomNavBar />}
           </ParallaxProviderWrapper>
         </ThemeProvider>
       </body>

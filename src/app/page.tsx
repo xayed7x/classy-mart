@@ -1,18 +1,21 @@
+import { getFeaturedProducts, getAllFeaturedOffers, getLookbookData } from '@/lib/contentful';
 import { HeroSection } from '@/components/homepage/HeroSection';
 import { FeaturedOffers } from '@/components/homepage/FeaturedOffers';
-import FeaturedCategories from "@/components/homepage/FeaturedCategories";
-import { TrendingProducts } from "@/components/homepage/TrendingProducts";
-import { LookbookSection } from "@/components/homepage/LookbookSection";
-import { SocialProofSection } from "@/components/homepage/SocialProofSection";
+import { LookbookSection } from '@/components/homepage/LookbookSection';
+import { TrendingProducts } from '@/components/homepage/TrendingProducts';
+import { SocialProofSection } from '@/components/homepage/SocialProofSection';
 
-export default function HomePage() {
+export default async function HomePage() {
+  const featuredProducts = await getFeaturedProducts();
+  const featuredOffers = await getAllFeaturedOffers();
+  const lookbookData = await getLookbookData();
+
   return (
-    <main className="grid grid-cols-1">
-      <HeroSection />
-      <FeaturedOffers />
-      <FeaturedCategories />
-      <TrendingProducts />
-      <LookbookSection />
+    <main>
+      <HeroSection offers={featuredOffers} /> {/* HeroSection now takes offers for mobile */}
+      <FeaturedOffers offers={featuredOffers} /> {/* New FeaturedOffers for desktop */}
+      <TrendingProducts products={featuredProducts} />
+      <LookbookSection lookbook={lookbookData} />
       <SocialProofSection />
     </main>
   );

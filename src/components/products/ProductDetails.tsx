@@ -1,0 +1,242 @@
+'use client';
+
+import { Star, Check } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import AnimatedButton from '@/components/ui/AnimatedButton';
+import { useCartStore } from '@/stores/cart-store';
+import { useCartDrawerStore } from '@/stores/cart-drawer-store';
+import { useProductPageStore } from '@/stores/product-page-store';
+
+interface ProductDetailsProps {
+  product: any;
+}
+
+export function ProductDetails({ product }: ProductDetailsProps) {
+  const { selectedSize, setSelectedSize, selectedColor, setSelectedColor } = useProductPageStore();
+  const addToCart = useCartStore((state) => state.addToCart);
+
+  const handleAddToCart = () => {
+    // Only add to cart if size is selected (and color if product has colors)
+    if (!selectedSize) return;
+    if (product.colors.length > 0 && !selectedColor) return;
+
+    addToCart({
+      ...product,
+      size: selectedSize,
+      color: selectedColor || undefined,
+      quantity: 1,
+    });
+    useCartDrawerStore.getState().open();
+  };
+
+  // Check if button should be disabled
+  const isDisabled = !selectedSize || (product.colors.length > 0 && !selectedColor);
+
+
+  return (
+    <div className="font-sans bg-background text-foreground">
+      {/* Mobile View */}
+      <div className="p-4 lg:hidden">
+        <h1 className="text-3xl font-bold font-heading tracking-tight text-foreground">
+          {product.name}
+        </h1>
+
+        <div className="mt-2 flex items-center gap-2">
+          <div className="flex items-center">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                size={18}
+                className={cn(
+                  i < Math.floor(product.rating)
+                    ? "text-yellow-400 fill-yellow-400"
+                    : "text-gray-300 dark:text-gray-600"
+                )}
+              />
+            ))}
+          </div>
+          <span className="text-sm font-sans text-muted-foreground ml-1">
+            ({product.reviewCount} Reviews)
+          </span>
+        </div>
+
+        <div className="mt-4 flex items-baseline gap-2">
+          <p className="text-2xl font-bold font-sans text-foreground">
+            BDT{product.price}
+          </p>
+          {product.originalPrice && (
+            <p className="text-lg font-sans text-muted-foreground line-through">
+              BDT{product.originalPrice}
+            </p>
+          )}
+        </div>
+
+        <div className="mt-6 flex items-center gap-3">
+          <Check size={18} className="text-green-500" />
+          <span className="text-sm font-sans font-medium text-foreground">
+            In Stock
+          </span>
+        </div>
+        <div className="mt-6 space-y-5">
+          <div className="flex items-center gap-4">
+            <p className="w-12 font-sans font-medium text-foreground">
+              Size
+            </p>
+            <div className="flex flex-1 gap-2">
+              {product.sizes.map((size: string) => (
+                <Button
+                  key={size}
+                  variant={selectedSize === size ? 'default' : 'outline'}
+                  onClick={() => setSelectedSize(size)}
+                  className={cn(
+                    'h-10 w-10 flex-shrink-0 rounded-full text-sm',
+                    selectedSize === size && 'bg-primary text-primary-foreground dark:bg-primary dark:text-rich-black'
+                  )}
+                >
+                  {size}
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <p className="w-12 font-sans font-medium text-foreground">
+              Color
+            </p>
+            <div className="flex flex-1 items-center gap-3">
+              {product.colors.map((color: string) => (
+                <button
+                  key={color}
+                  onClick={() => setSelectedColor(color)}
+                  className={cn(
+                    'h-8 w-8 rounded-full border-2 transition-all',
+                    selectedColor === color
+                      ? 'border-primary'
+                      : 'border-transparent'
+                  )}
+                  aria-label={`Select color ${color}`}
+                >
+                  <span
+                    className={cn(
+                      'block h-full w-full rounded-full border-2 border-background bg-gray-500'
+                    )}
+                    style={{ backgroundColor: color }}
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop View */}
+      <div className="hidden lg:block">
+        <h1 className="text-4xl font-bold font-heading tracking-tight text-foreground">
+          {product.name}
+        </h1>
+
+        <div className="mt-3 flex items-center gap-2">
+          <div className="flex items-center">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                size={20}
+                className={cn(
+                  i < Math.floor(product.rating)
+                    ? 'text-yellow-400 fill-yellow-400'
+                    : 'text-gray-300 dark:text-gray-600'
+                )}
+              />
+            ))}
+          </div>
+          <span className="text-sm font-sans text-muted-foreground ml-1">
+            ({product.reviewCount} Reviews)
+          </span>
+        </div>
+
+        <div className="mt-5 flex items-baseline gap-2">
+          <p className="text-3xl font-bold font-sans text-foreground">
+            BDT{product.price}
+          </p>
+          {product.originalPrice && (
+            <p className="text-xl font-sans text-muted-foreground line-through">
+              BDT{product.originalPrice}
+            </p>
+          )}
+        </div>
+
+        <div className="mt-8">
+          <h3 className="text-base font-sans font-medium text-foreground">
+            Size
+          </h3>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {product.sizes.map((size: string) => (
+              <Button
+                key={size}
+                variant={selectedSize === size ? 'default' : 'outline'}
+                onClick={() => setSelectedSize(size)}
+                className={cn(
+                  'min-w-[48px] rounded-full',
+                  selectedSize === size && 'bg-primary text-primary-foreground dark:bg-primary dark:text-rich-black'
+                )}
+              >
+                {size}
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-8">
+          <h3 className="text-base font-sans font-medium text-foreground">
+            Color
+          </h3>
+          <div className="mt-3 flex flex-wrap gap-3">
+            {product.colors.map((color: string) => (
+              <button
+                key={color}
+                onClick={() => setSelectedColor(color)}
+                className={cn(
+                  'h-8 w-8 rounded-full border-2 transition-all',
+                  selectedColor === color
+                    ? 'border-primary'
+                    : 'border-transparent'
+                )}
+                aria-label={`Select color ${color}`}
+              >
+                <span
+                  className={cn(
+                    'block h-full w-full rounded-full border-2 border-background'
+                  )}
+                  style={{ backgroundColor: color }}
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-6 flex items-center gap-3">
+          <Check size={18} className="text-green-500" />
+          <span className="text-sm font-sans font-medium text-foreground">
+            In Stock
+          </span>
+        </div>
+
+        <div className="mt-8">
+          <AnimatedButton
+            onClick={handleAddToCart}
+            disabled={isDisabled}
+            className="w-full font-sans text-lg font-bold uppercase tracking-wider px-8 py-5 rounded-lg transition-transform bg-primary text-primary-foreground dark:bg-primary dark:text-rich-black shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+          >
+            Add to Cart
+          </AnimatedButton>
+          {isDisabled && (
+            <p className="text-center text-xs text-red-500 mt-2">
+              Please choose size and color
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

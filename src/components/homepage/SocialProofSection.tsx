@@ -47,10 +47,10 @@ const instagramPosts = [
 
 export function SocialProofSection() {
   return (
-    <section className="bg-light-bg dark:bg-aura-black px-4 sm:px-6 lg:px-8 mt-16 sm:mt-24">
+    <section className="bg-background px-4 sm:px-6 lg:px-8 mt-16 sm:mt-24">
         {/* Section Header */}
         <div className="text-center">
-          <h2 className="font-heading text-3xl font-bold text-light-text dark:text-aura-soft-white sm:text-4xl">
+          <h2 className="font-heading text-3xl font-bold text-foreground sm:text-4xl">
             Join the Community
           </h2>
           
@@ -59,7 +59,7 @@ export function SocialProofSection() {
             href="https://instagram.com/classymart"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-4 inline-flex items-center gap-2 font-sans text-lg font-medium text-light-text dark:text-aura-gold transition-colors hover:text-brand-red dark:hover:text-aura-soft-white"
+            className="mt-4 inline-flex items-center gap-2 font-sans text-lg font-medium text-muted-foreground transition-colors hover:text-primary"
           >
             <Instagram strokeWidth={1.5} size={24} />
             <span>@classymart</span>
@@ -87,7 +87,7 @@ export function SocialProofSection() {
 
             {/* Hover Overlay (Desktop-Only) */}
             <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-              <Instagram strokeWidth={1.5} size={32} className="text-aura-soft-white" />
+              <Instagram strokeWidth={1.5} size={32} className="text-primary-foreground" />
             </div>
           </Link>
         ))}

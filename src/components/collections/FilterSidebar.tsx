@@ -1,7 +1,8 @@
-
 "use client";
 
-import React from 'react';
+import React, { useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface FilterSidebarProps {
   filterOptions: {
@@ -13,41 +14,105 @@ interface FilterSidebarProps {
 }
 
 const FilterSidebar: React.FC<FilterSidebarProps> = ({ filterOptions, onFilterChange, onClose }) => {
+  const [openSections, setOpenSections] = useState<{ size: boolean; color: boolean }>({
+    size: true,
+    color: true,
+  });
+
+  const toggleSection = (section: "size" | "color") => {
+    setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
+  };
+
   const handleFilterChangeAndClose = (filterType: string, value: string) => {
     onFilterChange(filterType, value);
-    onClose();
+    // Only close on mobile (when onClose is provided with actual functionality)
+    if (onClose) {
+      onClose();
+    }
   };
 
   return (
-    <div className="p-4 overflow-y-auto">
-      <h3 className="text-lg font-semibold mb-4">Filters</h3>
-      <div>
-        <h4 className="font-semibold mb-2">Size</h4>
-        {filterOptions.size.map((size) => (
-          <div key={size} className="flex items-center mb-2">
-            <input
-              type="checkbox"
-              id={`size-${size}`}
-              onChange={() => handleFilterChangeAndClose('size', size)}
-              className="mr-2"
-            />
-            <label htmlFor={`size-${size}`}>{size}</label>
+    <div className="overflow-y-auto">
+      <h3 className="text-lg font-bold font-heading text-foreground mb-6">Filters</h3>
+      
+      {/* Size Filter Section */}
+      <div className="mb-6 border-b border-border pb-4">
+        <button
+          onClick={() => toggleSection("size")}
+          className="flex w-full items-center justify-between text-left mb-3"
+        >
+          <h4 className="font-semibold font-sans text-foreground">Size</h4>
+          {openSections.size ? (
+            <ChevronUp size={18} className="text-muted-foreground" />
+          ) : (
+            <ChevronDown size={18} className="text-muted-foreground" />
+          )}
+        </button>
+        {openSections.size && (
+          <div className="space-y-2">
+            {filterOptions.size.map((size) => (
+              <label
+                key={size}
+                className="flex items-center gap-3 cursor-pointer group"
+                htmlFor={`size-${size}`}
+              >
+                <input
+                  type="checkbox"
+                  id={`size-${size}`}
+                  onChange={() => handleFilterChangeAndClose("size", size)}
+                  className={cn(
+                    "h-4 w-4 rounded border-border text-primary",
+                    "focus:ring-2 focus:ring-primary focus:ring-offset-2",
+                    "cursor-pointer"
+                  )}
+                />
+                <span className="text-sm font-sans text-foreground group-hover:text-primary transition-colors">
+                  {size}
+                </span>
+              </label>
+            ))}
           </div>
-        ))}
+        )}
       </div>
-      <div className="mt-4">
-        <h4 className="font-semibold mb-2">Color</h4>
-        {filterOptions.color.map((color) => (
-          <div key={color} className="flex items-center mb-2">
-            <input
-              type="checkbox"
-              id={`color-${color}`}
-              onChange={() => handleFilterChangeAndClose('color', color)}
-              className="mr-2"
-            />
-            <label htmlFor={`color-${color}`}>{color}</label>
+
+      {/* Color Filter Section */}
+      <div className="mb-6">
+        <button
+          onClick={() => toggleSection("color")}
+          className="flex w-full items-center justify-between text-left mb-3"
+        >
+          <h4 className="font-semibold font-sans text-foreground">Color</h4>
+          {openSections.color ? (
+            <ChevronUp size={18} className="text-muted-foreground" />
+          ) : (
+            <ChevronDown size={18} className="text-muted-foreground" />
+          )}
+        </button>
+        {openSections.color && (
+          <div className="space-y-2">
+            {filterOptions.color.map((color) => (
+              <label
+                key={color}
+                className="flex items-center gap-3 cursor-pointer group"
+                htmlFor={`color-${color}`}
+              >
+                <input
+                  type="checkbox"
+                  id={`color-${color}`}
+                  onChange={() => handleFilterChangeAndClose("color", color)}
+                  className={cn(
+                    "h-4 w-4 rounded border-border text-primary",
+                    "focus:ring-2 focus:ring-primary focus:ring-offset-2",
+                    "cursor-pointer"
+                  )}
+                />
+                <span className="text-sm font-sans text-foreground group-hover:text-primary transition-colors">
+                  {color}
+                </span>
+              </label>
+            ))}
           </div>
-        ))}
+        )}
       </div>
     </div>
   );
