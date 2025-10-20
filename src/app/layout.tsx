@@ -1,5 +1,6 @@
 "use client"; // Convert to a Client Component
 
+import { useState, useEffect } from "react"; // Import useState and useEffect
 import { usePathname } from "next/navigation"; // Import the hook
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { Inter } from "next/font/google";
@@ -30,6 +31,19 @@ export default function RootLayout({
   const pathname = usePathname();
   const isProductPage = pathname.startsWith("/products");
 
+  const [isDesktop, setIsDesktop] = useState(false); // State to track desktop view
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 1024); // Assuming 1024px is the desktop breakpoint
+    };
+
+    handleResize(); // Set initial value
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${satoshi.variable}`}>
@@ -41,7 +55,7 @@ export default function RootLayout({
           <ParallaxProviderWrapper>
             <CartController />
             <ImmersiveSearch />
-            {!isProductPage && <Header />}
+            {(!isProductPage || (isProductPage && isDesktop)) && <Header />}
             {children}
             <Footer />
             {!isProductPage && <BottomNavBar />}

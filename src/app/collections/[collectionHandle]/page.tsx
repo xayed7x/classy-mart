@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Filter } from "lucide-react";
 import { ProductGrid } from "@/components/collections/ProductGrid";
@@ -9,6 +8,8 @@ import FilterSidebar from "@/components/collections/FilterSidebar";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/Sheet";
 import { cn } from "@/lib/utils";
 import { Product } from "@/types/product";
+import Link from "next/link";
+import { ProductGridSkeleton } from "@/components/collections/ProductGridSkeleton";
 
 // Category configuration
 const CATEGORIES = [
@@ -78,6 +79,10 @@ export default function CollectionPage() {
         : [...currentValues, value];
       return { ...prev, [key]: newValues };
     });
+    // Close sheet on mobile after applying a filter
+    if (window.innerWidth < 1024) {
+      setIsSheetOpen(false);
+    }
   };
 
   const getCollectionTitle = () => {
@@ -88,10 +93,6 @@ export default function CollectionPage() {
 
   const getAllSizes = () => [...new Set(products.flatMap(p => p.sizes))];
   const getAllColors = () => [...new Set(products.flatMap(p => p.colors))];
-
-  if (isLoading) {
-    return <div>Loading...</div>; // Replace with a proper skeleton loader
-  }
 
   if (error) {
     return <div>Error: {error}</div>;
@@ -125,8 +126,8 @@ export default function CollectionPage() {
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-heading text-foreground">
             {getCollectionTitle()}
           </h1>
-          <p className="mt-2 text-muted-foreground font-sans">
-            {filteredProducts.length} {filteredProducts.length === 1 ? "product" : "products"}
+          <p className="mt-2 text-lg text-foreground font-sans">
+            We have {filteredProducts.length} {filteredProducts.length === 1 ? "product" : "products"}
           </p>
         </div>
 
@@ -136,7 +137,7 @@ export default function CollectionPage() {
             onClick={() => setIsSheetOpen(true)}
             className="flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary transition-colors"
           >
-            <Filter size={16} />
+            <Filter size={20} strokeWidth={2} />
             Filters
             {(activeFilters.sizes.length > 0 || activeFilters.colors.length > 0) && (
               <span className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
@@ -147,24 +148,24 @@ export default function CollectionPage() {
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8">
           {/* Desktop Sidebar */}
           <aside className="hidden lg:block">
-            <div className="sticky top-24">
+            <div className="sticky top-4">
               <FilterSidebar
                 filterOptions={{
                   size: getAllSizes(),
                   color: getAllColors(),
                 }}
                 onFilterChange={handleFilterChange}
-                onClose={() => {}}
+                onClose={() => {}} // Not needed for desktop
               />
             </div>
           </aside>
 
           {/* Product Grid */}
           <div>
-            <ProductGrid products={filteredProducts} />
+            {isLoading ? <ProductGridSkeleton /> : <ProductGrid products={filteredProducts} />}
           </div>
         </div>
       </div>

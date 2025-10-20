@@ -23,12 +23,9 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ filterOptions, onFilterCh
     setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
   };
 
-  const handleFilterChangeAndClose = (filterType: string, value: string) => {
+  const handleFilterClick = (filterType: string, value: string) => {
     onFilterChange(filterType, value);
-    // Only close on mobile (when onClose is provided with actual functionality)
-    if (onClose) {
-      onClose();
-    }
+    onClose(); // One-Tap Filter: close the sidebar on any filter interaction
   };
 
   return (
@@ -59,7 +56,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ filterOptions, onFilterCh
                 <input
                   type="checkbox"
                   id={`size-${size}`}
-                  onChange={() => handleFilterChangeAndClose("size", size)}
+                  onChange={() => handleFilterClick("size", size)}
                   className={cn(
                     "h-4 w-4 rounded border-border text-primary",
                     "focus:ring-2 focus:ring-primary focus:ring-offset-2",
@@ -99,7 +96,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ filterOptions, onFilterCh
                 <input
                   type="checkbox"
                   id={`color-${color}`}
-                  onChange={() => handleFilterChangeAndClose("color", color)}
+                  onChange={() => handleFilterClick("color", color)}
                   className={cn(
                     "h-4 w-4 rounded border-border text-primary",
                     "focus:ring-2 focus:ring-primary focus:ring-offset-2",

@@ -54,7 +54,7 @@ export function Header() {
           <ul className="flex items-center space-x-8">
             <li>
               <Link
-                href="/shop"
+                href="/collections/all"
                 className="font-sans text-sm font-medium uppercase tracking-wide transition-colors dark:text-foreground/60 dark:hover:text-foreground hover:text-primary"
               >
                 Shop
