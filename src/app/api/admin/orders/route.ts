@@ -1,12 +1,20 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
 
-export async function GET() {
+export const dynamic = 'force-dynamic';
+
+export async function GET(request: Request) {
   try {
-    const { data: orders, error } = await supabaseAdmin
-      .from('orders')
-      .select('*')
-      .order('created_at', { ascending: false });
+    const { searchParams } = new URL(request.url);
+    const status = searchParams.get('status');
+
+    let query = supabaseAdmin.from('orders').select('*');
+
+    if (status && status !== 'all') {
+      query = query.eq('status', status);
+    }
+
+    const { data: orders, error } = await query.order('created_at', { ascending: false });
 
     if (error) {
       throw error;
