@@ -26,7 +26,6 @@ interface Order {
 }
 
 export default function AdminOrdersClient() {
-  const [mounted, setMounted] = useState(false);
   const searchParams = useSearchParams();
   const currentStatus = searchParams.get('status');
 
@@ -36,12 +35,6 @@ export default function AdminOrdersClient() {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted) return;
-
     async function fetchOrders() {
       setIsLoading(true);
       setError(null);
@@ -59,9 +52,9 @@ export default function AdminOrdersClient() {
       }
     }
     fetchOrders();
-  }, [currentStatus, mounted]);
+  }, [currentStatus]);
 
-  if (isLoading || !mounted) {
+  if (isLoading) {
     return <AdminOrdersSkeleton />;
   }
 
@@ -72,7 +65,7 @@ export default function AdminOrdersClient() {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">Orders</h1>
-      {mounted && <OrderFilter />}
+      <OrderFilter />
       <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead className="bg-gray-50 dark:bg-gray-700">
