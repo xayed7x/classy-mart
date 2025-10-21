@@ -12,7 +12,7 @@ export async function GET(request: Request) {
     let query = supabaseAdmin.from('orders').select('*');
 
     if (status && status !== 'all') {
-      query = query.eq('status', status);
+      query = query.eq('order_status', status);
     }
 
     const { data: orders, error } = await query.order('created_at', { ascending: false });

@@ -39,7 +39,9 @@ function AdminOrdersPageContent() {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`/api/admin/orders${currentStatus ? `?status=${currentStatus}` : ''}`);
+        const response = await fetch(`/api/admin/orders${currentStatus ? `?status=${currentStatus}` : ''}`, {
+          cache: 'no-store',
+        });
         if (!response.ok) {
           throw new Error('Failed to fetch orders');
         }
