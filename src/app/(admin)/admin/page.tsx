@@ -96,7 +96,7 @@ export default function AdminPage() {
                     })}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                    BDT {order.total_amount.toFixed(2)}
+                    ৳&nbsp;{order.total_amount.toFixed(2)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                     {order.customer_phone}

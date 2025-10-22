@@ -1,13 +1,24 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, ShoppingBag, Menu, User } from "lucide-react";
+import { Search, ShoppingBag, Menu, User, LogOut, Package } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useCartStore } from "@/stores/cart-store";
 import { useCartDrawerStore } from "@/stores/cart-drawer-store";
-
 import { useSearchStore } from "@/stores/search-store";
+import { CustomerAuthModal } from "@/components/auth/CustomerAuthModal";
+import { createClient } from "@/lib/supabase/client";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { toast } from "sonner";
 
 /**
  * Main Header Component - Mobile-First Design
@@ -22,8 +33,50 @@ export function Header() {
   const { cartItems } = useCartStore();
   const { open } = useCartDrawerStore();
   const { open: openSearch } = useSearchStore();
+  const [user, setUser] = useState<any>(null);
+  const [profile, setProfile] = useState<any>(null);
+  const supabase = createClient();
 
   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+
+  useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchProfile(session.user.id);
+      }
+    });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchProfile(session.user.id);
+      } else {
+        setProfile(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const fetchProfile = async (userId: string) => {
+    const { data } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single();
+    setProfile(data);
+  };
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    toast.success("Signed out successfully");
+    window.location.reload();
+  };
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background text-foreground">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -82,9 +135,19 @@ export function Header() {
         {/* Right Section: Action Icons */}
         <div className="flex items-center space-x-4">
           <ThemeToggle />
-          <Link href="/admin" aria-label="Admin Dashboard">
-            <User strokeWidth={1.5} size={20} />
-          </Link>
+          <div className="hidden md:flex">
+            {user ? (
+              <Link
+                href="/account"
+                aria-label="Account"
+                className="text-foreground dark:text-foreground/60 hover:text-foreground dark:hover:text-foreground"
+              >
+                <User strokeWidth={1.5} size={20} />
+              </Link>
+            ) : (
+              <CustomerAuthModal />
+            )}
+          </div>
           <button
             aria-label="Search"
             className="text-foreground dark:text-foreground/60 hover:text-foreground dark:hover:text-foreground"

@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { supabaseAdmin } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server"; // Corrected import
+import { cookies } from "next/headers";
 
 interface CartItem {
   id: string;
@@ -25,6 +27,12 @@ export async function placeOrder(
   formData: FormData
 ) {
   let orderId = null;
+  const cookieStore = cookies();
+  const supabase = await createClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+  console.log("placeOrder: User ID from session:", user?.id);
+
   try {
     // Extract form data
     const firstName = formData.get("firstName") as string;
@@ -42,6 +50,7 @@ export async function placeOrder(
 
     // Construct the order payload according to Supabase schema
     const orderPayload = {
+      user_id: user ? user.id : null, // This is the key line
       customer_name: customerName,
       customer_phone: customerPhone,
       customer_address: customerAddress,
@@ -121,4 +130,66 @@ export async function updateOrderStatus(orderId: string, status: string) {
     console.error("Failed to update order status:", error);
     return { success: false, error };
   }
+}
+
+export async function getUserOrders() {
+  const cookieStore = cookies();
+  const supabase = await createClient(); // Corrected usage
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session || !session.user) {
+    console.log("getUserOrders: No session or user found.");
+    return [];
+  }
+
+  console.log("getUserOrders: Fetching orders for user ID:", session.user.id);
+
+  const { data: orders, error } = await supabase
+    .from("orders")
+    .select("*")
+    .eq("user_id", session.user.id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("getUserOrders: Error fetching user orders:", error);
+    return [];
+  }
+
+  console.log("getUserOrders: Fetched orders:", orders);
+  return orders;
+}
+
+export async function getUserOrderById(orderId: string) {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Security check: user must be logged in
+  if (!user) {
+    console.log("getUserOrderById: No user found.");
+    return null;
+  }
+
+  console.log("getUserOrderById: Fetching order", orderId, "for user ID:", user.id);
+
+  // Critical security measure: filter by BOTH order ID AND user ID
+  const { data: order, error } = await supabase
+    .from("orders")
+    .select("*")
+    .eq("id", orderId)
+    .eq("user_id", user.id) // Ensures user can only access their own orders
+    .single();
+
+  if (error) {
+    console.error("getUserOrderById: Error fetching order:", error);
+    return null;
+  }
+
+  console.log("getUserOrderById: Fetched order:", order);
+  return order;
 }

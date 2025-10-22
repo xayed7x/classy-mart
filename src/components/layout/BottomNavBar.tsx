@@ -1,9 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Home, LayoutGrid, ShoppingBag, User } from "lucide-react";
 import { useCartStore } from "@/stores/cart-store";
 import { useCartDrawerStore } from "@/stores/cart-drawer-store";
+import { CustomerAuthModal } from "@/components/auth/CustomerAuthModal"; // Import CustomerAuthModal
+import { createClient } from "@/lib/supabase/client";
 
 /**
  * Bottom Navigation Bar Component - Mobile-First "Flow UI"
@@ -17,6 +20,24 @@ import { useCartDrawerStore } from "@/stores/cart-drawer-store";
 export function BottomNavBar() {
   const { cartItems } = useCartStore();
   const { open } = useCartDrawerStore();
+  const [user, setUser] = useState<any>(null);
+  const supabase = createClient();
+
+  useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
   return (
@@ -58,13 +79,26 @@ export function BottomNavBar() {
       </button>
 
       {/* Account */}
-      <Link
-        href="/admin"
-        className="flex flex-col items-center gap-1 text-foreground dark:text-foreground/60 hover:text-foreground dark:hover:text-foreground active:text-foreground dark:active:text-foreground"
-      >
-        <User strokeWidth={1.5} size={24} />
-        <span className="text-xs font-medium">Account</span>
-      </Link>
+      {user ? (
+        <Link
+          href="/account"
+          aria-label="Account"
+          className="flex flex-col items-center gap-1 text-foreground dark:text-foreground/60 hover:text-foreground dark:hover:text-foreground active:text-foreground dark:active:text-foreground"
+        >
+          <User strokeWidth={1.5} size={24} />
+          <span className="text-xs font-medium">Account</span>
+        </Link>
+      ) : (
+        <CustomerAuthModal>
+          <button
+            aria-label="Account"
+            className="flex flex-col items-center gap-1 text-foreground dark:text-foreground/60 hover:text-foreground dark:hover:text-foreground active:text-foreground dark:active:text-foreground"
+          >
+            <User strokeWidth={1.5} size={24} />
+            <span className="text-xs font-medium">Account</span>
+          </button>
+        </CustomerAuthModal>
+      )}
     </nav>
   );
 }

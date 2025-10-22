@@ -102,7 +102,7 @@ export default function PaymentSuccessContent() {
                         </div>
                       </div>
                       <p className="text-foreground font-sans">
-                        BDT{(item.price * item.quantity).toFixed(2)}
+                        ৳&nbsp;{(item.price * item.quantity).toFixed(2)}
                       </p>
                     </div>
                   ))}
@@ -110,15 +110,15 @@ export default function PaymentSuccessContent() {
                 <div className="border-t dark:border-zinc-700 pt-6 space-y-2">
                   <div className="flex justify-between text-muted-foreground font-sans">
                     <p>Subtotal</p>
-                    <p>BDT{subtotal.toFixed(2)}</p>
+                    <p>৳&nbsp;{subtotal.toFixed(2)}</p>
                   </div>
                   <div className="flex justify-between text-muted-foreground font-sans">
                     <p>Shipping</p>
-                    <p>BDT{shippingCost.toFixed(2)}</p>
+                    <p>৳&nbsp;{shippingCost.toFixed(2)}</p>
                   </div>
                   <div className="flex justify-between text-lg font-bold dark:text-soft-white mt-2 font-sans">
                     <p>Total</p>
-                    <p>BDT{total.toFixed(2)}</p>
+                    <p>৳&nbsp;{total.toFixed(2)}</p>
                   </div>
                 </div>
               </>
@@ -126,10 +126,15 @@ export default function PaymentSuccessContent() {
           </div>
         )}
 
-        <div className="mt-8 text-center">
+        <div className="mt-8 flex flex-col gap-4 sm:flex-row justify-center">
           <Link href="/collections/all">
-            <button className="w-full dark:bg-primary dark:text-rich-black font-bold uppercase tracking-wider font-heading py-4 rounded-lg transition-transform hover:scale-105">
+            <button className="w-full sm:w-auto px-6 py-4 dark:bg-primary dark:text-rich-black font-bold uppercase tracking-wider font-heading rounded-lg transition-transform hover:scale-105">
               Continue Shopping
+            </button>
+          </Link>
+          <Link href="/account">
+            <button className="w-full sm:w-auto px-6 py-4 dark:bg-primary dark:text-rich-black font-bold uppercase tracking-wider font-heading rounded-lg transition-transform hover:scale-105">
+              View My Orders
             </button>
           </Link>
         </div>

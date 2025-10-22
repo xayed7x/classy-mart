@@ -41,7 +41,7 @@ function CartItem({ item, removeFromCart, updateQuantity }: CartItemProps) {
           </p>
         )}
         <p className="text-sm text-soft-white/60">
-          BDT{item.price.toFixed(2)}
+          ৳&nbsp;{item.price.toFixed(2)}
         </p>
       </div>
       <div className="flex-shrink-0 flex flex-col items-end gap-2">
@@ -131,7 +131,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           <div className="flex justify-between items-center font-sans text-lg mb-4">
             <span className="dark:text-soft-white/80">Subtotal</span>
             <span className="font-bold dark:text-soft-white">
-              BDT{subtotal.toFixed(2)}
+              ৳&nbsp;{subtotal.toFixed(2)}
             </span>
           </div>
           <button

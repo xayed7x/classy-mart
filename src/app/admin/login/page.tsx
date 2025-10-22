@@ -1,11 +1,19 @@
 'use client';
 
-import { login } from "@/actions/authActions";
+import { useFormState } from "react-dom";
+import { signInAdmin } from "@/actions/authActions";
 import { SubmitButton } from "@/components/ui/SubmitButton";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 export default function LoginPage() {
+  const [state, formAction] = useFormState(signInAdmin, null);
 
-  const boundLogin = login.bind(null, null);
+  useEffect(() => {
+    if (state?.error) {
+      toast.error(state.error);
+    }
+  }, [state]);
 
   return (
     <main className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
@@ -13,7 +21,7 @@ export default function LoginPage() {
         <h1 className="font-heading text-3xl dark:text-soft-white mb-8 text-center">
           Admin Login
         </h1>
-        <form action={boundLogin} className="space-y-6">
+        <form action={formAction} className="space-y-6">
           <div>
             <label
               htmlFor="email"

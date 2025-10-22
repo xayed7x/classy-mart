@@ -129,9 +129,9 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold">BDT {item.price.toFixed(2)}</p>
+                    <p className="font-semibold">৳&nbsp;{item.price.toFixed(2)}</p>
                     <p className="text-xs text-muted-foreground">
-                      Total: BDT {(item.price * item.quantity).toFixed(2)}
+                      Total: ৳&nbsp;{(item.price * item.quantity).toFixed(2)}
                     </p>
                   </div>
                 </div>
@@ -172,16 +172,16 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Subtotal:</span>
-                <span className="font-medium">BDT {order.subtotal.toFixed(2)}</span>
+                <span className="font-medium">৳&nbsp;{order.subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Shipping Cost:</span>
-                <span className="font-medium">BDT {order.shipping_cost.toFixed(2)}</span>
+                <span className="font-medium">৳&nbsp;{order.shipping_cost.toFixed(2)}</span>
               </div>
               <div className="flex justify-between pt-2 border-t border-gray-300 dark:border-gray-600">
                 <span className="font-semibold text-base">Total Amount:</span>
                 <span className="font-bold text-lg text-primary">
-                  BDT {order.total_amount.toFixed(2)}
+                  ৳&nbsp;{order.total_amount.toFixed(2)}
                 </span>
               </div>
             </div>
