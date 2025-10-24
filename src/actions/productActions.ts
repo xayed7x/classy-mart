@@ -42,12 +42,16 @@ export async function createOrUpdateProduct(prevState: any, formData: FormData) 
   const category = formData.get("category") as string;
   const subcategory = formData.get("subcategory") as string;
   const sizes = (formData.get("sizes") as string).split(',').map(s => s.trim()).filter(Boolean);
-  const colors = (formData.get("colors") as string).split(',').map(c => c.trim()).filter(Boolean);
   const shortDescription = formData.get("shortDescription") as string;
   const longDescription = formData.get("longDescription") as string;
   const sizingAndFit = formData.get("sizingAndFit") as string;
   const materialsAndCare = formData.get("materialsAndCare") as string;
   const isFeatured = formData.get("isFeatured") === "on"; // Checkbox value
+  const displayOnHomepage = formData.get("displayOnHomepage") === "on"; // Checkbox value
+  
+  // Parse color swatches JSON
+  const colorSwatchesJSON = formData.get("colorSwatches") as string;
+  const colorSwatches = colorSwatchesJSON ? JSON.parse(colorSwatchesJSON) : [];
 
   const mainImageFile = formData.get("mainImage") as File;
   const currentMainImageUrl = formData.get("currentMainImageUrl") as string | null;
@@ -77,16 +81,17 @@ export async function createOrUpdateProduct(prevState: any, formData: FormData) 
       subcategory: { "en-US": subcategory },
       stock: { "en-US": data.stock },
       sizes: { "en-US": sizes },
-      colors: { "en-US": colors },
       shortDescription: { "en-US": shortDescription },
       longDescription: { "en-US": longDescription },
       sizingAndFit: { "en-US": sizingAndFit },
       materialsAndCare: { "en-US": materialsAndCare },
       isFeatured: { "en-US": isFeatured },
+      displayOnHomepage: { "en-US": displayOnHomepage },
       rating: { "en-US": data.rating },
       reviewCount: { "en-US": data.reviewCount },
-      mainImage: { "en-US": mainImageUrl }, // New field
-      galleryImages: { "en-US": galleryImageUrls }, // New field
+      mainImage: { "en-US": mainImageUrl },
+      galleryImages: { "en-US": galleryImageUrls },
+      colorSwatches: { "en-US": colorSwatches }
     };
 
     const space = await contentfulManagementClient.getSpace(

@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { supabaseAdmin } from "@/lib/supabase";
 import { createClient } from "@/lib/supabase/server"; // Corrected import
 import { cookies } from "next/headers";
+import * as contentfulManagement from 'contentful-management';
 
 interface CartItem {
   id: string;
@@ -31,7 +32,7 @@ export async function placeOrder(
   const supabase = await createClient();
 
   const { data: { user } } = await supabase.auth.getUser();
-  console.log("placeOrder: User ID from session:", user?.id);
+
 
   try {
     // Extract form data
@@ -77,8 +78,60 @@ export async function placeOrder(
     }
     orderId = data.id;
 
-    // Revalidate admin orders page
+    // --- AUTOMATED STOCK REDUCTION LOGIC ---
+    // Reduce stock in Contentful for each ordered item
+    try {
+      const client = contentfulManagement.createClient({
+        accessToken: process.env.CONTENTFUL_MANAGEMENT_API_ACCESS_TOKEN!,
+      });
+      const space = await client.getSpace(process.env.CONTENTFUL_SPACE_ID!);
+      const environment = await space.getEnvironment('master');
+
+      // Process each item in the cart
+      for (const item of cartDetails.items) {
+        if (!item.id) {
+          console.warn(`Skipping item without ID: ${item.name}`);
+          continue;
+        }
+
+        try {
+          // Get the product entry from Contentful
+          const entry = await environment.getEntry(item.id);
+          
+          // Get current stock (default to 0 if not set)
+          const currentStock = entry.fields.stock?.['en-US'] || 0;
+          
+          // Calculate new stock (reduce by ordered quantity)
+          const newStock = currentStock - item.quantity;
+          
+          // Update stock (ensure it doesn't go below 0)
+          entry.fields.stock = { 'en-US': Math.max(0, newStock) };
+          
+          // Save and publish the updated entry
+          const updatedEntry = await entry.update();
+          await updatedEntry.publish();
+          
+          console.log(`✅ Stock updated for ${item.name}: ${currentStock} → ${Math.max(0, newStock)} (reduced by ${item.quantity})`);
+        } catch (itemError) {
+          console.error(`Failed to update stock for item ${item.id} (${item.name}):`, itemError);
+          // Continue processing other items even if one fails
+        }
+      }
+    } catch (contentfulError) {
+      // CRITICAL: Log error but don't fail the order
+      // The customer has already placed the order successfully
+      console.error('⚠️ CRITICAL: Order was placed successfully, but failed to update stock in Contentful.');
+      console.error('Order ID:', orderId);
+      console.error('Error:', contentfulError);
+      console.error('ACTION REQUIRED: Manually adjust stock levels in Contentful for this order.');
+      // Note: We don't throw here because the order is already saved
+    }
+    // --- END OF STOCK REDUCTION LOGIC ---
+
+    // Revalidate admin orders page and products
     revalidatePath("/admin/orders");
+    revalidatePath("/products");
+    revalidatePath("/");
 
     // ❌ THE SUCCESS REDIRECT IS NO LONGER HERE
   } catch (error: any) {
@@ -141,11 +194,11 @@ export async function getUserOrders() {
   } = await supabase.auth.getSession();
 
   if (!session || !session.user) {
-    console.log("getUserOrders: No session or user found.");
+
     return [];
   }
 
-  console.log("getUserOrders: Fetching orders for user ID:", session.user.id);
+
 
   const { data: orders, error } = await supabase
     .from("orders")
@@ -158,7 +211,7 @@ export async function getUserOrders() {
     return [];
   }
 
-  console.log("getUserOrders: Fetched orders:", orders);
+
   return orders;
 }
 
@@ -171,11 +224,11 @@ export async function getUserOrderById(orderId: string) {
 
   // Security check: user must be logged in
   if (!user) {
-    console.log("getUserOrderById: No user found.");
+
     return null;
   }
 
-  console.log("getUserOrderById: Fetching order", orderId, "for user ID:", user.id);
+
 
   // Critical security measure: filter by BOTH order ID AND user ID
   const { data: order, error } = await supabase
@@ -190,6 +243,6 @@ export async function getUserOrderById(orderId: string) {
     return null;
   }
 
-  console.log("getUserOrderById: Fetched order:", order);
+
   return order;
 }

@@ -52,7 +52,7 @@ export function ProductPageLayout({ product }: ProductPageLayoutProps) {
       <ProductPageContent product={product} />
 
       {/* Mobile-Only Sticky Action Footer */}
-      <StickyActionFooter product={product} />
+      <StickyActionFooter product={product} stock={product.stock} />
     </div>
   );
 }

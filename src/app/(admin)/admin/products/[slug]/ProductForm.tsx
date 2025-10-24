@@ -8,6 +8,7 @@ import { AdminTextarea } from "@/components/admin/AdminTextarea";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { AdminInput } from "@/components/admin/AdminInput";
+import { ColorSwatchManager } from "@/components/admin/ColorSwatchManager";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -27,6 +28,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product }) => {
 
   const [mainImagePreview, setMainImagePreview] = useState<string | null>(null);
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
+  const [colorSwatches, setColorSwatches] = useState<Array<{ name: string; hex: string }>>([]);
 
   useEffect(() => {
     if (state?.success) {
@@ -52,9 +54,13 @@ const ProductForm: React.FC<ProductFormProps> = ({ product }) => {
         // galleryImages is now an array of string URLs
         setGalleryPreviews(product.fields.galleryImages as string[]);
       }
+      if (product.fields.colorSwatches) {
+        setColorSwatches(product.fields.colorSwatches);
+      }
     } else {
       setMainImagePreview(null);
       setGalleryPreviews([]);
+      setColorSwatches([]);
     }
   }, [product]);
 
@@ -175,6 +181,17 @@ const ProductForm: React.FC<ProductFormProps> = ({ product }) => {
             />
           </div>
           <div className="md:col-span-2">
+            <ColorSwatchManager
+              value={colorSwatches}
+              onChange={setColorSwatches}
+            />
+            <input
+              type="hidden"
+              name="colorSwatches"
+              value={JSON.stringify(colorSwatches)}
+            />
+          </div>
+          <div className="md:col-span-2">
             <Label htmlFor="shortDescription">Short Description</Label>
             <AdminInput
               id="shortDescription"
@@ -264,6 +281,17 @@ const ProductForm: React.FC<ProductFormProps> = ({ product }) => {
                 name="isFeatured"
                 type="checkbox"
                 defaultChecked={product?.fields.isFeatured || false}
+              />
+            </div>
+            <div className="flex items-center mt-4">
+              <Label htmlFor="displayOnHomepage" className="mr-2">
+                Display on Homepage &quot;Just for You&quot; section?
+              </Label>
+              <AdminInput
+                id="displayOnHomepage"
+                name="displayOnHomepage"
+                type="checkbox"
+                defaultChecked={product?.fields.displayOnHomepage || false}
               />
             </div>
           </div>

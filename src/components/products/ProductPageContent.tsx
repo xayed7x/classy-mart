@@ -17,7 +17,7 @@ export function ProductPageContent({ product }: ProductPageContentProps) {
             <ProductGallery product={product} />
           </div>
           <div className="mt-8 lg:mt-0 lg:p-4">
-            <ProductDetails product={product} />
+            <ProductDetails product={product} stock={product.stock} />
           </div>
         </div>
         <div className="mt-12">

@@ -21,7 +21,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <h3 className="px-6 py-2 text-xs uppercase text-muted-gold font-semibold">Store Management</h3>
           <ul>
             <li>
-              <Link href="/admin">
+              <Link href="/admin/orders">
                 <p className="block px-6 py-3 hover:bg-muted-gold/10">Orders</p>
               </Link>
             </li>

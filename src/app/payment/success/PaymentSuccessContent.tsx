@@ -93,8 +93,18 @@ export default function PaymentSuccessContent() {
                         />
                         <div>
                           <p className="text-foreground font-sans">{item.name}</p>
-                          <p className="text-sm text-muted-foreground font-sans">
-                            {item.size && `Size: ${item.size}`}{item.color && `, Color: ${item.color}`}
+                          <p className="text-sm text-muted-foreground font-sans flex items-center gap-2">
+                            <span>
+                              {item.size && `Size: ${item.size}`}
+                              {item.color && `, Color: ${typeof item.color === 'string' ? item.color : item.color.name}`}
+                            </span>
+                            {typeof item.color === 'object' && item.color?.hex && (
+                              <span
+                                className="inline-block w-4 h-4 rounded-full border border-border"
+                                style={{ backgroundColor: item.color.hex }}
+                                title={item.color.name}
+                              />
+                            )}
                           </p>
                           <p className="text-sm text-muted-foreground font-sans">
                             Qty: {item.quantity}

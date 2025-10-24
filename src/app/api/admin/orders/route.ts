@@ -7,7 +7,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status');
-    console.log('API: Received status parameter:', status);
+
 
     let query = supabaseAdmin.from('orders').select('*');
 
@@ -22,8 +22,8 @@ export async function GET(request: Request) {
       throw error;
     }
 
-    console.log('API: Supabase query data (first 5 orders):', orders ? orders.slice(0, 5) : 'no orders');
-    console.log('API: Returning orders count:', orders ? orders.length : 0);
+
+
     return NextResponse.json(orders);
   } catch (error: any) {
     console.error('API: Error fetching orders in route:', error);

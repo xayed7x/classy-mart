@@ -1,5 +1,5 @@
-import Image from "next/image";
-import Link from "next/link";
+import Image from 'next/image';
+import Link from 'next/link';
 
 export function LookbookSection({ lookbook }: { lookbook: any }) {
   if (!lookbook) {
@@ -9,14 +9,16 @@ export function LookbookSection({ lookbook }: { lookbook: any }) {
   return (
     <section className="relative overflow-hidden lg:h-[70vh] mt-16 sm:mt-24">
       <div className="relative h-full">
-        <Image
-          src={lookbook.fields.backgroundImage}
-          alt={lookbook.fields.title}
-          fill
-          className="object-cover"
-          sizes="100vw"
-          priority
-        />
+        {lookbook.fields.backgroundImage && (
+          <Image
+            src={lookbook.fields.backgroundImage}
+            alt={lookbook.fields.title || 'Lookbook background'}
+            fill
+            className="object-cover"
+            sizes="100vw"
+            priority
+          />
+        )}
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 h-full flex flex-col items-center justify-center px-8 text-center">
           <h2 className="font-heading text-3xl font-bold text-white lg:text-7xl dark:text-soft-white">

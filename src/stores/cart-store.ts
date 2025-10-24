@@ -5,14 +5,14 @@ import { Product } from '@/types/product';
 export interface CartItem extends Product {
   quantity: number;
   size?: string;
-  color?: string;
+  color?: string | { name: string; hex: string };
 }
 
 interface CartState {
   cartItems: CartItem[];
   addToCart: (item: CartItem) => void;
-  removeFromCart: (productId: string, size?: string, color?: string) => void;
-  updateQuantity: (productId: string, quantity: number, size?: string, color?: string) => void;
+  removeFromCart: (productId: string, size?: string, color?: string | { name: string; hex: string }) => void;
+  updateQuantity: (productId: string, quantity: number, size?: string, color?: string | { name: string; hex: string }) => void;
   clearCart: () => void;
 }
 

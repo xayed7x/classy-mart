@@ -44,7 +44,7 @@ export function CustomerAuthModal({ children }: CustomerAuthModalProps) {
     const fullName = formData.fullName;
 
     // Log the data you are about to send
-    console.log("Attempting to sign up with:", { email, fullName });
+
 
     try {
       const { data, error } = await supabase.auth.signUp({
@@ -59,7 +59,7 @@ export function CustomerAuthModal({ children }: CustomerAuthModalProps) {
 
       // --- THIS IS THE KEY DIAGNOSTIC ---
       if (error) {
-        console.error("Supabase SignUp Error:", error);
+
         setError(error.message); // Set the error state to display it
         setLoading(false);
         return; // Stop the function here
@@ -67,7 +67,7 @@ export function CustomerAuthModal({ children }: CustomerAuthModalProps) {
       // ------------------------------------
 
       // If successful, you can log the success and maybe close the modal
-      console.log("Sign up successful!", data);
+
       toast.success(
         "Account created! Please check your email to verify your account."
       );
@@ -77,7 +77,7 @@ export function CustomerAuthModal({ children }: CustomerAuthModalProps) {
       // or automatically log them in. For now, let's just confirm it works.
     } catch (err) {
       // This will catch any other unexpected JS errors
-      console.error("A non-Supabase error occurred:", err);
+
       setError("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);

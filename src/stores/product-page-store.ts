@@ -1,10 +1,12 @@
 import { create } from 'zustand';
 
+type ColorSelection = string | { name: string; hex: string } | null;
+
 interface ProductPageState {
   selectedSize: string | null;
-  selectedColor: string | null;
+  selectedColor: ColorSelection;
   setSelectedSize: (size: string) => void;
-  setSelectedColor: (color: string) => void;
+  setSelectedColor: (color: ColorSelection) => void;
   reset: () => void;
 }
 

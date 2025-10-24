@@ -16,7 +16,7 @@ interface OrderProduct {
   price: number;
   quantity: number;
   size?: string;
-  color?: string;
+  color?: string | { name: string; hex: string };
   images?: {
     main: string;
   };
@@ -118,10 +118,19 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
                   <div className="flex-1">
                     <p className="font-medium text-sm">{item.name}</p>
                     {(item.size || item.color) && (
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {item.size && `Size: ${item.size}`}
-                        {item.size && item.color && ' • '}
-                        {item.color && `Color: ${item.color}`}
+                      <p className="text-xs text-muted-foreground mt-1 flex items-center gap-2">
+                        <span>
+                          {item.size && `Size: ${item.size}`}
+                          {item.size && item.color && ' • '}
+                          {item.color && `Color: ${typeof item.color === 'string' ? item.color : item.color.name}`}
+                        </span>
+                        {typeof item.color === 'object' && item.color.hex && (
+                          <span
+                            className="inline-block w-4 h-4 rounded-full border border-gray-300 dark:border-gray-600"
+                            style={{ backgroundColor: item.color.hex }}
+                            title={item.color.name}
+                          />
+                        )}
                       </p>
                     )}
                     <p className="text-xs text-muted-foreground mt-1">

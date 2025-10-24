@@ -7,28 +7,34 @@ import { useProductPageStore } from '@/stores/product-page-store';
 
 interface StickyActionFooterProps {
   product: any;
+  stock: number;
 }
 
-export function StickyActionFooter({ product }: StickyActionFooterProps) {
+export function StickyActionFooter({ product, stock }: StickyActionFooterProps) {
   const { selectedSize, selectedColor } = useProductPageStore();
   const addToCart = useCartStore((state) => state.addToCart);
 
+  // Type guard to check if selectedColor is a swatch object
+  const isSwatchObject = (color: any): color is { name: string; hex: string } => {
+    return color && typeof color === 'object' && 'name' in color && 'hex' in color;
+  };
+
   const handleAddToCart = () => {
-    // Only add to cart if size is selected (and color if product has colors)
+    // Only add to cart if size is selected (and color if product has colorSwatches)
     if (!selectedSize) return;
-    if (product.colors.length > 0 && !selectedColor) return;
+    if (product.colorSwatches && product.colorSwatches.length > 0 && !selectedColor) return;
 
     addToCart({
       ...product,
       size: selectedSize,
-      color: selectedColor || undefined,
+      color: isSwatchObject(selectedColor) ? selectedColor.name : selectedColor || undefined,
       quantity: 1,
     });
     useCartDrawerStore.getState().open();
   };
 
   // Check if button should be disabled
-  const isDisabled = !selectedSize || (product.colors.length > 0 && !selectedColor);
+  const isDisabled = !selectedSize || (product.colorSwatches && product.colorSwatches.length > 0 && !selectedColor) || stock <= 0;
 
   return (
     <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-sm p-4 z-10 border-t">
@@ -41,7 +47,7 @@ export function StickyActionFooter({ product }: StickyActionFooterProps) {
       </AnimatedButton>
       {isDisabled && (
         <p className="text-center text-xs text-red-500 mt-2">
-          Please choose size and color
+          {stock <= 0 ? 'This product is out of stock' : 'Please choose size and color'}
         </p>
       )}
     </div>

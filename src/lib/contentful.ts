@@ -42,6 +42,7 @@ function transformContentfulProduct(entry: any): Product {
     isFeatured: fields.isFeatured || false,
     rating: fields.rating || 0,
     reviewCount: fields.reviewCount || 0,
+    colorSwatches: fields.colorSwatches || [],
     salePercentage:
       fields.originalPrice && fields.price
         ? Math.round(
@@ -62,6 +63,20 @@ export async function getFeaturedProducts(): Promise<Product[]> {
     return entries.items.map((entry) => transformContentfulProduct(entry));
   } catch (error) {
     console.error("Error fetching featured products:", error);
+    return [];
+  }
+}
+
+export async function getJustForYouProducts(): Promise<Product[]> {
+  try {
+    const entries = await contentfulClient.getEntries({
+      content_type: "product",
+      "fields.displayOnHomepage": true,
+    });
+    if (!entries.items) return [];
+    return entries.items.map((entry) => transformContentfulProduct(entry));
+  } catch (error) {
+    console.error("Error fetching just for you products:", error);
     return [];
   }
 }
@@ -89,9 +104,6 @@ export async function getAllProducts(): Promise<Product[]> {
     if (!entries.items) return [];
     return entries.items.map((entry) => transformContentfulProduct(entry));
   } catch (error: any) {
-    console.error("--- CONTENTFUL FETCH FAILED for Products ---");
-    console.error("Error Message:", error.message);
-    console.error("Error Stack:", error.stack);
     return [];
   }
 }
@@ -174,24 +186,22 @@ export async function getFeaturedOfferById(id: string) {
 }
 
 export async function getLookbookData() {
-  const entries = await contentfulClient.getEntries({
-    content_type: "lookbook",
-    limit: 1,
-  });
-  if (!entries.items || entries.items.length === 0) return null;
-  return entries.items[0]; // Return the raw entry
-}
+  try {
+    const entries = await contentfulClient.getEntries({
+      content_type: 'lookbook',
+      limit: 1,
+      include: 2
+    });
 
-function transformContentfulLookbook(entry: any) {
-  if (!entry || !entry.fields) return null;
-  const imageUrl = entry.fields.backgroundImage?.fields?.file?.url;
-  return {
-    title: entry.fields.title || "",
-    subtitle: entry.fields.subtitle || "",
-    ctaButtonText: entry.fields.ctaButtonText || "",
-    ctaLink: entry.fields.ctaLink || "",
-    backgroundImage: imageUrl ? `https:${imageUrl}` : "/images/polo-tshirt.png",
-  };
+    if (entries.items.length === 0) {
+      return null;
+    }
+    
+    return entries.items[0];
+
+  } catch (error) {
+    return null;
+  }
 }
 
 export async function getLookbookEntryRAW(): Promise<any | null> {
@@ -199,6 +209,7 @@ export async function getLookbookEntryRAW(): Promise<any | null> {
     const entries = await contentfulClient.getEntries({
       content_type: "lookbook",
       limit: 1,
+      include: 2
     });
     if (!entries.items || entries.items.length === 0) return null;
     return entries.items[0];
@@ -208,7 +219,4 @@ export async function getLookbookEntryRAW(): Promise<any | null> {
   }
 }
 
-export async function getLookbookEntry(): Promise<any | null> {
-  const rawEntry = await getLookbookEntryRAW();
-  return transformContentfulLookbook(rawEntry);
-}
+

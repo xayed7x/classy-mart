@@ -95,8 +95,17 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
                     </p>
                   )}
                   {item.color && (
-                    <p className="text-sm text-muted-foreground">
-                      Color: {item.color}
+                    <p className="text-sm text-muted-foreground flex items-center gap-2">
+                      <span>
+                        Color: {typeof item.color === 'string' ? item.color : item.color.name}
+                      </span>
+                      {typeof item.color === 'object' && item.color.hex && (
+                        <span
+                          className="inline-block w-4 h-4 rounded-full border border-border"
+                          style={{ backgroundColor: item.color.hex }}
+                          title={item.color.name}
+                        />
+                      )}
                     </p>
                   )}
                 </div>

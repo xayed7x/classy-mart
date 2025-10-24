@@ -14,13 +14,28 @@ interface CartDrawerProps {
 // Internal CartItem component adapted from Aura's structure
 interface CartItemProps {
   item: CartItemType;
-  removeFromCart: (id: string, size?: string, color?: string) => void;
-  updateQuantity: (id: string, quantity: number, size?: string, color?: string) => void;
+  removeFromCart: (id: string, size?: string, color?: string | { name: string; hex: string }) => void;
+  updateQuantity: (id: string, quantity: number, size?: string, color?: string | { name: string; hex: string }) => void;
 }
 
 function CartItem({ item, removeFromCart, updateQuantity }: CartItemProps) {
   // Fallback logic to handle both old (item.image) and new (item.images.main) data structures
   const imageUrl = item.images?.main || (item as any).image || "/logo.png";
+  
+  // Helper to get color name
+  const getColorName = (color?: string | { name: string; hex: string }) => {
+    if (!color) return null;
+    return typeof color === 'string' ? color : color.name;
+  };
+  
+  // Helper to get color hex
+  const getColorHex = (color?: string | { name: string; hex: string }) => {
+    if (!color || typeof color === 'string') return null;
+    return color.hex;
+  };
+  
+  const colorName = getColorName(item.color);
+  const colorHex = getColorHex(item.color);
 
   return (
     <li key={`${item.id}-${item.size}-${item.color}`} className="flex items-center gap-4">
@@ -33,11 +48,20 @@ function CartItem({ item, removeFromCart, updateQuantity }: CartItemProps) {
       />
       <div className="flex-grow">
         <p className="font-heading text-soft-white">{item.name}</p>
-        {(item.size || item.color) && (
-          <p className="text-xs text-soft-white/50">
-            {item.size && `Size: ${item.size}`}
-            {item.size && item.color && ' • '}
-            {item.color && `Color: ${item.color}`}
+        {(item.size || colorName) && (
+          <p className="text-xs text-soft-white/50 flex items-center gap-2">
+            <span>
+              {item.size && `Size: ${item.size}`}
+              {item.size && colorName && ' • '}
+              {colorName && `Color: ${colorName}`}
+            </span>
+            {colorHex && (
+              <span
+                className="inline-block w-4 h-4 rounded-full border border-white/30"
+                style={{ backgroundColor: colorHex }}
+                title={colorName || ''}
+              />
+            )}
           </p>
         )}
         <p className="text-sm text-soft-white/60">

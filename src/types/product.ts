@@ -12,6 +12,7 @@ export interface Product {
   subcategory?: string;
   sizes: string[];
   colors: string[];
+  colorSwatches?: Array<{ name: string; hex: string }>;
   shortDescription?: string;
   longDescription?: string;
   sizingAndFit?: string;
