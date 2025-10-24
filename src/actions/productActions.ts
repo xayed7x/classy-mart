@@ -113,8 +113,13 @@ export async function createOrUpdateProduct(prevState: any, formData: FormData) 
       await newEntry.publish();
     }
 
-    revalidatePath("/products");
-    revalidatePath("/admin/products");
+    // Comprehensive revalidation for all affected pages
+    revalidatePath("/"); // Homepage (featured products, just for you)
+    revalidatePath("/products"); // All products page
+    revalidatePath(`/products/${slug}`); // Individual product page
+    revalidatePath("/collections/all"); // All products collection
+    revalidatePath(`/collections/${category}`); // Specific category page
+    revalidatePath("/admin/products"); // Admin products page
 
     return { success: true, message: "Product saved successfully!" };
   } catch (error: any) {
@@ -132,7 +137,10 @@ export async function deleteProduct(prevState: any, formData: FormData) {
     );
     const environment = await space.getEnvironment("master");
 
+    // Get product details before deletion to know which paths to revalidate
     const entry = await environment.getEntry(productId);
+    const productSlug = entry.fields.slug?.['en-US'];
+    const productCategory = entry.fields.category?.['en-US'];
     
     // Unpublish first if published
     if (entry.isPublished()) {
@@ -142,10 +150,17 @@ export async function deleteProduct(prevState: any, formData: FormData) {
     // Then delete
     await entry.delete();
 
-    // Revalidate paths after successful deletion
-    revalidatePath("/");
-    revalidatePath("/products");
-    revalidatePath("/admin/products");
+    // Comprehensive revalidation for all affected pages
+    revalidatePath("/"); // Homepage
+    revalidatePath("/products"); // All products page
+    if (productSlug) {
+      revalidatePath(`/products/${productSlug}`); // Individual product page
+    }
+    revalidatePath("/collections/all"); // All products collection
+    if (productCategory) {
+      revalidatePath(`/collections/${productCategory}`); // Specific category page
+    }
+    revalidatePath("/admin/products"); // Admin products page
   } catch (error: any) {
     console.error("Delete Product Error:", error);
     redirect(

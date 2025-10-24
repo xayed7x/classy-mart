@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getFeaturedProducts, getAllFeaturedOffers, getLookbookData, getJustForYouProducts } from '@/lib/contentful';
 import { HeroSection } from '@/components/homepage/HeroSection';
 import { FeaturedOffers } from '@/components/homepage/FeaturedOffers';

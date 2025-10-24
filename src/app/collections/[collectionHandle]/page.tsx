@@ -40,7 +40,9 @@ export default function CollectionPage() {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`/api/collections/${collectionHandle}`);
+        const response = await fetch(`/api/collections/${collectionHandle}`, {
+          cache: 'no-store',
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }
