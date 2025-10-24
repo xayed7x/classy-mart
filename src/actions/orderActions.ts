@@ -189,21 +189,19 @@ export async function getUserOrders() {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
+  // Use secure getUser() method instead of getSession()
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  if (!session || !session.user) {
-
+  if (!user) {
     return [];
   }
-
-
 
   const { data: orders, error } = await supabase
     .from("orders")
     .select("*")
-    .eq("user_id", session.user.id)
+    .eq("user_id", user.id)
     .order("created_at", { ascending: false });
 
   if (error) {
