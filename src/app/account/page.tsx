@@ -1,13 +1,15 @@
 import { getUserOrders } from "@/actions/orderActions";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import Link from "next/link";
 import { OrderHistoryCard } from "@/components/account/OrderHistoryCard";
 import { Package } from "lucide-react";
 import { signOut } from "@/actions/authActions";
 
 export default async function AccountPage() {
-  const supabase = await createClient();
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
 
   const {
     data: { user },

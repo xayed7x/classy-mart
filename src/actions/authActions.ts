@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 
 export async function signInAdmin(prevState: any, formData: FormData) {
   const email = formData.get("email") as string;
@@ -13,7 +14,8 @@ export async function signInAdmin(prevState: any, formData: FormData) {
     };
   }
 
-  const supabase = await createClient();
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
 
   // Sign in with Supabase
   const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
@@ -47,7 +49,8 @@ export async function signInAdmin(prevState: any, formData: FormData) {
 }
 
 export async function signOut() {
-  const supabase = await createClient();
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
   await supabase.auth.signOut();
   redirect("/");
 }

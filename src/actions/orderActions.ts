@@ -28,8 +28,8 @@ export async function placeOrder(
   formData: FormData
 ) {
   let orderId = null;
-  const cookieStore = cookies();
-  const supabase = await createClient();
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
 
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -186,8 +186,8 @@ export async function updateOrderStatus(orderId: string, status: string) {
 }
 
 export async function getUserOrders() {
-  const cookieStore = cookies();
-  const supabase = await createClient(); // Corrected usage
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
 
   const {
     data: { session },
@@ -216,7 +216,8 @@ export async function getUserOrders() {
 }
 
 export async function getUserOrderById(orderId: string) {
-  const supabase = await createClient();
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
 
   const {
     data: { user },

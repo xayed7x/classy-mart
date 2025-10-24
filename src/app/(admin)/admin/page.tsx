@@ -1,10 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 import { DollarSign, Package, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { getAllProducts } from "@/lib/contentful";
 
 export default async function AdminPage() {
-  const supabase = await createClient();
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
   const { data: orders, error } = await supabase.from("orders").select("total_amount");
 
   if (error) {
