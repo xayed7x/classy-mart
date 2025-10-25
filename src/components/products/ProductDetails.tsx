@@ -11,6 +11,7 @@ import { useProductPageStore } from '@/stores/product-page-store';
 interface ProductDetailsProps {
   product: any;
   stock: number;
+  selectedImage: string;
 }
 
 // Stock Indicator Component
@@ -39,7 +40,7 @@ function StockIndicator({ stock }: { stock: number }) {
   );
 }
 
-export function ProductDetails({ product, stock }: ProductDetailsProps) {
+export function ProductDetails({ product, stock, selectedImage }: ProductDetailsProps) {
   const { selectedSize, setSelectedSize, selectedColor, setSelectedColor } = useProductPageStore();
   const addToCart = useCartStore((state) => state.addToCart);
 
@@ -53,10 +54,15 @@ export function ProductDetails({ product, stock }: ProductDetailsProps) {
     if (!selectedSize) return;
     if (product.colorSwatches && product.colorSwatches.length > 0 && !selectedColor) return;
 
+    console.log('Adding to cart - selectedColor:', selectedColor);
+    console.log('Adding to cart - selectedImage:', selectedImage);
+    console.log('Is swatch object?', isSwatchObject(selectedColor));
+    
     addToCart({
       ...product,
       size: selectedSize,
-      color: isSwatchObject(selectedColor) ? selectedColor.name : selectedColor || undefined,
+      color: selectedColor,
+      image: selectedImage, // THE CRITICAL FIX: Use the currently displayed image
       quantity: 1,
     });
     useCartDrawerStore.getState().open();

@@ -9,7 +9,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/Sh
 import { cn } from "@/lib/utils";
 import { Product } from "@/types/product";
 import Link from "next/link";
-import { ProductGridSkeleton } from "@/components/collections/ProductGridSkeleton";
+import { ProductGridSkeleton } from "@/components/skeletons/ProductGridSkeleton";
 
 // Category configuration
 const CATEGORIES = [

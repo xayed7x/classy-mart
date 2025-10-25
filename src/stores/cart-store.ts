@@ -6,6 +6,7 @@ export interface CartItem extends Product {
   quantity: number;
   size?: string;
   color?: string | { name: string; hex: string };
+  image?: string; // The specific image selected by the user
 }
 
 interface CartState {
@@ -21,21 +22,34 @@ export const useCartStore = create<CartState>()(
     (set) => ({
       cartItems: [],
       addToCart: (item) => {
+        console.log('addToCart item:', item);
         set((state) => {
-          // Check if item with same id, size, and color already exists
+          // Helper to compare colors
+          const isSameColor = (color1?: string | { name: string; hex: string }, color2?: string | { name: string; hex: string }) => {
+            if (!color1 && !color2) return true;
+            if (!color1 || !color2) return false;
+            if (typeof color1 === 'string' && typeof color2 === 'string') return color1 === color2;
+            if (typeof color1 === 'object' && typeof color2 === 'object') return color1.name === color2.name;
+            return false;
+          };
+
+          // Check if item with same id, size, color, AND image already exists
+          // Different images should create separate cart items!
           const existingItem = state.cartItems.find(
             (cartItem) =>
               cartItem.id === item.id &&
               cartItem.size === item.size &&
-              cartItem.color === item.color
+              isSameColor(cartItem.color, item.color) &&
+              cartItem.image === item.image // ✅ THE FIX: Also compare images
           );
           
           if (existingItem) {
-            // Increment quantity of existing item
+            // Increment quantity of existing item (same product, size, color, AND image)
             const updatedCart = state.cartItems.map((cartItem) =>
               cartItem.id === item.id &&
               cartItem.size === item.size &&
-              cartItem.color === item.color
+              isSameColor(cartItem.color, item.color) &&
+              cartItem.image === item.image // ✅ THE FIX: Also compare images
                 ? { ...cartItem, quantity: cartItem.quantity + 1 }
                 : cartItem
             );

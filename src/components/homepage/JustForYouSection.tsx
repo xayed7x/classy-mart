@@ -10,13 +10,11 @@ export function JustForYouSection({ products }: JustForYouSectionProps) {
   }
 
   return (
-    <section className="py-12 sm:py-16">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold font-heading text-foreground sm:text-3xl">
+    <section className="py-4 sm:py-6">
+      <div className="container mx-auto px-4 text-left md:text-center">
+        <h2 className="text-3xl sm:text-4xl font-bold font-heading text-foreground mb-6">
             Just for You
           </h2>
-        </div>
 
         <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4">
           {products.map((product) => (

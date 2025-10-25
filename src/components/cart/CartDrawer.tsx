@@ -19,23 +19,29 @@ interface CartItemProps {
 }
 
 function CartItem({ item, removeFromCart, updateQuantity }: CartItemProps) {
-  // Fallback logic to handle both old (item.image) and new (item.images.main) data structures
-  const imageUrl = item.images?.main || (item as any).image || "/logo.png";
+  console.log('CartItem item:', item);
+  // THE CRITICAL FIX: Use the specific image selected by the user
+  // Priority: item.image (selected) > item.images.main (default) > fallback
+  const imageUrl = item.image || item.images?.main || (item as any).image || "/logo.png";
+  console.log('Using image URL:', imageUrl);
   
-  // Helper to get color name
-  const getColorName = (color?: string | { name: string; hex: string }) => {
+  // Helper to get color name - handles both string and object
+  const getColorName = (color?: string | { name: string; hex: string } | null | undefined) => {
     if (!color) return null;
-    return typeof color === 'string' ? color : color.name;
+    if (typeof color === 'string') return color;
+    return color.name;
   };
   
-  // Helper to get color hex
-  const getColorHex = (color?: string | { name: string; hex: string }) => {
+  // Helper to get color hex - only works for objects
+  const getColorHex = (color?: string | { name: string; hex: string } | null | undefined) => {
     if (!color || typeof color === 'string') return null;
     return color.hex;
   };
   
-  const colorName = getColorName(item.color);
-  const colorHex = getColorHex(item.color);
+  const colorName = getColorName(item.color as any);
+  const colorHex = getColorHex(item.color as any);
+  console.log('Color in cart:', item.color);
+  console.log('colorName:', colorName, 'colorHex:', colorHex);
 
   return (
     <li key={`${item.id}-${item.size}-${item.color}`} className="flex items-center gap-4">
@@ -57,7 +63,7 @@ function CartItem({ item, removeFromCart, updateQuantity }: CartItemProps) {
             </span>
             {colorHex && (
               <span
-                className="inline-block w-4 h-4 rounded-full border border-white/30"
+                className="inline-block w-5 h-5 rounded-full border-2 border-white shadow-sm flex-shrink-0"
                 style={{ backgroundColor: colorHex }}
                 title={colorName || ''}
               />
@@ -69,21 +75,21 @@ function CartItem({ item, removeFromCart, updateQuantity }: CartItemProps) {
         </p>
       </div>
       <div className="flex-shrink-0 flex flex-col items-end gap-2">
-        <div className="flex items-center dark:bg-zinc-800 dark:border-zinc-700 border rounded-full">
+        <div className="flex items-center bg-gray-100 border border-gray-300 dark:bg-zinc-800 dark:border-zinc-700 rounded-full">
           <button
             onClick={() => updateQuantity(item.id, item.quantity - 1, item.size, item.color)}
-            className="px-3 py-1 text-lg dark:text-soft-white"
+            className="px-3 py-1 text-lg text-foreground dark:text-soft-white"
             aria-label="Decrease"
             disabled={item.quantity === 1}
           >
             -
           </button>
-          <span className="font-sans text-sm w-6 text-center dark:text-soft-white">
+          <span className="font-sans text-sm w-6 text-center text-foreground dark:text-soft-white">
             {item.quantity}
           </span>
           <button
             onClick={() => updateQuantity(item.id, item.quantity + 1, item.size, item.color)}
-            className="px-3 py-1 text-lg dark:text-soft-white"
+            className="px-3 py-1 text-lg text-foreground dark:text-soft-white"
             aria-label="Increase"
           >
             +
@@ -91,7 +97,7 @@ function CartItem({ item, removeFromCart, updateQuantity }: CartItemProps) {
         </div>
         <button
           onClick={() => removeFromCart(item.id, item.size, item.color)}
-          className="text-xs dark:text-muted-gold transition-colors hover:text-red-500 dark:hover:text-red-500"
+          className="text-xs text-muted-foreground dark:text-muted-gold transition-colors hover:text-red-500 dark:hover:text-red-500"
         >
           Remove
         </button>
@@ -114,7 +120,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   return (
     <>
       <div
-        className={`fixed top-0 right-0 h-full w-full max-w-md dark:bg-rich-black/80 backdrop-blur-xl
+        className={`fixed top-0 right-0 h-full w-full max-w-md bg-background dark:bg-rich-black/80 backdrop-blur-xl
                     shadow-2xl z-[110] p-6 grid grid-rows-[auto_1fr_auto] gap-4
                     transition-transform duration-500 ease-in-out
                     ${isOpen ? "translate-x-0" : "translate-x-full"}`}
@@ -124,7 +130,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           <h2 className="font-heading text-2xl dark:text-soft-white">Your Cart</h2>
           <button
             onClick={onClose}
-            className="dark:text-soft-white/70 dark:hover:text-soft-white transition-colors"
+            className="text-muted-foreground dark:text-soft-white/70 dark:hover:text-soft-white transition-colors"
           >
             <X size={24} />
           </button>
@@ -159,7 +165,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             </span>
           </div>
           <button
-            className="w-full dark:bg-primary dark:text-rich-black font-bold uppercase tracking-wider font-heading
+            className="w-full bg-primary text-primary-foreground dark:bg-primary dark:text-rich-black font-bold uppercase tracking-wider font-heading
                        py-4 transition-transform hover:scale-105 disabled:opacity-50"
             disabled={cartItems.length === 0}
             onClick={handleCheckout}

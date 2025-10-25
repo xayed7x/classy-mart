@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { ArrowLeft, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { StickyActionFooter } from "./StickyActionFooter";
@@ -22,6 +23,9 @@ export function ProductPageLayout({ product }: ProductPageLayoutProps) {
   const { open } = useCartDrawerStore();
   const { cartItems } = useCartStore();
   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+  
+  // Single source of truth for the currently displayed image
+  const [selectedImage, setSelectedImage] = useState(product.images?.main || product.images?.gallery?.[0] || '/logo.png');
 
   return (
     <div className="min-h-screen bg-background shadow-lg">
@@ -49,10 +53,18 @@ export function ProductPageLayout({ product }: ProductPageLayoutProps) {
       </div>
 
       {/* Page Content */}
-      <ProductPageContent product={product} />
+      <ProductPageContent 
+        product={product}
+        selectedImage={selectedImage}
+        setSelectedImage={setSelectedImage}
+      />
 
       {/* Mobile-Only Sticky Action Footer */}
-      <StickyActionFooter product={product} stock={product.stock} />
+      <StickyActionFooter 
+        product={product} 
+        stock={product.stock}
+        selectedImage={selectedImage}
+      />
     </div>
   );
 }

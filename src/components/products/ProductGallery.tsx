@@ -3,27 +3,34 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import useEmblaCarousel from 'embla-carousel-react';
-import Autoplay from 'embla-carousel-autoplay';
 import { cn } from '@/lib/utils';
+import Lightbox from 'yet-another-react-lightbox';
+import 'yet-another-react-lightbox/styles.css';
+import { ZoomIn } from 'lucide-react';
 
 interface ProductGalleryProps {
   product: any;
+  selectedImage: string;
+  setSelectedImage: (image: string) => void;
 }
 
-export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
+export const ProductGallery: React.FC<ProductGalleryProps> = ({ product, selectedImage, setSelectedImage }) => {
   const { main: mainImage, gallery: galleryImages } = product.images;
   const allImages = [mainImage, ...(galleryImages || [])].filter(Boolean);
   const productName = product.name;
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay()]);
+  // Remove autoplay for user-controlled experience
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [featuredImage, setFeaturedImage] = useState(allImages[0]);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
+  // Carousel only controls its own index for mobile dots
+  // It does NOT control selectedImage - that's controlled by user clicks
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
     setSelectedIndex(emblaApi.selectedScrollSnap());
-    setFeaturedImage(allImages[emblaApi.selectedScrollSnap()]);
-  }, [emblaApi, allImages]);
+  }, [emblaApi]);
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -32,6 +39,13 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
     emblaApi.on('reInit', onSelect);
   }, [emblaApi, onSelect]);
 
+  // Sync selectedImage to carousel when user clicks mobile carousel
+  const handleMobileImageClick = (index: number) => {
+    setSelectedImage(allImages[index]);
+    setLightboxIndex(index);
+    setIsLightboxOpen(true);
+  };
+
   return (
     <div className="relative">
       {/* Mobile Carousel */}
@@ -39,7 +53,11 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex">
             {allImages.map((src: string, index: number) => (
-              <div className="relative flex-[0_0_100%] aspect-[4/3]" key={index}>
+              <div 
+                className="relative flex-[0_0_100%] aspect-[4/3] cursor-zoom-in group" 
+                key={index}
+                onClick={() => handleMobileImageClick(index)}
+              >
                 <Image
                   src={src}
                   alt={`${productName} image ${index + 1}`}
@@ -47,6 +65,9 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
                   className="object-cover"
                   sizes="(max-width: 1023px) 100vw, 50vw"
                 />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                  <ZoomIn className="text-white opacity-0 group-hover:opacity-100 transition-opacity" size={32} />
+                </div>
               </div>
             ))}
           </div>
@@ -64,24 +85,39 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
 
       {/* Desktop Gallery */}
       <div className="hidden lg:flex flex-col gap-4">
-        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg">
+        <div 
+          className="relative aspect-[4/3] w-full overflow-hidden rounded-lg cursor-zoom-in group"
+          onClick={() => {
+            const index = allImages.indexOf(selectedImage);
+            setLightboxIndex(index);
+            setIsLightboxOpen(true);
+          }}
+        >
           <Image
-            src={featuredImage}
+            src={selectedImage}
             alt={`Featured image of ${productName}`}
             fill
             className="object-cover transition-opacity duration-300"
             sizes="50vw"
           />
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+            <ZoomIn className="text-white opacity-0 group-hover:opacity-100 transition-opacity" size={48} />
+          </div>
         </div>
         <div className="grid grid-cols-6 gap-2">
           {allImages.map((src: string, index: number) => (
             <button
               key={index}
-              onClick={() => setFeaturedImage(src)}
+              onClick={() => {
+                console.log('Desktop thumbnail clicked:', src);
+                console.log('Current selectedImage:', selectedImage);
+                setSelectedImage(src);
+                console.log('Called setSelectedImage with:', src);
+              }}
               className={cn(
                 'relative aspect-square w-full overflow-hidden rounded-md transition-all',
                 'ring-offset-2 ring-offset-background',
-                featuredImage === src ? 'ring-2 ring-primary' : 'hover:opacity-90'
+                selectedImage === src ? 'ring-2 ring-primary' : 'hover:opacity-90'
               )}
             >
               <Image
@@ -95,6 +131,17 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
           ))}
         </div>
       </div>
+
+      {/* Lightbox */}
+      <Lightbox
+        open={isLightboxOpen}
+        close={() => setIsLightboxOpen(false)}
+        index={lightboxIndex}
+        slides={allImages.map((src: string) => ({ src }))}
+        on={{
+          view: ({ index }) => setLightboxIndex(index),
+        }}
+      />
     </div>
   );
 };

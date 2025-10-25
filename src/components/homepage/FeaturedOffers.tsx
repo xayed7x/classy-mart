@@ -28,7 +28,7 @@ export function FeaturedOffers({ offers }: FeaturedOffersProps) {
           />
           <div className="absolute inset-0 bg-black/40" />
           <div className="relative z-10 h-full flex flex-col justify-end p-6">
-            <h2 className="font-bold text-2xl md:text-3xl dark:text-soft-white">
+            <h2 className="font-bold font-heading text-2xl md:text-3xl dark:text-soft-white">
               {offer.title}
             </h2>
             <div className="mt-2 inline-block self-start bg-overlay-button text-rich-black backdrop-blur-sm text-sm font-semibold font-sans px-4 py-2 rounded-full ">
@@ -55,7 +55,7 @@ export function FeaturedOffers({ offers }: FeaturedOffersProps) {
   return (
     <section className="hidden lg:block py-8">
       <div className="container mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-8">This Season's Highlights</h2>
+        <h2 className="text-3xl font-bold font-heading text-center sm:text-4xl mb-8">This Season's Highlights</h2>
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex -m-4"> {/* Negative margin to offset padding in cards */}
             {offers && offers.length > 0

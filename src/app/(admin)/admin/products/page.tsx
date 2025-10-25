@@ -1,12 +1,15 @@
-export const dynamic = 'force-dynamic';
+"use client";
 
 import { Suspense } from 'react';
 import ProductsPageContent from './ProductsPageContent';
+import { AdminTableSkeleton } from '@/components/skeletons/AdminTableSkeleton';
 
 export default function ProductsPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <ProductsPageContent />
-    </Suspense>
+    <div className="p-6">
+      <Suspense fallback={<AdminTableSkeleton />}>
+        <ProductsPageContent />
+      </Suspense>
+    </div>
   );
 }

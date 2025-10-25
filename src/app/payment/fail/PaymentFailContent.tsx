@@ -26,7 +26,7 @@ export default function PaymentFailContent() {
           There was an issue processing your order. Please try again.
         </p>
         <Link href="/checkout">
-          <button className="w-full dark:bg-primary dark:text-rich-black font-bold uppercase tracking-wider font-heading py-4 rounded-lg transition-transform hover:scale-105">
+          <button className="w-full bg-primary text-primary-foreground dark:bg-primary dark:text-rich-black font-bold uppercase tracking-wider font-heading py-4 rounded-lg transition-transform hover:scale-105">
             Return to Checkout
           </button>
         </Link>

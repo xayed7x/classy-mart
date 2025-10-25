@@ -80,32 +80,32 @@ export function ImmersiveSearch() {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm" onClick={handleClose}>
-      <div className="w-full max-w-2xl mx-auto mt-20 bg-rich-black rounded-lg shadow-lg" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center p-4 border-b border-white/10">
-          <Search className="text-white/50 mr-4" />
+    <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm" onClick={handleClose}>
+      <div className="w-full max-w-2xl mx-auto mt-20 bg-background dark:bg-rich-black rounded-lg shadow-lg" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center p-4 border-b border-muted-foreground/20">
+          <Search className="text-muted-foreground mr-4" />
           <input
             ref={inputRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search for products..."
-            className="w-full bg-transparent text-white placeholder-white/50 focus:outline-none"
+            className="w-full bg-transparent text-foreground placeholder-foreground/50 focus:outline-none"
           />
-          <button onClick={handleClose} className="text-white/50 hover:text-white">
+          <button onClick={handleClose} className="text-muted-foreground hover:text-foreground">
             <X />
           </button>
         </div>
         <div className="p-4">
-          {isLoading && <div className="text-white/50">Searching...</div>}
+          {isLoading && <div className="text-muted-foreground">Searching...</div>}
           {!isLoading && results.length === 0 && query.length > 1 && (
-            <div className="text-white/50">No results found for "{query}"</div>
+            <div className="text-muted-foreground">No results found for "{query}"</div>
           )}
           <ul className="space-y-2">
             {results.map((product, index) => (
               <li
                 key={product.id}
-                className={`p-2 rounded-md cursor-pointer ${selectedIndex === index ? 'bg-white/10' : ''}`}
+                className={`p-2 rounded-md cursor-pointer ${selectedIndex === index ? 'bg-accent' : ''}`}
                 onMouseEnter={() => setSelectedIndex(index)}
                 onClick={() => {
                   router.push(`/products/${product.slug}`);
@@ -121,8 +121,8 @@ export function ImmersiveSearch() {
                     className="rounded-md mr-4"
                   />
                   <div>
-                    <div className="text-white font-bold">{product.name}</div>
-                    <div className="text-white/50">{product.category}</div>
+                    <div className="text-foreground font-bold">{product.name}</div>
+                    <div className="text-muted-foreground">{product.category}</div>
                   </div>
                 </div>
               </li>

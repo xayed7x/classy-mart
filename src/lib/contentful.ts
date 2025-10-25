@@ -219,4 +219,35 @@ export async function getLookbookEntryRAW(): Promise<any | null> {
   }
 }
 
+function transformContentfulSocialPost(entry: any) {
+  if (!entry || !entry.fields) return null;
+  return {
+    id: entry.sys.id,
+    image: entry.fields.image || "",
+    postLink: entry.fields.postLink || "",
+  };
+}
+
+export async function getAllSocialPosts() {
+  try {
+    const entries = await contentfulClient.getEntries({
+      content_type: "socialPost",
+      order: ["-sys.createdAt"],
+    });
+    return entries.items.map(transformContentfulSocialPost).filter((post): post is NonNullable<typeof post> => post !== null);
+  } catch (error) {
+    console.error("Error fetching social posts:", error);
+    return [];
+  }
+}
+
+export async function getSocialPostById(id: string) {
+  try {
+    const entry = await contentfulClient.getEntry(id);
+    return transformContentfulSocialPost(entry);
+  } catch (error) {
+    console.error(`Error fetching social post by id ${id}:`, error);
+    return null;
+  }
+}
 

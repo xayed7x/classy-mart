@@ -4,12 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { Star, Heart } from "lucide-react";
 import { Product } from "@/types/product";
+import { cn } from "@/lib/utils";
 
 interface ProductCardProps {
   product: Product;
+  className?: string; // Add className prop
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, className }: ProductCardProps) {
   if (!product || !product.slug) {
     return null;
   }
@@ -17,9 +19,10 @@ export function ProductCard({ product }: ProductCardProps) {
   const { name, slug, price, originalPrice, images, rating, reviewCount, salePercentage } = product;
   const mainImage = images?.main || "/images/placeholder.png";
   const hoverImage = images?.gallery?.[0] || mainImage; // Use first gallery image for hover, or mainImage
+  const hasHoverImage = hoverImage && hoverImage !== mainImage;
 
   return (
-    <div className="group flex h-full flex-col rounded-lg border border-border dark:border-zinc-800 p-4">
+    <div className={cn("group flex h-full flex-col rounded-lg border border-border dark:border-zinc-800 p-4", className)}>
       <Link href={`/products/${slug}`} className="block flex-1">
         <div className="relative aspect-[3/4] overflow-hidden rounded-md">
           {/* Main Image */}
@@ -28,10 +31,10 @@ export function ProductCard({ product }: ProductCardProps) {
             alt={name || "Product Image"}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-            className="object-cover transition-all duration-300 lg:group-hover:scale-105 lg:group-hover:opacity-0"
+            className={`object-cover transition-all duration-300 ${hasHoverImage ? 'lg:group-hover:scale-105 lg:group-hover:opacity-0' : ''}`}
           />
           {/* Hover Image (Desktop Only) */}
-          {hoverImage && hoverImage !== mainImage && (
+          {hasHoverImage && (
             <Image
               src={hoverImage}
               alt={`${name || "Product Image"} - Hover`}
@@ -101,7 +104,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 </p>
               )}
             </div>
-            <div className="relative h-10 w-24 hidden lg:flex items-center justify-center rounded-full bg-green-500 px-4 py-2 text-sm font-bold text-rich-black font-heading transition-all duration-300 group-hover:bg-green-600">
+            <div className="relative h-10 w-24 hidden lg:flex items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-bold text-rich-black font-heading transition-all duration-300 group-hover:bg-primary/90">
               Explore
             </div>
           </div>

@@ -8,9 +8,10 @@ import { useProductPageStore } from '@/stores/product-page-store';
 interface StickyActionFooterProps {
   product: any;
   stock: number;
+  selectedImage: string;
 }
 
-export function StickyActionFooter({ product, stock }: StickyActionFooterProps) {
+export function StickyActionFooter({ product, stock, selectedImage }: StickyActionFooterProps) {
   const { selectedSize, selectedColor } = useProductPageStore();
   const addToCart = useCartStore((state) => state.addToCart);
 
@@ -24,10 +25,14 @@ export function StickyActionFooter({ product, stock }: StickyActionFooterProps) 
     if (!selectedSize) return;
     if (product.colorSwatches && product.colorSwatches.length > 0 && !selectedColor) return;
 
+    console.log('StickyActionFooter - Adding to cart - selectedColor:', selectedColor);
+    console.log('StickyActionFooter - Adding to cart - selectedImage:', selectedImage);
+
     addToCart({
       ...product,
       size: selectedSize,
-      color: isSwatchObject(selectedColor) ? selectedColor.name : selectedColor || undefined,
+      color: selectedColor, // Pass the full object, not just the name
+      image: selectedImage, // THE CRITICAL FIX: Use the currently displayed image
       quantity: 1,
     });
     useCartDrawerStore.getState().open();

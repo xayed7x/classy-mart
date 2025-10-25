@@ -219,7 +219,7 @@ export default function CheckoutPage() {
             <div className="mt-12">
               <button 
                 type="submit"
-                className="w-full dark:bg-primary dark:text-rich-black font-bold uppercase tracking-wider font-heading py-4 rounded-lg transition-transform hover:scale-105 disabled:opacity-50"
+                className="w-full bg-primary text-primary-foreground dark:bg-primary dark:text-rich-black font-bold uppercase tracking-wider font-heading py-4 rounded-lg transition-transform hover:scale-105 disabled:opacity-50"
                 disabled={cart.length === 0}
               >
                 Place Order
@@ -262,7 +262,7 @@ export default function CheckoutPage() {
                           </span>
                           {typeof item.color === 'object' && item.color?.hex && (
                             <span
-                              className="inline-block w-4 h-4 rounded-full border border-border"
+                              className="inline-block w-5 h-5 rounded-full border-2 border-foreground shadow-sm flex-shrink-0"
                               style={{ backgroundColor: item.color.hex }}
                               title={item.color.name}
                             />

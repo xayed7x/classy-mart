@@ -43,6 +43,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <p className="block px-6 py-3 hover:bg-muted-gold/10">Featured Offers</p>
               </Link>
             </li>
+            <li>
+              <Link href="/admin/homepage/social">
+                <p className="block px-6 py-3 hover:bg-muted-gold/10">Social Proof</p>
+              </Link>
+            </li>
           </ul>
         </nav>
       </aside>

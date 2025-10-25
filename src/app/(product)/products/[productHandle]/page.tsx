@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { ProductPageLayout } from "@/components/products/ProductPageLayout";
 import { useProductPageStore } from '@/stores/product-page-store';
+import { PDPSkeleton } from '@/components/skeletons/PDPSkeleton';
 
 export default function ProductPage() {
   const { reset } = useProductPageStore();
@@ -44,15 +45,24 @@ export default function ProductPage() {
   }, [productHandle]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <PDPSkeleton />;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center">
+        <h2 className="text-2xl font-bold text-red-500">Error</h2>
+        <p className="mt-2 text-muted-foreground">{error}</p>
+      </div>
+    </div>;
   }
 
   if (!product) {
-    return <div>Product not found</div>;
+    return <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center">
+        <h2 className="text-2xl font-bold">Product not found</h2>
+      </div>
+    </div>;
   }
 
   return (

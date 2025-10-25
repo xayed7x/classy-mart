@@ -9,6 +9,7 @@ import { useCartStore } from "@/stores/cart-store";
 import { useCartDrawerStore } from "@/stores/cart-drawer-store";
 import { useSearchStore } from "@/stores/search-store";
 import { CustomerAuthModal } from "@/components/auth/CustomerAuthModal";
+import { MobileNav } from "@/components/layout/MobileNav";
 import { createClient } from "@/lib/supabase/client";
 import {
   DropdownMenu,
@@ -96,14 +97,19 @@ export function Header() {
           </Link>
 
           {/* Welcome Message (Mobile Only) */}
-          <div className="lg:hidden">
-            <p className="text-sm text-muted-foreground dark:text-muted-foreground">Welcome back,</p>
-            <p className="font-bold text-foreground dark:text-foreground">Classy Mart User</p>
-          </div>
+          {user && (
+            <div className="lg:hidden">
+              {user && profile ? (
+                <p className="font-bold text-foreground dark:text-foreground">Welcome back, {profile.full_name || user.email}</p>
+              ) : (
+                <p className="font-bold text-foreground dark:text-foreground">Welcome back, Guest</p>
+              )}
+            </div>
+          )}
         </div>
 
-        {/* Middle Section: Desktop Navigation (hidden on mobile, visible on lg:) */}
-        <nav className="hidden lg:flex" aria-label="Main navigation">
+        {/* Middle Section: Desktop Navigation (hidden on mobile, visible on md:) */}
+        <nav className="hidden md:flex" aria-label="Main navigation">
           <ul className="flex items-center space-x-8">
             <li>
               <Link
@@ -121,6 +127,7 @@ export function Header() {
                 Our Story
               </Link>
             </li>
+
             <li>
               <Link
                 href="/contact"
@@ -169,12 +176,9 @@ export function Header() {
             )}
           </button>
           {/* Mobile Menu Icon (visible only on mobile) */}
-          <button
-            aria-label="Open menu"
-            className="text-foreground dark:text-foreground/60 hover:text-foreground dark:hover:text-foreground lg:hidden"
-          >
-            <Menu strokeWidth={1.5} size={24} />
-          </button>
+          <div className="md:hidden">
+            <MobileNav />
+          </div>
         </div>
       </div>
     </header>

@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { OrderStatusSelector } from '@/components/admin/OrderStatusSelector';
 import OrderFilter from '@/components/admin/OrderFilter';
-import { AdminOrdersSkeleton } from '@/components/admin/AdminOrdersSkeleton';
+import { AdminTableSkeleton } from '@/components/skeletons/AdminTableSkeleton';
 import { Eye } from 'lucide-react';
 import { OrderDetailsModal } from '@/components/admin/OrderDetailsModal';
 
@@ -57,7 +57,7 @@ function AdminOrdersPageContent() {
   }, [currentStatus]);
 
   if (isLoading) {
-    return <AdminOrdersSkeleton />;
+    return <div className="p-6"><AdminTableSkeleton /></div>;
   }
 
   if (error) {

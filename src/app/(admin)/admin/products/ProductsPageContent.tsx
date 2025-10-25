@@ -17,7 +17,9 @@ export default function ProductsPageContent() {
   useEffect(() => {
     async function fetchProducts() {
       try {
-        const response = await fetch("/api/admin/products");
+        const response = await fetch("/api/admin/products", {
+          cache: 'no-store',
+        });
         const result = await response.json();
         if (result.success) {
           setProducts(result.data);
@@ -53,8 +55,7 @@ export default function ProductsPageContent() {
 
   if (loading) {
     return (
-      <div className="p-6">
-        <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
             <p className="text-gray-600 dark:text-gray-400">
@@ -62,14 +63,12 @@ export default function ProductsPageContent() {
             </p>
           </div>
         </div>
-      </div>
     );
   }
 
   if (error) {
     return (
-      <div className="p-6">
-        <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center">
             <div className="text-red-500 text-5xl mb-4">⚠️</div>
             <h2 className="text-xl font-bold mb-2">Failed to Load Products</h2>
@@ -82,7 +81,6 @@ export default function ProductsPageContent() {
             </Button>
           </div>
         </div>
-      </div>
     );
   }
 

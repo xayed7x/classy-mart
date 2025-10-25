@@ -41,7 +41,7 @@ export default async function AccountPage() {
           <form action={signOut} className="mt-6">
             <button
               type="submit"
-              className="dark:bg-primary dark:text-rich-black font-bold uppercase tracking-wider font-heading py-2 px-4 rounded-lg transition-transform hover:scale-105 disabled:opacity-50 text-sm"
+              className="bg-primary text-primary-foreground dark:bg-primary dark:text-rich-black font-bold uppercase tracking-wider font-heading py-2 px-4 rounded-lg transition-transform hover:scale-105 disabled:opacity-50 text-sm"
             >
               Sign Out
             </button>
@@ -76,7 +76,7 @@ export default async function AccountPage() {
             </p>
             <Link
               href="/collections/all"
-              className="inline-flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-colors"
+              className="inline-flex items-center justify-center px-8 py-4 bg-primary text-primary-foreground dark:bg-primary dark:text-rich-black font-bold uppercase tracking-wider font-heading rounded-lg transition-transform hover:scale-105"
             >
               Start Shopping
             </Link>

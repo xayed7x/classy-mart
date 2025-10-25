@@ -37,7 +37,7 @@ const FeaturedCategories = () => {
       <div className="lg:hidden mt-8">
         <div className="px-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold font-heading text-foreground dark:text-foreground">
+            <h2 className="text-3xl font-bold font-heading text-foreground dark:text-foreground sm:text-4xl text-left">
               Categories
             </h2>
             <Link
@@ -63,7 +63,7 @@ const FeaturedCategories = () => {
 
       <div className="hidden lg:block">
         <div className="text-center">
-          <h2 className="text-4xl font-bold font-heading text-foreground sm:text-5xl">
+          <h2 className="text-3xl font-bold font-heading text-foreground sm:text-4xl">
             Shop by Collection
           </h2>
           <p className="mt-4 font-sans text-base text-muted-foreground">

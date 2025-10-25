@@ -100,7 +100,7 @@ export default function PaymentSuccessContent() {
                             </span>
                             {typeof item.color === 'object' && item.color?.hex && (
                               <span
-                                className="inline-block w-4 h-4 rounded-full border border-border"
+                                className="inline-block w-5 h-5 rounded-full border-2 border-foreground shadow-sm flex-shrink-0"
                                 style={{ backgroundColor: item.color.hex }}
                                 title={item.color.name}
                               />
@@ -138,12 +138,12 @@ export default function PaymentSuccessContent() {
 
         <div className="mt-8 flex flex-col gap-4 sm:flex-row justify-center">
           <Link href="/collections/all">
-            <button className="w-full sm:w-auto px-6 py-4 dark:bg-primary dark:text-rich-black font-bold uppercase tracking-wider font-heading rounded-lg transition-transform hover:scale-105">
+            <button className="w-full sm:w-auto px-6 py-4 bg-primary text-white dark:bg-primary dark:text-rich-black font-bold uppercase tracking-wider font-heading rounded-lg transition-transform hover:scale-105">
               Continue Shopping
             </button>
           </Link>
           <Link href="/account">
-            <button className="w-full sm:w-auto px-6 py-4 dark:bg-primary dark:text-rich-black font-bold uppercase tracking-wider font-heading rounded-lg transition-transform hover:scale-105">
+            <button className="w-full sm:w-auto px-6 py-4 bg-primary text-white dark:bg-primary dark:text-rich-black font-bold uppercase tracking-wider font-heading rounded-lg transition-transform hover:scale-105">
               View My Orders
             </button>
           </Link>

@@ -49,8 +49,8 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
     <Sheet open={true} onOpenChange={onClose}>
       <SheetContent size="lg" className="overflow-y-auto">
         <SheetHeader>
-          <SheetTitle className="text-2xl font-bold">Order Details</SheetTitle>
-          <SheetDescription>
+          <SheetTitle className="text-2xl font-bold font-heading">Order Details</SheetTitle>
+          <SheetDescription className="font-heading">
             Order ID: {order.id.substring(0, 8)}...
           </SheetDescription>
         </SheetHeader>
@@ -60,20 +60,20 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
           <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
             <div className="flex items-center gap-2 mb-3">
               <User className="w-5 h-5 text-primary" />
-              <h3 className="font-semibold text-lg">Customer Information</h3>
+              <h3 className="font-semibold text-lg font-heading">Customer Information</h3>
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Name:</span>
-                <span className="font-medium">{order.customer_name}</span>
+                <span className="font-medium font-heading">{order.customer_name}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Phone:</span>
-                <span className="font-medium">{order.customer_phone}</span>
+                <span className="font-medium font-heading">{order.customer_phone}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Email:</span>
-                <span className="font-medium">{order.customer_email}</span>
+                <span className="font-medium font-heading">{order.customer_email}</span>
               </div>
             </div>
           </div>
@@ -82,16 +82,16 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
           <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
             <div className="flex items-center gap-2 mb-3">
               <MapPin className="w-5 h-5 text-primary" />
-              <h3 className="font-semibold text-lg">Shipping Address</h3>
+              <h3 className="font-semibold text-lg font-heading">Shipping Address</h3>
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">City:</span>
-                <span className="font-medium">{order.customer_city}</span>
+                <span className="font-medium font-heading">{order.customer_city}</span>
               </div>
               <div>
                 <span className="text-muted-foreground">Address:</span>
-                <p className="font-medium mt-1">{order.customer_address}</p>
+                <p className="font-medium font-heading mt-1">{order.customer_address}</p>
               </div>
             </div>
           </div>
@@ -100,7 +100,7 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
           <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
             <div className="flex items-center gap-2 mb-3">
               <Package className="w-5 h-5 text-primary" />
-              <h3 className="font-semibold text-lg">Ordered Products</h3>
+              <h3 className="font-semibold text-lg font-heading">Ordered Products</h3>
             </div>
             <div className="space-y-3">
               {order.ordered_products.map((item, index) => (
@@ -116,9 +116,9 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
                     className="rounded-md object-cover"
                   />
                   <div className="flex-1">
-                    <p className="font-medium text-sm">{item.name}</p>
+                    <p className="font-medium font-heading text-sm">{item.name}</p>
                     {(item.size || item.color) && (
-                      <p className="text-xs text-muted-foreground mt-1 flex items-center gap-2">
+                      <p className="text-xs text-muted-foreground mt-1 flex items-center gap-2 font-heading">
                         <span>
                           {item.size && `Size: ${item.size}`}
                           {item.size && item.color && ' • '}
@@ -133,11 +133,11 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
                         )}
                       </p>
                     )}
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs text-muted-foreground mt-1 font-heading">
                       Qty: {item.quantity}
                     </p>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right font-heading">
                     <p className="font-semibold">৳&nbsp;{item.price.toFixed(2)}</p>
                     <p className="text-xs text-muted-foreground">
                       Total: ৳&nbsp;{(item.price * item.quantity).toFixed(2)}
@@ -152,16 +152,16 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
           <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
             <div className="flex items-center gap-2 mb-3">
               <CreditCard className="w-5 h-5 text-primary" />
-              <h3 className="font-semibold text-lg">Payment Information</h3>
+              <h3 className="font-semibold text-lg font-heading">Payment Information</h3>
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Payment Method:</span>
-                <span className="font-medium uppercase">{order.payment_method}</span>
+                <span className="font-medium font-heading uppercase">{order.payment_method}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Payment Status:</span>
-                <span className={`font-medium capitalize ${
+                <span className={`font-medium font-heading capitalize ${
                   order.payment_status === 'paid' 
                     ? 'text-green-600 dark:text-green-400' 
                     : 'text-yellow-600 dark:text-yellow-400'
@@ -176,20 +176,20 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
           <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
             <div className="flex items-center gap-2 mb-3">
               <DollarSign className="w-5 h-5 text-primary" />
-              <h3 className="font-semibold text-lg">Pricing Details</h3>
+              <h3 className="font-semibold text-lg font-heading">Pricing Details</h3>
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Subtotal:</span>
-                <span className="font-medium">৳&nbsp;{order.subtotal.toFixed(2)}</span>
+                <span className="font-medium font-heading">৳&nbsp;{order.subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Shipping Cost:</span>
-                <span className="font-medium">৳&nbsp;{order.shipping_cost.toFixed(2)}</span>
+                <span className="font-medium font-heading">৳&nbsp;{order.shipping_cost.toFixed(2)}</span>
               </div>
               <div className="flex justify-between pt-2 border-t border-gray-300 dark:border-gray-600">
-                <span className="font-semibold text-base">Total Amount:</span>
-                <span className="font-bold text-lg text-primary">
+                <span className="font-semibold text-base font-heading">Total Amount:</span>
+                <span className="font-bold text-lg text-primary font-heading">
                   ৳&nbsp;{order.total_amount.toFixed(2)}
                 </span>
               </div>
@@ -201,7 +201,7 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Order Status:</span>
-                <span className={`font-medium capitalize px-3 py-1 rounded-full text-xs ${
+                <span className={`font-medium font-heading capitalize px-3 py-1 rounded-full text-xs ${
                   order.order_status === 'delivered' 
                     ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
                     : order.order_status === 'shipped'
@@ -215,7 +215,7 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Order Date:</span>
-                <span className="font-medium">
+                <span className="font-medium font-heading">
                   {new Date(order.created_at).toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'long',

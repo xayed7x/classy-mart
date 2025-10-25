@@ -5,20 +5,21 @@
 @layer base {
   :root {
     --radius: 0.5rem; /* Default border radius for rounded-lg */
-    /* Light Mode ("Showroom") Variables */
-    --background: 0 0% 100%; /* #FFFFFF */
-    --foreground: 0 0% 7%;   /* #111111 */
-    --primary: 0 100% 50%;    /* #FF0000 - Brand Red */
-    --primary-foreground: 0 0% 100%; /* White text for on top of red */
-    --secondary: 0 0% 96.1%; /* #F5F5F5 */
-    --secondary-foreground: 0 0% 7%; /* #111111 */
-    --accent: 0 0% 89.8%;    /* #E5E5E5 */
-    --accent-foreground: 0 0% 7%; /* #111111 */
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --border: 0 0% 89.8%;    /* #E5E5E5 */
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 7%;
+    --background: 40 33% 97%;  /* New Gallery White */
+    --foreground: 0 0% 10%;    /* New Charcoal Black */
+    --primary: 0 100% 50%;    /* Unchanged Brand Red */
+    --primary-foreground: 0 0% 100%;
+
+    /* Update secondary/accent colors to match */
+    --secondary: 0 0% 95%; /* A slightly adjusted off-white */
+    --secondary-foreground: 0 0% 10%;
+    --accent: 0 0% 92%;
+    --accent-foreground: 0 0% 10%;
+    --muted: 0 0% 95%;
+    --muted-foreground: 0 0% 45%;
+    --border: 0 0% 88%;      /* New Stone Gray */
+    --card: 40 33% 97%;       /* Same as background */
+    --card-foreground: 0 0% 10%;
   }
 
   .dark {
