@@ -21,7 +21,7 @@ export function LookbookSection({ lookbook }: { lookbook: any }) {
         )}
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 h-full flex flex-col items-center justify-center px-8 text-center">
-          <h2 className="font-heading text-3xl font-bold text-white lg:text-7xl dark:text-soft-white">
+          <h2 className="font-heading text-3xl font-bold text-[#F0EBE3] lg:text-7xl">
             {lookbook.fields.title}
           </h2>
           <p className="mt-6 max-w-2xl font-sans text-base text-gray-100 lg:text-xl dark:text-soft-white">
@@ -30,7 +30,7 @@ export function LookbookSection({ lookbook }: { lookbook: any }) {
           {lookbook.fields.ctaLink && lookbook.fields.ctaButtonText && (
             <Link
               href={lookbook.fields.ctaLink}
-              className="mt-8 rounded-full bg-overlay-button text-rich-black backdrop-blur-sm px-10 py-4 font-sans text-base font-bold uppercase tracking-wide transition-transform hover:scale-105 active:scale-95"
+              className="mt-8 rounded-full bg-overlay-button text-[#1A1A1A] backdrop-blur-sm px-10 py-4 font-sans text-base font-bold uppercase tracking-wide transition-transform hover:scale-105 active:scale-95"
             >
               {lookbook.fields.ctaButtonText}
             </Link>

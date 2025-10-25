@@ -28,10 +28,10 @@ export function FeaturedOffers({ offers }: FeaturedOffersProps) {
           />
           <div className="absolute inset-0 bg-black/40" />
           <div className="relative z-10 h-full flex flex-col justify-end p-6">
-            <h2 className="font-bold font-heading text-2xl md:text-3xl dark:text-soft-white">
+            <h2 className="font-bold font-heading text-2xl md:text-3xl text-[#F0EBE3]">
               {offer.title}
             </h2>
-            <div className="mt-2 inline-block self-start bg-overlay-button text-rich-black backdrop-blur-sm text-sm font-semibold font-sans px-4 py-2 rounded-full ">
+            <div className="mt-2 inline-block self-start bg-overlay-button text-[#1A1A1A] backdrop-blur-sm text-sm font-semibold font-sans px-4 py-2 rounded-full ">
               {offer.ctaButtonText}
             </div>
           </div>
