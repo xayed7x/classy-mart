@@ -56,7 +56,7 @@ export default function CheckoutPage() {
   const placeOrderWithCart = placeOrder.bind(null, cartDetails);
 
   return (
-    <main className="min-h-screen bg-background text-foreground pt-20 sm:pt-24 px-4 sm:px-8">
+    <main className="min-h-screen bg-background text-foreground pt-10 sm:pt-12 px-4 sm:px-8">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
         {/* Left Column: Shipping, Payment, Place Order */}
         <div className="lg:pr-8">

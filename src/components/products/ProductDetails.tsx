@@ -75,45 +75,45 @@ export function ProductDetails({ product, stock, selectedImage }: ProductDetails
   return (
     <div className="font-sans bg-background text-foreground">
       {/* Mobile View */}
-      <div className="p-4 lg:hidden">
-        <h1 className="text-3xl font-bold font-heading tracking-tight text-foreground">
+      <div className="p-0 lg:hidden">
+        <h1 className="text-2xl font-bold font-heading tracking-tight text-foreground">
           {product.name}
         </h1>
 
-        <div className="mt-2 flex items-center gap-2">
+        <div className="mt-1 flex items-center gap-2">
           <div className="flex items-center">
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
                 size={18}
                 className={cn(
-                  i < Math.floor(product.rating)
-                    ? "text-yellow-400 fill-yellow-400"
-                    : "text-gray-300 dark:text-gray-600"
+                  product.rating && i < product.rating
+                    ? "fill-primary text-primary"
+                    : "fill-none text-muted-foreground"
                 )}
               />
             ))}
           </div>
           <span className="text-sm font-sans text-muted-foreground ml-1">
-            ({product.reviewCount} Reviews)
+            ({product.reviewCount})
           </span>
         </div>
 
-        <div className="mt-4 flex items-baseline gap-2">
-          <p className="text-2xl font-bold font-sans text-foreground">
+        <div className="mt-1 flex items-baseline gap-2">
+          <p className="text-xl font-bold font-sans text-foreground">
             BDT{product.price}
           </p>
           {product.originalPrice && (
-            <p className="text-lg font-sans text-muted-foreground line-through">
+            <p className="text-base font-sans text-muted-foreground line-through">
               BDT{product.originalPrice}
             </p>
           )}
         </div>
 
-        <div className="mt-6">
+        <div className="mt-2">
           <StockIndicator stock={stock} />
         </div>
-        <div className="mt-6 space-y-5">
+        <div className="mt-2 space-y-5">
           <div className="flex items-center gap-4">
             <p className="w-12 font-sans font-medium text-foreground">
               Size
@@ -125,7 +125,7 @@ export function ProductDetails({ product, stock, selectedImage }: ProductDetails
                   variant={selectedSize === size ? 'default' : 'outline'}
                   onClick={() => setSelectedSize(size)}
                   className={cn(
-                    'h-10 w-10 flex-shrink-0 rounded-full text-sm',
+                    'h-10 w-10 flex-shrink-0 rounded-full text-sm border-border dark:border-zinc-800',
                     selectedSize === size && 'bg-primary text-primary-foreground dark:bg-primary dark:text-rich-black'
                   )}
                 >
@@ -147,10 +147,10 @@ export function ProductDetails({ product, stock, selectedImage }: ProductDetails
                       key={swatch.name}
                       onClick={() => setSelectedColor(swatch)}
                       className={cn(
-                        'h-10 w-10 rounded-full border-2 transition-all',
+                        'h-10 w-10 rounded-full border-2 transition-all border-border dark:border-zinc-800',
                         isSwatchObject(selectedColor) && selectedColor.name === swatch.name
                           ? 'border-primary ring-2 ring-primary ring-offset-2'
-                          : 'border-gray-300 dark:border-gray-600'
+                          : ''
                       )}
                       aria-label={`Select color ${swatch.name}`}
                       title={swatch.name}
@@ -186,15 +186,15 @@ export function ProductDetails({ product, stock, selectedImage }: ProductDetails
                 key={i}
                 size={20}
                 className={cn(
-                  i < Math.floor(product.rating)
-                    ? 'text-yellow-400 fill-yellow-400'
-                    : 'text-gray-300 dark:text-gray-600'
+                  product.rating && i < product.rating
+                    ? "fill-primary text-primary"
+                    : "fill-none text-muted-foreground"
                 )}
               />
             ))}
           </div>
           <span className="text-sm font-sans text-muted-foreground ml-1">
-            ({product.reviewCount} Reviews)
+            ({product.reviewCount})
           </span>
         </div>
 
@@ -220,7 +220,7 @@ export function ProductDetails({ product, stock, selectedImage }: ProductDetails
                 variant={selectedSize === size ? 'default' : 'outline'}
                 onClick={() => setSelectedSize(size)}
                 className={cn(
-                  'min-w-[48px] rounded-full',
+                  'min-w-[48px] rounded-full border-border dark:border-zinc-800',
                   selectedSize === size && 'bg-primary text-primary-foreground dark:bg-primary dark:text-rich-black'
                 )}
               >
@@ -241,10 +241,10 @@ export function ProductDetails({ product, stock, selectedImage }: ProductDetails
                   key={swatch.name}
                   onClick={() => setSelectedColor(swatch)}
                   className={cn(
-                    'h-10 w-10 rounded-full border-2 transition-all',
+                    'h-10 w-10 rounded-full border-2 transition-all border-border dark:border-zinc-800',
                     isSwatchObject(selectedColor) && selectedColor.name === swatch.name
                       ? 'border-primary ring-2 ring-primary ring-offset-2'
-                      : 'border-gray-300 dark:border-gray-600'
+                      : ''
                   )}
                   aria-label={`Select color ${swatch.name}`}
                   title={swatch.name}
@@ -286,3 +286,4 @@ export function ProductDetails({ product, stock, selectedImage }: ProductDetails
     </div>
   );
 }
+

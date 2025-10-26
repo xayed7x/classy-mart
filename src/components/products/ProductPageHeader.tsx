@@ -12,7 +12,7 @@ export function ProductPageHeader() {
   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   return (
-    <header className="sticky top-0 z-40 flex items-center justify-between border-b border-border bg-background px-4 py-2">
+    <header className="sticky top-0 z-40 flex items-center justify-between bg-background px-4 py-2">
       <Link
         href="/"
         className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-secondary"

@@ -30,17 +30,17 @@ export function ProductPageLayout({ product }: ProductPageLayoutProps) {
   return (
     <div className="min-h-screen bg-background shadow-lg">
       {/* Mobile-Only Focused Header */}
-      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-accent bg-background px-4 py-2 lg:hidden">
+      <div className="sticky top-0 z-30 flex items-center justify-between bg-background px-4 py-2 lg:hidden">
         <Link
           href="/"
-          className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-accent"
+          className="flex h-10 w-10 items-center justify-center rounded-full transition-colors text-foreground dark:text-foreground/60 hover:text-foreground dark:hover:text-foreground"
           aria-label="Go back"
         >
           <ArrowLeft size={20} strokeWidth={2} />
         </Link>
         <button
           onClick={open}
-          className="relative flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-accent"
+          className="relative flex h-10 w-10 items-center justify-center rounded-full transition-colors text-foreground dark:text-foreground/60 hover:text-foreground dark:hover:text-foreground"
           aria-label="View cart"
         >
           <ShoppingBag size={20} strokeWidth={2} />

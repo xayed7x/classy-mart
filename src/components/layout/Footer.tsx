@@ -143,7 +143,22 @@ export function Footer() {
                   Contact Us
                 </Link>
               </li>
-
+              <li>
+                <Link
+                  href="/privacy-policy"
+                  className="font-sans text-sm text-foreground/60 hover:text-foreground"
+                >
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/terms-of-service"
+                  className="font-sans text-sm text-foreground/60 hover:text-foreground"
+                >
+                  Terms of Service
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -184,10 +199,10 @@ export function Footer() {
             </span>
             <div className="flex items-center gap-2 font-sans text-xs font-medium text-foreground">
               <div className="relative h-6 w-10">
-                <Image src="/icons/bkash.png" alt="bKash" layout="fill" objectFit="contain" />
+                <Image src="/icons/bkash.png" alt="bKash" fill className="object-contain" />
               </div>
               <div className="relative h-6 w-10">
-                <Image src="/icons/nagod.png" alt="Nagad" layout="fill" objectFit="contain" />
+                <Image src="/icons/nagod.png" alt="Nagad" fill className="object-contain" />
               </div>
             </div>
           </div>

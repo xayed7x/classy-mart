@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { BottomSheet } from "@/components/ui/BottomSheet";
 
 interface ProductInformationProps {
@@ -24,20 +24,21 @@ export function ProductInformation({ product }: ProductInformationProps) {
   };
 
   return (
-    <div className="mt-6 border-t border-accent dark:border-aura-accent-border">
+    <div className="mt-6">
       {/* Mobile: Clickable rows with BottomSheet */}
       <div className="lg:hidden">
         {productDetails.map((item) => (
           <button
             key={item.title}
             onClick={() => openSheet(item.title, item.content)}
-            className="flex w-full items-center justify-between border-b border-accent dark:border-aura-accent-border py-4 text-left"
+            className="flex w-full items-center justify-between py-4 text-left"
           >
-            <span className="font-medium text-base text-text dark:text-aura-soft-white">
+            <span className="font-sans font-medium text-base text-text dark:text-aura-soft-white">
               {item.title}
             </span>
-            <ChevronRight
+            <ArrowRight
               size={20}
+              strokeWidth={3}
               className="text-muted-foreground dark:text-aura-gold"
             />
           </button>
@@ -47,7 +48,7 @@ export function ProductInformation({ product }: ProductInformationProps) {
           onOpenChange={setIsSheetOpen}
           title={sheetContent.title}
         >
-          <p>{sheetContent.content}</p>
+          <p className="font-sans">{sheetContent.content}</p>
         </BottomSheet>
       </div>
 
@@ -55,10 +56,10 @@ export function ProductInformation({ product }: ProductInformationProps) {
       <div className="hidden lg:block space-y-8">
         {productDetails.map((item) => (
           <div key={item.title}>
-            <h3 className="text-lg font-bold font-satoshi text-text dark:text-aura-soft-white">
+            <h3 className="text-lg font-bold font-sans text-text dark:text-aura-soft-white">
               {item.title}
             </h3>
-            <p className="mt-2 text-base text-muted-foreground dark:text-aura-gold">
+            <p className="mt-2 text-base font-sans text-muted-foreground dark:text-aura-gold">
               {item.content}
             </p>
           </div>

@@ -42,11 +42,11 @@ export function StickyActionFooter({ product, stock, selectedImage }: StickyActi
   const isDisabled = !selectedSize || (product.colorSwatches && product.colorSwatches.length > 0 && !selectedColor) || stock <= 0;
 
   return (
-    <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-sm p-4 z-10 border-t">
+    <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-sm p-4 z-10">
       <AnimatedButton
         onClick={handleAddToCart}
         disabled={isDisabled}
-        className="w-full font-bold uppercase tracking-wider h-12 bg-primary text-primary-foreground dark:bg-primary dark:text-rich-black rounded-md border-0 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full font-sans text-lg font-bold uppercase tracking-wider h-12 bg-primary text-primary-foreground dark:bg-primary dark:text-rich-black rounded-md border-0 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Add to Cart
       </AnimatedButton>
