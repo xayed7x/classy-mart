@@ -1,8 +1,33 @@
-
+import type { Metadata } from 'next';
 import { Facebook, Instagram, Phone, Mail, MapPin, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTiktok } from '@fortawesome/free-brands-svg-icons';
+
+export const metadata: Metadata = {
+  title: 'Contact Us',
+  description: 'Get in touch with Classy Mart. Visit our outlets in Cumilla, call our customer support, or reach us via email. We\'re here to help you 24/7.',
+  keywords: ['contact Classy Mart', 'Classy Mart outlets', 'customer support Bangladesh', 'Cumilla clothing store', 'Lalmai Bazar', 'Ananda City Center'],
+  openGraph: {
+    title: 'Contact Us | Classy Mart',
+    description: 'Visit our outlets in Cumilla or contact our 24/7 customer support. We\'re here to help you find the perfect outfit.',
+    type: 'website',
+    images: [
+      {
+        url: '/logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'Contact Classy Mart',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Contact Us | Classy Mart',
+    description: 'Visit our outlets in Cumilla or contact our 24/7 customer support.',
+    images: ['/logo.png'],
+  },
+};
 
 const contactDetails = {
     outlets: [
@@ -67,7 +92,7 @@ export default function ContactPage() {
                                 ))}
                             </div>
                             <div>
-                                <a href={`mailto:${contactDetails.customerSupport.email}`} className="flex items-center space-x-3 group">
+                                <a href={`mailto:${contactDetails.customerSupport.email}`} target="_blank" className="flex items-center space-x-3 group">
                                     <Mail size={20} className="text-muted-foreground group-hover:text-primary transition-colors" />
                                     <span className="group-hover:text-primary transition-colors">{contactDetails.customerSupport.email}</span>
                                 </a>

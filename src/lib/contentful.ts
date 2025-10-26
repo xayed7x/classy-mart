@@ -251,3 +251,19 @@ export async function getSocialPostById(id: string) {
   }
 }
 
+export async function getAllCollections(): Promise<string[]> {
+  try {
+    const products = await getAllProducts();
+    const categories = new Set<string>();
+    products.forEach(product => {
+      if (product.category) {
+        categories.add(product.category.toLowerCase());
+      }
+    });
+    return Array.from(categories);
+  } catch (error) {
+    console.error("Error fetching collections:", error);
+    return [];
+  }
+}
+

@@ -1,71 +1,76 @@
-'use client';
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { getProductBySlug } from '@/lib/contentful';
+import { ProductPageClient } from '@/components/products/ProductPageClient';
 
-import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
-import { ProductPageLayout } from "@/components/products/ProductPageLayout";
-import { useProductPageStore } from '@/stores/product-page-store';
-import { PDPSkeleton } from '@/components/skeletons/PDPSkeleton';
+interface ProductPageProps {
+  params: {
+    productHandle: string;
+  };
+}
 
-export default function ProductPage() {
-  const { reset } = useProductPageStore();
-  const [product, setProduct] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const params = useParams();
-  const { productHandle } = params;
-
-  useEffect(() => {
-    // This function will be called when the component is unmounted (i.e., user navigates away)
-    return () => {
-      reset();
+export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
+  const product = await getProductBySlug(params.productHandle);
+  
+  if (!product) {
+    return {
+      title: 'Product Not Found',
     };
-  }, [reset]);
-
-  useEffect(() => {
-    if (!productHandle) return;
-
-    async function fetchProduct() {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const response = await fetch(`/api/products/${productHandle}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch product');
-        }
-        const productData = await response.json();
-        setProduct(productData);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    fetchProduct();
-  }, [productHandle]);
-
-  if (isLoading) {
-    return <PDPSkeleton />;
   }
 
-  if (error) {
-    return <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-red-500">Error</h2>
-        <p className="mt-2 text-muted-foreground">{error}</p>
-      </div>
-    </div>;
-  }
+  const price = product.price ? `৳${product.price}` : '';
+  const availability = product.stock > 0 ? 'in stock' : 'out of stock';
+
+  return {
+    title: product.name,
+    description: product.shortDescription || `${product.name} - ${price}. ${product.longDescription?.substring(0, 150) || 'Premium quality men\'s clothing from Classy Mart.'}`,
+    keywords: [
+      product.name,
+      product.category,
+      product.subcategory || '',
+      'buy online',
+      'Classy Mart',
+      'Bangladesh',
+      'mens fashion',
+      'premium clothing',
+    ].filter(Boolean),
+    openGraph: {
+      title: product.name,
+      description: product.shortDescription || `${product.name} - Premium quality men's clothing`,
+      images: [
+        {
+          url: product.images.main || '/logo.png',
+          width: 1200,
+          height: 1200,
+          alt: product.name,
+        },
+      ],
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: product.name,
+      description: product.shortDescription || `${product.name} - Premium quality men's clothing`,
+      images: [product.images.main || '/logo.png'],
+    },
+    alternates: {
+      canonical: `/products/${product.slug}`,
+    },
+    other: {
+      'product:price:amount': product.price?.toString() || '',
+      'product:price:currency': 'BDT',
+      'product:availability': availability,
+      'product:condition': 'new',
+    },
+  };
+}
+
+export default async function ProductPage({ params }: ProductPageProps) {
+  const product = await getProductBySlug(params.productHandle);
 
   if (!product) {
-    return <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold">Product not found</h2>
-      </div>
-    </div>;
+    notFound();
   }
 
-  return (
-    <ProductPageLayout product={product} />
-  );
+  return <ProductPageClient product={product} />;
 }

@@ -30,6 +30,7 @@ export function LookbookSection({ lookbook }: { lookbook: any }) {
           {lookbook.fields.ctaLink && lookbook.fields.ctaButtonText && (
             <Link
               href={lookbook.fields.ctaLink}
+              target="_blank"
               className="mt-8 rounded-full bg-overlay-button text-[#1A1A1A] backdrop-blur-sm px-10 py-4 font-sans text-base font-bold uppercase tracking-wide transition-transform hover:scale-105 active:scale-95"
             >
               {lookbook.fields.ctaButtonText}

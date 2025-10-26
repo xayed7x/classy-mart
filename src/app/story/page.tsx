@@ -1,4 +1,30 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Our Story',
+  description: 'Discover the story behind Classy Mart - redefining authentic luxury in Bangladesh. Learn about our passion for premium quality men\'s clothing and our commitment to excellence.',
+  keywords: ['Classy Mart story', 'about Classy Mart', 'premium clothing Bangladesh', 'authentic fashion', 'luxury menswear BD'],
+  openGraph: {
+    title: 'Our Story | Classy Mart',
+    description: 'Redefining authentic luxury in Bangladesh. Discover our passion for premium quality and commitment to excellence.',
+    type: 'website',
+    images: [
+      {
+        url: '/logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'Classy Mart - Our Story',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Our Story | Classy Mart',
+    description: 'Redefining authentic luxury in Bangladesh. Discover our passion for premium quality and commitment to excellence.',
+    images: ['/logo.png'],
+  },
+};
 
 export default function OurStoryPage() {
   return (
