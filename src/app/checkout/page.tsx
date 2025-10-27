@@ -6,6 +6,7 @@ import Image from "next/image";
 
 import { placeOrder } from "@/actions/orderActions";
 import { PaymentMethodSelector } from "@/components/checkout/PaymentMethodSelector";
+import { CheckoutSubmitButton } from "@/components/checkout/CheckoutSubmitButton";
 
 type ShippingInfo = {
   email: string;
@@ -217,13 +218,12 @@ export default function CheckoutPage() {
             </div>
 
             <div className="mt-12">
-              <button 
-                type="submit"
+              <CheckoutSubmitButton
                 className="w-full bg-primary text-primary-foreground dark:bg-primary dark:text-rich-black font-bold uppercase tracking-wider font-heading py-4 rounded-lg transition-transform hover:scale-105 disabled:opacity-50"
                 disabled={cart.length === 0}
               >
                 Place Order
-              </button>
+              </CheckoutSubmitButton>
             </div>
           </form>
         </div>

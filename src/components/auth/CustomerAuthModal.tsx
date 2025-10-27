@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { User } from "lucide-react";
 import { toast } from "sonner";
-import { SubmitButton } from "@/components/ui/SubmitButton";
+import { AuthSubmitButton } from "@/components/auth/AuthSubmitButton";
 import { useRouter } from "next/navigation";
 
 // Google SVG Icon Component
@@ -47,7 +47,6 @@ export function CustomerAuthModal({ children }: CustomerAuthModalProps) {
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null); // Reset error on new submission
-    setLoading(true);
 
     const email = formData.email;
     const password = formData.password;
@@ -71,7 +70,6 @@ export function CustomerAuthModal({ children }: CustomerAuthModalProps) {
       if (error) {
 
         setError(error.message); // Set the error state to display it
-        setLoading(false);
         return; // Stop the function here
       }
       // ------------------------------------
@@ -90,13 +88,12 @@ export function CustomerAuthModal({ children }: CustomerAuthModalProps) {
 
       setError("An unexpected error occurred. Please try again.");
     } finally {
-      setLoading(false);
+      
     }
   };
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
 
     try {
@@ -117,13 +114,12 @@ export function CustomerAuthModal({ children }: CustomerAuthModalProps) {
     } catch (error: any) {
       toast.error(error.message || "An error occurred");
     } finally {
-      setLoading(false);
+      
     }
   };
 
   const handleGoogleSignIn = async () => {
     try {
-      setLoading(true);
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -133,12 +129,10 @@ export function CustomerAuthModal({ children }: CustomerAuthModalProps) {
 
       if (error) {
         toast.error(error.message || "Failed to sign in with Google");
-        setLoading(false);
       }
       // Note: User will be redirected to Google, so we don't need to handle success here
     } catch (error: any) {
       toast.error(error.message || "An error occurred");
-      setLoading(false);
     }
   };
 
@@ -265,11 +259,13 @@ export function CustomerAuthModal({ children }: CustomerAuthModalProps) {
 
           {error && <p className="text-red-500 text-sm mb-4 dark:text-soft-white">{error}</p>}
 
-          <SubmitButton
+          <AuthSubmitButton
             className="w-full dark:bg-primary dark:text-rich-black font-bold uppercase tracking-wider font-heading py-4 rounded-lg transition-transform hover:scale-105 disabled:opacity-50"
+            loading={loading}
+            loadingText={mode === "signin" ? "Signing In..." : "Signing Up..."}
           >
             {mode === "signin" ? "Sign In" : "Sign Up"}
-          </SubmitButton>
+          </AuthSubmitButton>
 
           <div className="text-center">
             <button
