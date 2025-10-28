@@ -11,15 +11,22 @@ const OrderFilter = () => {
   const currentStatus = searchParams.get('status');
 
   useEffect(() => {
-    if (searchParams.get('status') === null) {
-      router.push(`/admin/orders?status=pending`);
+    // Only set default to pending if there's no status param AND no explicit 'all' selection
+    if (searchParams.get('status') === null && !searchParams.toString().includes('status')) {
+      // Check if this is the initial load (no navigation from filter)
+      const isInitialLoad = !sessionStorage.getItem('orderFilterSet');
+      if (isInitialLoad) {
+        router.push(`/admin/orders?status=pending`);
+        sessionStorage.setItem('orderFilterSet', 'true');
+      }
     }
   }, [searchParams, router]);
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newStatus = e.target.value;
+    sessionStorage.setItem('orderFilterSet', 'true');
     if (newStatus === 'all') {
-      router.push('/admin/orders');
+      router.push('/admin/orders?status=all');
     } else {
       router.push(`/admin/orders?status=${newStatus}`);
     }
@@ -35,7 +42,7 @@ const OrderFilter = () => {
         name="status-filter"
         className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
         onChange={handleFilterChange}
-        value={currentStatus || 'all'}
+        value={currentStatus || 'pending'}
       >
         {statuses.map((status) => (
           <option key={status} value={status}>
