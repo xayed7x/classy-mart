@@ -40,6 +40,7 @@ const config: Config = {
         "rich-black": "hsl(var(--background))", // Dark mode background
         "soft-white": "hsl(var(--foreground))", // Dark mode text
         "muted-gold": "hsl(var(--muted-foreground))", // Dark mode muted text
+        "product-details-muted-foreground": "hsl(var(--product-details-muted-foreground))",
       },
       fontFamily: {
         sans: ["var(--font-inter)"],

@@ -26,6 +26,7 @@
   --background: 0 0% 7%;          /* #111111 -> rich-black */
   --foreground: 39 23% 92%;       /* #F0EBE3 -> soft-white */
   --muted-foreground: 34 23% 61%; /* #B4A284 -> muted-gold */
+  --product-details-muted-foreground: 39 23% 92%;
   /* --- VERIFY ALL OTHER VARIABLES ARE CORRECT --- */
   --primary: 165 100% 30%;        /* #009B77 -> emerald-green */
   --primary-foreground: 0 0% 100%; /* White text for on top of green */

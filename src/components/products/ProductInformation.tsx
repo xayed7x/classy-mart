@@ -33,7 +33,7 @@ export function ProductInformation({ product }: ProductInformationProps) {
             onClick={() => openSheet(item.title, item.content)}
             className="flex w-full items-center justify-between py-4 text-left"
           >
-            <span className="font-sans font-medium text-base text-text dark:text-aura-soft-white">
+            <span className="font-sans font-medium text-base text-foreground/60">
               {item.title}
             </span>
             <ArrowRight
@@ -56,10 +56,10 @@ export function ProductInformation({ product }: ProductInformationProps) {
       <div className="hidden lg:block space-y-8">
         {productDetails.map((item) => (
           <div key={item.title}>
-            <h3 className="text-lg font-bold font-sans text-text dark:text-aura-soft-white">
+            <h3 className="text-lg font-bold font-sans text-foreground/60">
               {item.title}
             </h3>
-            <p className="mt-2 text-base font-sans text-muted-foreground dark:text-aura-gold whitespace-pre-line">
+            <p className="mt-2 text-base font-sans text-foreground/60 whitespace-pre-line">
               {item.content}
             </p>
           </div>
