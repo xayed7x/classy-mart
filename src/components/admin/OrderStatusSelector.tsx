@@ -5,6 +5,7 @@ import { updateOrderStatus } from '@/actions/adminActions';
 interface OrderStatusSelectorProps {
   orderId: string;
   currentStatus: string;
+  onStatusUpdate?: () => void;
 }
 
 const getStatusClasses = (status: string) => {
@@ -22,18 +23,24 @@ const getStatusClasses = (status: string) => {
   }
 };
 
-export function OrderStatusSelector({ orderId, currentStatus }: OrderStatusSelectorProps) {
+export function OrderStatusSelector({ orderId, currentStatus, onStatusUpdate }: OrderStatusSelectorProps) {
   const handleStatusChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newStatus = e.target.value;
     const formData = new FormData();
     formData.append('orderId', orderId);
     formData.append('status', newStatus);
-    await updateOrderStatus(formData);
+    
+    const result = await updateOrderStatus(formData);
+    
+    if (result.success && onStatusUpdate) {
+      // Trigger refetch after successful status update
+      onStatusUpdate();
+    }
   };
 
   return (
     <select
-      defaultValue={currentStatus}
+      value={currentStatus}
       onChange={handleStatusChange}
       className={`p-2 rounded-md ${getStatusClasses(currentStatus)}`}
     >

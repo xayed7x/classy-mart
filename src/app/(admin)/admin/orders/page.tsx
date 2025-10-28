@@ -34,25 +34,36 @@ function AdminOrdersPageContent() {
   const [error, setError] = useState<string | null>(null);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
-  useEffect(() => {
-    async function fetchOrders() {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const response = await fetch(`/api/admin/orders${currentStatus ? `?status=${currentStatus}` : ''}`, {
-          cache: 'no-store',
-        });
-        if (!response.ok) {
-          throw new Error('Failed to fetch orders');
-        }
-        const data = await response.json();
-        setOrders(data);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
+  const fetchOrders = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const statusParam = currentStatus && currentStatus !== 'all' ? `?status=${currentStatus}` : '';
+      const separator = statusParam ? '&' : '?';
+      const timestamp = `${separator}_t=${Date.now()}`; // Cache busting parameter
+      const response = await fetch(`/api/admin/orders${statusParam}${timestamp}`, {
+        method: 'GET',
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-store',
+          'Pragma': 'no-cache',
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch orders');
       }
+      const result = await response.json();
+      // Handle both response formats for backward compatibility
+      const ordersData = result.data || result;
+      setOrders(ordersData);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  useEffect(() => {
     fetchOrders();
   }, [currentStatus]);
 
@@ -113,7 +124,11 @@ function AdminOrdersPageContent() {
                     {order.customer_email}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300" onClick={(e) => e.stopPropagation()}>
-                    <OrderStatusSelector orderId={order.id} currentStatus={order.order_status} />
+                    <OrderStatusSelector 
+                      orderId={order.id} 
+                      currentStatus={order.order_status}
+                      onStatusUpdate={fetchOrders}
+                    />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                     <button

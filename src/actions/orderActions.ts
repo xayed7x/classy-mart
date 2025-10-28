@@ -67,6 +67,7 @@ export async function placeOrder(
     };
 
     // Insert order into Supabase
+    console.log('🔵 Inserting order to Supabase...');
     const { data, error } = await supabaseAdmin
       .from("orders")
       .insert(orderPayload)
@@ -74,14 +75,17 @@ export async function placeOrder(
       .single();
 
     if (error) {
+      console.error('🔴 Supabase insert failed:', error);
       throw error;
     }
     
     if (!data) {
+      console.error('🔴 No data returned from insert');
       throw new Error('Failed to create order - no data returned');
     }
     
     orderId = data.id;
+    console.log('✅ Order inserted successfully. ID:', orderId);
 
     // --- AUTOMATED STOCK REDUCTION LOGIC ---
     // Reduce stock in Contentful for each ordered item
@@ -172,19 +176,23 @@ export async function getOrderDetails(orderId: string) {
 
 export async function updateOrderStatus(orderId: string, status: string) {
   try {
+    console.log(`🔵 Updating order ${orderId.substring(0, 8)}... status to: ${status}`);
+    
     const { error } = await supabaseAdmin
       .from("orders")
       .update({ order_status: status })
       .eq("id", orderId);
 
     if (error) {
+      console.error('🔴 Failed to update order status:', error);
       throw error;
     }
 
+    console.log(`✅ Order status updated successfully to: ${status}`);
     revalidatePath("/admin/orders");
     return { success: true };
   } catch (error) {
-    console.error("Failed to update order status:", error);
+    console.error("🔴 Failed to update order status:", error);
     return { success: false, error };
   }
 }
@@ -202,6 +210,7 @@ export async function getUserOrders() {
     return [];
   }
 
+  console.log('🔵 getUserOrders: Fetching orders for user:', user.id);
   const { data: orders, error } = await supabase
     .from("orders")
     .select("*")
@@ -209,11 +218,11 @@ export async function getUserOrders() {
     .order("created_at", { ascending: false });
 
   if (error) {
-    console.error("getUserOrders: Error fetching user orders:", error);
+    console.error("🔴 getUserOrders: Error fetching user orders:", error);
     return [];
   }
 
-
+  console.log(`✅ getUserOrders: Found ${orders?.length || 0} orders`);
   return orders;
 }
 
