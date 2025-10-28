@@ -48,7 +48,7 @@ export function ProductInformation({ product }: ProductInformationProps) {
           onOpenChange={setIsSheetOpen}
           title={sheetContent.title}
         >
-          <p className="font-sans">{sheetContent.content}</p>
+          <p className="font-sans whitespace-pre-line">{sheetContent.content}</p>
         </BottomSheet>
       </div>
 
@@ -59,7 +59,7 @@ export function ProductInformation({ product }: ProductInformationProps) {
             <h3 className="text-lg font-bold font-sans text-text dark:text-aura-soft-white">
               {item.title}
             </h3>
-            <p className="mt-2 text-base font-sans text-muted-foreground dark:text-aura-gold">
+            <p className="mt-2 text-base font-sans text-muted-foreground dark:text-aura-gold whitespace-pre-line">
               {item.content}
             </p>
           </div>
