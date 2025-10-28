@@ -17,7 +17,7 @@ export function CheckoutSubmitButton({
   const { pending } = useFormStatus();
 
   return (
-    <Button type="submit" disabled={pending} className={className}>
+    <Button type="submit" disabled={pending || disabled} className={className}>
       {pending ? (
         <div className="flex items-center gap-2">
           <svg

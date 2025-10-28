@@ -76,6 +76,11 @@ export async function placeOrder(
     if (error) {
       throw error;
     }
+    
+    if (!data) {
+      throw new Error('Failed to create order - no data returned');
+    }
+    
     orderId = data.id;
 
     // --- AUTOMATED STOCK REDUCTION LOGIC ---
@@ -133,14 +138,13 @@ export async function placeOrder(
     revalidatePath("/products");
     revalidatePath("/");
 
-    // ❌ THE SUCCESS REDIRECT IS NO LONGER HERE
   } catch (error: any) {
     // This will now only catch REAL errors (database connection, etc.)
+    console.error('Error in placeOrder:', error);
     return redirect(`/payment/fail?error=${encodeURIComponent(error.message)}`);
   }
 
-  // ✅ THE SUCCESS REDIRECT IS NOW HERE
-  // This line will only be reached if the try block completed successfully.
+  // Redirect to success page
   redirect(`/payment/success?order_id=${orderId}`);
 }
 

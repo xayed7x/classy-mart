@@ -8,7 +8,6 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status');
 
-
     let query = supabaseAdmin.from('orders').select('*');
 
     if (status && status !== 'all') {
@@ -21,8 +20,6 @@ export async function GET(request: Request) {
       console.error('API: Supabase query error:', error);
       throw error;
     }
-
-
 
     return NextResponse.json(orders);
   } catch (error: any) {
