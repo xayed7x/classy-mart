@@ -39,7 +39,7 @@ export function ProductInformation({ product }: ProductInformationProps) {
             <ArrowRight
               size={20}
               strokeWidth={3}
-              className="text-muted-foreground dark:text-aura-gold"
+              className="text-muted-foreground"
             />
           </button>
         ))}
@@ -48,7 +48,7 @@ export function ProductInformation({ product }: ProductInformationProps) {
           onOpenChange={setIsSheetOpen}
           title={sheetContent.title}
         >
-          <p className="font-sans whitespace-pre-line">{sheetContent.content}</p>
+          <p className="font-sans whitespace-pre-line text-foreground/60">{sheetContent.content}</p>
         </BottomSheet>
       </div>
 
