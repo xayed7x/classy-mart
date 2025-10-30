@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import { getFeaturedProducts, getAllFeaturedOffers, getLookbookData, getJustForYouProducts, getAllSocialPosts } from '@/lib/contentful';
 import { HeroSection } from '@/components/homepage/HeroSection';
 import { FeaturedOffers } from '@/components/homepage/FeaturedOffers';
+import FeaturedCategories from '@/components/homepage/FeaturedCategories';
 import { LookbookSection } from '@/components/homepage/LookbookSection';
 import { TrendingProducts } from '@/components/homepage/TrendingProducts';
 import { JustForYouSection } from '@/components/homepage/JustForYouSection';
@@ -24,6 +25,9 @@ async function HomeContent() {
     <>
       <HeroSection offers={featuredOffers} />
       <FeaturedOffers offers={featuredOffers} />
+      <div className="md:hidden">
+        <FeaturedCategories />
+      </div>
       <TrendingProducts products={featuredProducts} />
       <JustForYouSection products={justForYouProducts} />
       <LookbookSection lookbook={lookbookData} />

@@ -82,7 +82,7 @@ export function CollectionPageClient({ products, collectionHandle }: CollectionP
                   "whitespace-nowrap rounded-full border px-6 py-2 text-sm font-medium font-sans transition-colors",
                   collectionHandle === category.slug
                     ? "bg-primary text-primary-foreground dark:bg-primary dark:text-rich-black border-primary"
-                    : "bg-background text-foreground border-border hover:bg-secondary"
+                    : "bg-background text-foreground border-border"
                 )}
               >
                 {category.name}
@@ -105,7 +105,7 @@ export function CollectionPageClient({ products, collectionHandle }: CollectionP
         <div className="lg:hidden mb-6">
           <button
             onClick={() => setIsSheetOpen(true)}
-            className="flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary transition-colors"
+            className="flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors"
           >
             <Filter size={20} strokeWidth={2} />
             Filters

@@ -41,7 +41,7 @@ const FeaturedCategories = () => {
               Categories
             </h2>
             <Link
-              href="/collections"
+              href="/collections/all"
               className="text-sm font-sans text-muted-foreground transition-colors hover:text-foreground dark:text-foreground/60"
             >
               See all
@@ -52,7 +52,7 @@ const FeaturedCategories = () => {
               <Link
                 key={category.id}
                 href={`/collections/${category.slug}`}
-                className="block whitespace-nowrap rounded-full border border-border dark:border-border bg-background px-4 py-2 text-sm font-medium font-sans text-foreground dark:text-foreground/60 transition-colors hover:bg-secondary"
+                className="block whitespace-nowrap rounded-full border border-border dark:border-border bg-background px-4 py-2 text-sm font-medium font-sans text-foreground dark:text-foreground/60 transition-colors"
               >
                 {category.name}
               </Link>
