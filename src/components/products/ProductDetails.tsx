@@ -104,7 +104,7 @@ export function ProductDetails({ product, stock, selectedImage }: ProductDetails
             BDT{product.price}
           </p>
           {product.originalPrice && (
-            <p className="dark:text-product-details-muted-foreground">
+            <p className="text-sm font-sans text-muted-foreground line-through">
               BDT{product.originalPrice}
             </p>
           )}
