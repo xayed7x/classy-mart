@@ -13,6 +13,7 @@ import { ImmersiveSearch } from "@/components/layout/ImmersiveSearch";
 export function RootLayoutClient({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isProductPage = pathname.startsWith("/products");
+  const isCheckoutPage = pathname.startsWith("/checkout");
 
   const [isDesktop, setIsDesktop] = useState(false);
 
@@ -36,10 +37,10 @@ export function RootLayoutClient({ children }: { children: React.ReactNode }) {
       <ParallaxProviderWrapper>
         <CartController />
         <ImmersiveSearch />
-        {(!isProductPage || (isProductPage && isDesktop)) && <Header />}
+        {(!((isProductPage || isCheckoutPage) && !isDesktop)) && <Header />}
         {children}
         <Footer />
-        {!isProductPage && <BottomNavBar />}
+        {!isProductPage && !isCheckoutPage && !isDesktop && <BottomNavBar />}
       </ParallaxProviderWrapper>
     </ThemeProvider>
   );

@@ -1,38 +1,25 @@
 "use client";
 
-import { useState } from "react";
 import { ArrowLeft, ShoppingCart } from "lucide-react";
 import Link from "next/link";
-import { StickyActionFooter } from "./StickyActionFooter";
-import { ProductPageContent } from "./ProductPageContent";
 import { useCartDrawerStore } from "@/stores/cart-drawer-store";
 import { useCartStore } from "@/stores/cart-store";
 
-/**
- * Product Page Layout Component
- * 
- * Dedicated layout for PDP that replaces main site header/footer
- * Provides mobile-focused header and sticky action footer
- */
-
-interface ProductPageLayoutProps {
-  product: any;
+interface CheckoutPageLayoutProps {
+  children: React.ReactNode;
 }
 
-export function ProductPageLayout({ product }: ProductPageLayoutProps) {
+export function CheckoutPageLayout({ children }: CheckoutPageLayoutProps) {
   const { open } = useCartDrawerStore();
   const { cartItems } = useCartStore();
   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
-  
-  // Single source of truth for the currently displayed image
-  const [selectedImage, setSelectedImage] = useState(product.images?.main || product.images?.gallery?.[0] || '/logo.png');
 
   return (
     <div className="min-h-screen bg-background shadow-lg">
       {/* Mobile-Only Focused Header */}
       <div className="sticky top-0 z-30 flex items-center justify-between bg-background px-4 py-2 lg:hidden">
         <Link
-          href="/"
+          href="/products" // Go back to products page
           className="flex h-10 w-10 items-center justify-center rounded-full transition-colors text-foreground dark:text-foreground/60 hover:text-foreground dark:hover:text-foreground"
           aria-label="Go back"
         >
@@ -53,18 +40,7 @@ export function ProductPageLayout({ product }: ProductPageLayoutProps) {
       </div>
 
       {/* Page Content */}
-      <ProductPageContent 
-        product={product}
-        selectedImage={selectedImage}
-        setSelectedImage={setSelectedImage}
-      />
-
-      {/* Mobile-Only Sticky Action Footer */}
-      <StickyActionFooter 
-        product={product} 
-        stock={product.stock}
-        selectedImage={selectedImage}
-      />
+      {children}
     </div>
   );
 }

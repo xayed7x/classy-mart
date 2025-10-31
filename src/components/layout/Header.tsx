@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, ShoppingBag, Menu, User, LogOut, Package } from "lucide-react";
+import { Search, ShoppingCart, Menu, User, LogOut, Package } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useCartStore } from "@/stores/cart-store";
 import { useCartDrawerStore } from "@/stores/cart-drawer-store";
@@ -164,11 +164,11 @@ export function Header() {
           </button>
           {/* Shopping Bag Icon (hidden on mobile, visible on desktop) */}
           <button
-            aria-label="Shopping bag"
+            aria-label="Shopping cart"
             className="hidden text-foreground dark:text-foreground/60 hover:text-foreground dark:hover:text-foreground lg:flex relative"
             onClick={open}
           >
-            <ShoppingBag strokeWidth={1.5} size={20} />
+            <ShoppingCart strokeWidth={1.5} size={20} />
             {totalItems > 0 && (
               <div className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary dark:bg-primary text-[10px] font-bold text-black">
                 {totalItems}

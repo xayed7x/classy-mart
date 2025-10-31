@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCartStore } from "@/stores/cart-store";
 import Image from "next/image";
 
 import { placeOrder } from "@/actions/orderActions";
 import { PaymentMethodSelector } from "@/components/checkout/PaymentMethodSelector";
 import { CheckoutSubmitButton } from "@/components/checkout/CheckoutSubmitButton";
+import { CheckoutPageLayout } from "@/components/checkout/CheckoutPageLayout";
 
 type ShippingInfo = {
   email: string;
@@ -33,6 +34,18 @@ export default function CheckoutPage() {
     upazila: "",
   });
   const [paymentMethod, setPaymentMethod] = useState('cod');
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -43,7 +56,7 @@ export default function CheckoutPage() {
     (sum, item) => sum + item.price * item.quantity,
     0
   );
-  const shippingCost = 0.0;
+  const shippingCost = 150;
   const total = subtotal + shippingCost;
 
   // Prepare cart details for server action
@@ -56,7 +69,7 @@ export default function CheckoutPage() {
   // Bind cart details to the server action
   const placeOrderWithCart = placeOrder.bind(null, cartDetails);
 
-  return (
+  const CheckoutContent = (
     <main className="min-h-screen bg-background text-foreground pt-10 sm:pt-12 px-4 sm:px-8">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
         {/* Left Column: Shipping, Payment, Place Order */}
@@ -300,4 +313,10 @@ export default function CheckoutPage() {
       <div className="h-20" />
     </main>
   );
+
+  if (isDesktop) {
+    return CheckoutContent;
+  }
+
+  return <CheckoutPageLayout>{CheckoutContent}</CheckoutPageLayout>;
 }

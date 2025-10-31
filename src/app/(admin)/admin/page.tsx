@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic';
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { DollarSign, Package, ShoppingCart } from "lucide-react";
+import { CreditCard, Package, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { getAllProducts } from "@/lib/contentful";
 
@@ -48,18 +48,18 @@ export default async function AdminPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <StatCard
           title="Total Revenue"
-          value={`$${totalRevenue.toFixed(2)}`}
-          icon={<DollarSign className="w-8 h-8 text-green-500" />}
+          value={`BDT ${totalRevenue.toFixed(2)}`}
+          icon={<CreditCard className="w-8 h-8 text-green-500" />}
         />
         <StatCard
           title="Total Orders"
           value={totalOrders.toString()}
-          icon={<ShoppingCart className="w-8 h-8 text-blue-500" />}
+          icon={<Package className="w-8 h-8 text-blue-500" />}
         />
         <StatCard
           title="Total Products"
           value={totalProducts.toString()}
-          icon={<Package className="w-8 h-8 text-orange-500" />}
+          icon={<ShoppingCart className="w-8 h-8 text-orange-500" />}
         />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Home, LayoutGrid, ShoppingBag, User } from "lucide-react";
+import { Home, LayoutGrid, ShoppingCart, User } from "lucide-react";
 import { useCartStore } from "@/stores/cart-store";
 import { useCartDrawerStore } from "@/stores/cart-drawer-store";
 import { CustomerAuthModal } from "@/components/auth/CustomerAuthModal"; // Import CustomerAuthModal
@@ -69,7 +69,7 @@ export function BottomNavBar() {
         className="relative flex flex-col items-center gap-1 text-foreground dark:text-foreground/60 hover:text-foreground dark:hover:text-foreground active:text-foreground dark:active:text-foreground"
       >
         <div className="relative">
-          <ShoppingBag strokeWidth={1.5} size={24} />
+          <ShoppingCart strokeWidth={1.5} size={24} />
           {totalItems > 0 && (
                             <div className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary dark:bg-primary text-[10px] font-bold text-primary-foreground dark:text-rich-black">              {totalItems}
             </div>
