@@ -4,6 +4,14 @@ import { supabaseAdmin } from '@/lib/supabase';
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+    'Pragma': 'no-cache',
+    'Expires': '0',
+    'Surrogate-Control': 'no-store',
+  };
+
   try {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status');
@@ -31,30 +39,12 @@ export async function GET(request: Request) {
       console.log('Sample order statuses:', orders.slice(0, 3).map(o => ({ id: o.id.substring(0, 8), status: o.order_status })));
     }
 
-    return new NextResponse(JSON.stringify({ success: true, data: orders }), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0',
-        'Surrogate-Control': 'no-store',
-      },
-    });
+    return NextResponse.json({ success: true, data: orders }, { headers });
   } catch (error: any) {
     console.error('API: Error fetching orders in route:', error);
-    return new NextResponse(
-      JSON.stringify({ error: 'Failed to fetch orders', message: error.message }),
-      {
-        status: 500,
-        headers: {
-          'Content-Type': 'application/json',
-          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0',
-          'Surrogate-Control': 'no-store',
-        },
-      }
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 500, headers }
     );
   }
 }

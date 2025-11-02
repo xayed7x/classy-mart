@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { OrderStatusSelector } from '@/components/admin/OrderStatusSelector';
 import OrderFilter from '@/components/admin/OrderFilter';
@@ -34,38 +34,42 @@ function AdminOrdersPageContent() {
   const [error, setError] = useState<string | null>(null);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const statusParam = currentStatus && currentStatus !== 'all' ? `?status=${currentStatus}` : '';
-      const separator = statusParam ? '&' : '?';
-      const timestamp = `${separator}_t=${Date.now()}`; // Cache busting parameter
-      const response = await fetch(`/api/admin/orders${statusParam}${timestamp}`, {
-        method: 'GET',
-        cache: 'no-store',
-        headers: {
-          'Cache-Control': 'no-store',
-          'Pragma': 'no-cache',
-        },
-      });
+      const status = currentStatus || 'all';
+      const response = await fetch(
+        `/api/admin/orders?status=${status}&_t=${Date.now()}`,
+        {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-store, no-cache',
+            'Pragma': 'no-cache',
+          },
+        }
+      );
+
       if (!response.ok) {
         throw new Error('Failed to fetch orders');
       }
+
       const result = await response.json();
-      // Handle both response formats for backward compatibility
-      const ordersData = result.data || result;
-      setOrders(ordersData);
+      if (result.success) {
+        setOrders(result.data);
+      } else {
+        throw new Error(result.error || 'Failed to fetch orders');
+      }
     } catch (err: any) {
       setError(err.message);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentStatus]);
 
   useEffect(() => {
     fetchOrders();
-  }, [currentStatus]);
+  }, [fetchOrders]);
 
   if (isLoading) {
     return <div className="p-6"><AdminTableSkeleton /></div>;
