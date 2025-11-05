@@ -7,6 +7,7 @@ import OrderFilter from '@/components/admin/OrderFilter';
 import { AdminTableSkeleton } from '@/components/skeletons/AdminTableSkeleton';
 import { Eye } from 'lucide-react';
 import { OrderDetailsModal } from '@/components/admin/OrderDetailsModal';
+import { createClient } from '@/lib/supabase/client';
 
 interface Order {
   id: string;
@@ -39,27 +40,20 @@ function AdminOrdersPageContent() {
     setError(null);
     try {
       const status = currentStatus || 'all';
-      const response = await fetch(
-        `/api/admin/orders?status=${status}&_t=${Date.now()}`,
-        {
-          cache: 'no-store',
-          headers: {
-            'Cache-Control': 'no-store, no-cache',
-            'Pragma': 'no-cache',
-          },
-        }
-      );
+      const supabase = createClient();
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch orders');
+      let query = supabase.from('orders').select('*');
+      if (status && status !== 'all') {
+        query = query.eq('order_status', status);
       }
 
-      const result = await response.json();
-      if (result.success) {
-        setOrders(result.data);
-      } else {
-        throw new Error(result.error || 'Failed to fetch orders');
+      const { data: orders, error } = await query.order('created_at', { ascending: false });
+
+      if (error) {
+        throw error;
       }
+
+      setOrders(orders || []);
     } catch (err: any) {
       setError(err.message);
     } finally {
