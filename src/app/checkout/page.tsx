@@ -63,6 +63,7 @@ export default function CheckoutPage() {
   const cartDetails = {
     items: cart,
     subtotal: subtotal,
+    shippingCost: shippingCost,
     totalAmount: total,
   };
 

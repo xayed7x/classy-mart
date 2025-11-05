@@ -20,6 +20,7 @@ interface CartItem {
 interface CartDetails {
   items: CartItem[];
   subtotal: number;
+  shippingCost: number;
   totalAmount: number;
 }
 
@@ -59,7 +60,7 @@ export async function placeOrder(
       customer_email: customerEmail,
       ordered_products: cartDetails.items,
       subtotal: cartDetails.subtotal,
-      shipping_cost: 0,
+      shipping_cost: cartDetails.shippingCost,
       total_amount: cartDetails.totalAmount,
       payment_method: paymentMethod,
       payment_status: "pending",

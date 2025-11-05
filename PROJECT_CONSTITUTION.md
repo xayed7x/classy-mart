@@ -36,3 +36,27 @@ CSR should be limited to components that require heavy user interactivity and do
 ### 2.2. Deployment
 
 The project is configured for a dynamic, server-rendered deployment. The `next.config.js` file is set to `output: 'standalone'` to produce a self-contained Node.js server, not a static export. This is non-negotiable for our application's architecture.
+
+## 3. The "Golden Rule" of Production Caching
+### Rule 0 (The "Nuclear Option" / Golden Pattern for Admin Panels): Direct-to-Database from the Client
+
+**For any critical, interactive admin page that MUST display real-time data (e.g., Orders, Products), the primary architectural choice is a Client-Side Rendered (CSR) component that fetches data DIRECTLY from the Supabase JS client.**
+
+-   **Rationale:** This pattern has proven to be the only 100% reliable method to defeat all layers of unpredictable production caching on Netlify (Next.js data cache, server cache, CDN cache).
+-   **Implementation:**
+    -   The page MUST be a `"use client"` component.
+    -   It MUST NOT use an internal API route (`/api/...`).
+    -   It MUST use the client-side Supabase JS library (`import { createClient } from '@/lib/supabase/client'`) inside a `useEffect` hook to fetch its data.
+    -   Security is ensured by Supabase's Row Level Security (RLS) policies, which are configured to only allow users with the `'admin'` role to read the data.
+-   *This pattern supersedes Rules A, B, C, and D for admin panel pages where absolute data freshness is non-negotiable.*
+
+## 6. Architectural Decision Records (ADR)
+
+### ADR-001: Admin Panel Caching Strategy
+
+-   **Status:** Decided
+-   **Context:** Throughout the project, we faced a persistent production bug where admin panel pages (`/admin/orders`, `/admin/products`) served stale data on Netlify, despite the correct implementation of standard Next.js revalidation features (`revalidatePath`, `force-dynamic`, `cache: 'no-store'`). New orders and products were not appearing without a new deployment.
+-   **Decision:** We have made the definitive architectural decision to **abandon all server-side rendering and intermediate API routes for critical admin list pages.** The final, successful architecture is a pure CSR pattern where the client component communicates directly with the Supabase database via the Supabase JS SDK.
+-   **Consequences:**
+    -   **Pros:** 100% guaranteed data freshness in any production environment. Simpler codebase with fewer layers (no API routes for these pages). Security is robustly handled by Supabase RLS.
+    -   **Cons:** Minor increase in client-side load. Exposes database query structure in the browser (deemed an acceptable risk for this internal tool due to strong RLS).
