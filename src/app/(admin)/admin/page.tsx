@@ -30,7 +30,7 @@ export default async function AdminPage() {
   }
 
   // Fetch data after authorization checks pass
-  const { data: orders, error } = await supabase.from("orders").select("total_amount");
+      const { data: orders, error } = await supabase.from("orders").select("total_amount");
 
   if (error) {
     console.error("Error fetching orders:", error);
@@ -39,7 +39,7 @@ export default async function AdminPage() {
 
   const totalOrders = orders?.length || 0;
   const totalRevenue = orders?.reduce((sum, order) => sum + order.total_amount, 0) || 0;
-    const products = await getAllProducts();
+  const products = await getAllProducts();
   const totalProducts = products.length;
 
   return (
