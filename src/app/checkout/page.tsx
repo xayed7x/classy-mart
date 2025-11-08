@@ -15,7 +15,6 @@ type ShippingInfo = {
   firstName: string;
   lastName: string;
   address: string;
-  division: string;
   district: string;
   upazila: string;
 };
@@ -29,7 +28,6 @@ export default function CheckoutPage() {
     firstName: "",
     lastName: "",
     address: "",
-    division: "",
     district: "",
     upazila: "",
   });
@@ -86,7 +84,7 @@ export default function CheckoutPage() {
                   htmlFor="email"
                   className="block text-sm font-sans dark:text-soft-white mb-2"
                 >
-                  Email Address
+                  Email Address (Optional)
                 </label>
                 <input
                   type="email"
@@ -94,7 +92,7 @@ export default function CheckoutPage() {
                   name="email"
                   value={shippingInfo.email}
                   onChange={handleInputChange}
-                  required
+                  placeholder="Email address (optional)"
                   className="w-full p-3 bg-white/10 text-foreground border border-muted-gold/20 rounded-lg backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-primary font-heading"
                 />
               </div>
@@ -205,23 +203,7 @@ export default function CheckoutPage() {
                   className="w-full p-3 bg-white/10 text-foreground border border-muted-gold/20 rounded-lg backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-primary font-heading"
                 />
               </div>
-              <div>
-                <label
-                  htmlFor="division"
-                  className="block text-sm font-sans dark:text-soft-white mb-2"
-                >
-                  Division
-                </label>
-                <input
-                  type="text"
-                  id="division"
-                  name="division"
-                  value={shippingInfo.division}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full p-3 bg-white/10 text-foreground border border-muted-gold/20 rounded-lg backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-primary font-heading"
-                />
-              </div>
+
             </div>
             <div className="mt-12">
               <h2 className="font-heading text-2xl dark:text-soft-white mb-6">
@@ -276,7 +258,7 @@ export default function CheckoutPage() {
                           </span>
                           {typeof item.color === 'object' && item.color?.hex && (
                             <span
-                              className="inline-block w-5 h-5 rounded-full border-2 border-foreground shadow-sm flex-shrink-0"
+                              className="inline-block w-5 h-5 rounded-full border border-border dark:border-zinc-800 shadow-sm flex-shrink-0"
                               style={{ backgroundColor: item.color.hex }}
                               title={item.color.name}
                             />

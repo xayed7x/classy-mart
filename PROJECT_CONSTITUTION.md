@@ -60,3 +60,16 @@ The project is configured for a dynamic, server-rendered deployment. The `next.c
 -   **Consequences:**
     -   **Pros:** 100% guaranteed data freshness in any production environment. Simpler codebase with fewer layers (no API routes for these pages). Security is robustly handled by Supabase RLS.
     -   **Cons:** Minor increase in client-side load. Exposes database query structure in the browser (deemed an acceptable risk for this internal tool due to strong RLS).
+
+### ADR-002: Checkout Form and UI Enhancements
+
+-   **Status:** Implemented
+-   **Context:** The checkout page required several updates to improve user experience and simplify the form. The email field was mandatory, the "division" field was redundant, the mobile back button was broken, and color swatches had inconsistent styling.
+-   **Decision:**
+    1.  The email field on the checkout page was made optional to reduce friction during checkout. The backend was updated to handle `null` email values.
+    2.  The "division" field was removed from the checkout form and the backend logic to simplify the address input.
+    3.  The mobile back button on the checkout page was fixed to point to the homepage (`/`) instead of a non-existent `/products` page.
+    4.  The border style of color swatches was standardized across the application (checkout page, cart drawer, product details) to match the product card's border for a consistent UI.
+-   **Consequences:**
+    -   **Pros:** Improved user experience during checkout, a cleaner and more consistent UI, and a more streamlined address form.
+    -   **Cons:** None.

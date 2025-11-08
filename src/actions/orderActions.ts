@@ -44,10 +44,10 @@ export async function placeOrder(
     const streetAddress = formData.get("address") as string;
     const upazila = formData.get("upazila") as string;
     const district = formData.get("district") as string;
-    const division = formData.get("division") as string;
-    const customerAddress = `${streetAddress}, ${upazila}, ${district}, ${division}`.trim();
+
+    const customerAddress = `${streetAddress}, ${upazila}, ${district}`.trim();
     const customerCity = district;
-    const customerEmail = formData.get("email") as string;
+    const customerEmail = (formData.get("email") as string) || null;
     const paymentMethod = formData.get("paymentMethod") as string;
 
     // Construct the order payload according to Supabase schema

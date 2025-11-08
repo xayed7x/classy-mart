@@ -147,7 +147,7 @@ export function ProductDetails({ product, stock, selectedImage }: ProductDetails
                       key={swatch.name}
                       onClick={() => setSelectedColor(swatch)}
                       className={cn(
-                        'h-10 w-10 rounded-full border-2 transition-all border-border dark:border-zinc-800',
+                        'h-10 w-10 rounded-full border transition-all border-border dark:border-zinc-800',
                         isSwatchObject(selectedColor) && selectedColor.name === swatch.name
                           ? 'border-primary ring-2 ring-primary ring-offset-2'
                           : ''

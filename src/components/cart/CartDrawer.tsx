@@ -63,7 +63,7 @@ function CartItem({ item, removeFromCart, updateQuantity }: CartItemProps) {
             </span>
             {colorHex && (
               <span
-                className="inline-block w-5 h-5 rounded-full border-2 border-white shadow-sm flex-shrink-0"
+                className="inline-block w-5 h-5 rounded-full border border-border dark:border-zinc-800 shadow-sm flex-shrink-0"
                 style={{ backgroundColor: colorHex }}
                 title={colorName || ''}
               />

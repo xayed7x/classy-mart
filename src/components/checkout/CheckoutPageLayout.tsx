@@ -19,7 +19,7 @@ export function CheckoutPageLayout({ children }: CheckoutPageLayoutProps) {
       {/* Mobile-Only Focused Header */}
       <div className="sticky top-0 z-30 flex items-center justify-between bg-background px-4 py-2 lg:hidden">
         <Link
-          href="/products" // Go back to products page
+          href="/" // Go back to homepage
           className="flex h-10 w-10 items-center justify-center rounded-full transition-colors text-foreground dark:text-foreground/60 hover:text-foreground dark:hover:text-foreground"
           aria-label="Go back"
         >
