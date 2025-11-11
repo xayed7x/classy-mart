@@ -6,6 +6,8 @@ import { ArrowLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { mapStatusToCustomerFriendlyText } from "@/lib/utils";
 
+export const dynamic = 'force-dynamic';
+
 interface OrderDetailPageProps {
   params: {
     orderId: string;

@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import { getProductBySlug } from '@/lib/contentful';
 import { ProductPageClient } from '@/components/products/ProductPageClient';
 
+export const dynamic = 'force-dynamic';
+
 interface ProductPageProps {
   params: {
     productHandle: string;

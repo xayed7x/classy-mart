@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { getAllProducts } from '@/lib/contentful';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://classymart-com.netlify.app'; // Replace with your actual production domain
+  const baseUrl = 'https://classymart2024.com';
   
   const products = await getAllProducts();
   const productUrls = products.map(product => ({

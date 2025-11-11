@@ -6,6 +6,8 @@ import Link from "next/link";
 import { OrderHistoryCard } from "@/components/account/OrderHistoryCard";
 import { Package, ArrowLeft } from "lucide-react";
 
+export const dynamic = 'force-dynamic';
+
 export default async function OrdersPage() {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);

@@ -7,6 +7,8 @@ import { OrderHistoryCard } from "@/components/account/OrderHistoryCard";
 import { Package } from "lucide-react";
 import { signOut } from "@/actions/authActions";
 
+export const dynamic = 'force-dynamic';
+
 export default async function AccountPage() {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);

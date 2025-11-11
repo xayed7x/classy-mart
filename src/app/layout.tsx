@@ -14,7 +14,7 @@ const satoshi = localFont({
   variable: "--font-satoshi",
 });
 
-const siteUrl = 'https://classymart-com.netlify.app'; // Replace with your actual production domain
+const siteUrl = 'https://classymart2024.com';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { getProductsByCollection } from '@/lib/contentful';
 import { CollectionPageClient } from '@/components/collections/CollectionPageClient';
 
+export const dynamic = 'force-dynamic';
+
 interface CollectionPageProps {
   params: {
     collectionHandle: string;

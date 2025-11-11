@@ -1,75 +1,129 @@
-# Project Constitution: Classy Mart
+# -----------------------------------------------------------
+#            PROJECT CONSTITUTION: "Classy Mart"
+# -----------------------------------------------------------
+# This document is the absolute source of truth for all
+# architectural decisions, core principles, and established
+# patterns for the Classy Mart e-commerce platform.
+#
+# ALL NEW FEATURES AND REFACTORS MUST ADHERE TO THESE RULES.
+# ANY AI WORKING ON THIS PROJECT MUST READ AND UNDERSTAND
+# THIS DOCUMENT BEFORE WRITING ANY CODE.
+# -----------------------------------------------------------
 
-This document outlines the core architectural principles and conventions for the Classy Mart project. Adhering to these guidelines is crucial for maintaining a scalable, performant, and maintainable codebase.
+## 1. The Core Doctrines (Our Philosophy)
 
-## 1. Core Principles
+- **"Better Than Amazon":** We compete on a curated, premium boutique experience, not logistics. Every design and UX choice must feel luxurious and intentional.
+- **"Supersonic" Performance:** Perceived performance is the most critical feature. We prioritize fast load times, instant transitions, and optimized assets. All pages must strive for a perfect Lighthouse score.
+- **"Fluid Motion":** All major user interactions must be enhanced with subtle, performant animations using `Framer Motion` to provide a responsive and premium feel.
+- **"Aura Lookbook" Design System:** The primary theme is a premium dark mode. All design choices must adhere to the established color palette and typography.
+  - **Primary Action Color:** Emerald Green (`#009B77`) is used for all primary CTAs (Add to Cart, Place Order, etc.).
+  - **Accent/Secondary Color:** Muted Gold (`#B4A284`) is used for secondary text, links, and highlights.
+  - **Fonts:** `Satoshi` for headings, `Inter` for body/UI text.
 
-- **Performance First:** Prioritize fast load times and a smooth user experience.
-- **Server-Centric Data Fetching:** Fetch data on the server whenever possible to ensure freshness and reduce client-side complexity.
-- **Consistency is Key:** Adhere to established patterns and conventions throughout the codebase.
-- **Dynamic Over Static for E-commerce:** The dynamic nature of our inventory, orders, and user data requires a server-rendered approach, not a static export.
+## 2. The Technology Stack (Non-Negotiable)
 
-## 2. Architectural Decisions
+- **Frontend Framework:** Next.js 14 (App Router)
+- **Styling:** Tailwind CSS with a variable-based Shadcn/UI theme.
+- **State Management:** Zustand. `useCartStore` for the global cart, `useProductPageStore` for PDP state.
+- **Backend Services:**
+  - **CMS (Products & Homepage Content):** Contentful
+  - **Database (Orders & User Profiles):** Supabase
+  - **Media (Images):** Cloudinary
+  - **Authentication:** Supabase Auth (with a dual-path system)
+- **Deployment:** Netlify
 
-### 2.1. Rendering and Data Fetching Strategy
+## 3. The "Golden Rule" of Production Caching (CRITICAL)
 
-**Primary Strategy: Server-Side Rendering (SSR) with Direct Database Access**
+**Problem Solved:** The live production site on Netlify MUST always display real-time data without requiring a new build. Stale data is the #1 critical bug.
 
-To ensure data freshness and eliminate caching-related bugs, all data-intensive pages (especially within the admin panel) **must** be implemented as async Server Components.
+**The Definitive Solution (A Multi-Layered Strategy):** All new features must respect and utilize this established architecture.
 
-- **Pattern:** Pages should be async components that directly query the database (e.g., Supabase) on the server.
-- **Implementation:** Use `export const dynamic = 'force-dynamic'` and `export const revalidate = 0` at the page level to enforce per-request rendering and prevent caching.
+- **Rule A (For Server Components):** Any server-rendered page that displays dynamic data from Contentful or Supabase (e.g., Homepage, Collection Pages) **MUST** include `export const dynamic = 'force-dynamic';` at the top of the `page.tsx` file.
 
-**Rationale:**
+- **Rule B (For Server Actions):** Any Server Action that mutates data (`create`, `update`, `delete`) **MUST** include a comprehensive list of `revalidatePath()` calls for all potentially affected routes *after* the successful mutation and *before* the final `redirect`.
 
-This approach was adopted after diagnosing a critical caching issue on the Admin Orders page. The previous architecture, which used client-side `fetch` calls to an API route, was prone to serving stale data due to multiple caching layers (browser, CDN).
+- **Rule C (For Critical Client Pages):** Highly interactive pages that require guaranteed real-time data (e.g., the entire Admin Panel) **MUST** use a full Client-Side Rendering (CSR) architecture.
+  - The page must be a `"use client"` component.
+  - It must fetch its data using a `useEffect` hook.
+  - The `fetch` call **MUST** be made to an internal, secure API route (e.g., `/api/admin/orders`).
+  - The `fetch` call **MUST** use the `{ cache: 'no-store' }` option and is recommended to use a cache-busting timestamp parameter (`?_t=${Date.now()}`).
 
-By fetching data directly on the server during the rendering process, we:
-1.  Bypass all intermediate caching layers.
-2.  Ensure the user always sees the most up-to-date information.
-3.  Simplify the architecture by removing the need for client-side data fetching logic and separate API routes for simple data retrieval.
+- **Rule D (For API Routes):** All internal API routes that serve dynamic data **MUST** include `export const dynamic = 'force-dynamic';` and are recommended to return explicit `Cache-Control: no-store` headers.
 
-**When to use Client-Side Rendering (CSR):**
+## 4. Architectural Patterns & Established Logic
 
-CSR should be limited to components that require heavy user interactivity and do not rely on frequently changing data.
+- **Image Handling:** All user-uploaded images are handled via a server action. The image is uploaded to **Cloudinary**, and the resulting secure **string URL** is saved to a **"Short text"** field in Contentful/Supabase. The database does **not** store image files.
 
-### 2.2. Deployment
+- **Authentication:** A dual-path system is in place.
+  - **Customers:** Use a modal-based (`Sheet`) UI for Sign In/Up with Email/Password and Google. Managed via client-side Supabase JS.
+  - **Admins:** Use a dedicated page (`/admin/login`). Access to all `/admin/*` routes is protected by a **`middleware.ts`** file that performs a real-time database check for the user's `role`.
 
-The project is configured for a dynamic, server-rendered deployment. The `next.config.js` file is set to `output: 'standalone'` to produce a self-contained Node.js server, not a static export. This is non-negotiable for our application's architecture.
+- **Form Submissions (Admin Panel):** All admin forms are CSR components that call Server Actions. All submit buttons are the reusable `<SubmitButton />` component which uses `useFormStatus` to show a pending state.
 
-## 3. The "Golden Rule" of Production Caching
-### Rule 0 (The "Nuclear Option" / Golden Pattern for Admin Panels): Direct-to-Database from the Client
+- **Text Formatting:** Long-text fields from Contentful that require line breaks to be preserved **MUST** be rendered in an element with the `whitespace-pre-line` Tailwind CSS class.
 
-**For any critical, interactive admin page that MUST display real-time data (e.g., Orders, Products), the primary architectural choice is a Client-Side Rendered (CSR) component that fetches data DIRECTLY from the Supabase JS client.**
+- **Error Handling:** All server actions and API routes must be wrapped in `try...catch` blocks to prevent server crashes and provide graceful error feedback.
 
--   **Rationale:** This pattern has proven to be the only 100% reliable method to defeat all layers of unpredictable production caching on Netlify (Next.js data cache, server cache, CDN cache).
--   **Implementation:**
-    -   The page MUST be a `"use client"` component.
-    -   It MUST NOT use an internal API route (`/api/...`).
-    -   It MUST use the client-side Supabase JS library (`import { createClient } from '@/lib/supabase/client'`) inside a `useEffect` hook to fetch its data.
-    -   Security is ensured by Supabase's Row Level Security (RLS) policies, which are configured to only allow users with the `'admin'` role to read the data.
--   *This pattern supersedes Rules A, B, C, and D for admin panel pages where absolute data freshness is non-negotiable.*
+## 5. Restrictions & Future Development
 
-## 6. Architectural Decision Records (ADR)
+- **Free Tier Constraint:** The application is designed to run within the free tiers of Netlify, Contentful, Supabase, and Cloudinary. Any new feature proposal must consider this constraint. Solutions that require frequent builds (e.g., webhooks triggering deployments) are **prohibited**.
 
-### ADR-001: Admin Panel Caching Strategy
+- **Phase 2 Features (On Hold):**
+  - Automated deletion of Cloudinary images when a product is deleted.
+  - A more advanced "On-Demand ISR" strategy if the current dynamic rendering proves to be a performance bottleneck (unlikely).
 
--   **Status:** Decided
--   **Context:** Throughout the project, we faced a persistent production bug where admin panel pages (`/admin/orders`, `/admin/products`) served stale data on Netlify, despite the correct implementation of standard Next.js revalidation features (`revalidatePath`, `force-dynamic`, `cache: 'no-store'`). New orders and products were not appearing without a new deployment.
--   **Decision:** We have made the definitive architectural decision to **abandon all server-side rendering and intermediate API routes for critical admin list pages.** The final, successful architecture is a pure CSR pattern where the client component communicates directly with the Supabase database via the Supabase JS SDK.
--   **Consequences:**
-    -   **Pros:** 100% guaranteed data freshness in any production environment. Simpler codebase with fewer layers (no API routes for these pages). Security is robustly handled by Supabase RLS.
-    -   **Cons:** Minor increase in client-side load. Exposes database query structure in the browser (deemed an acceptable risk for this internal tool due to strong RLS).
+## 6. Production Launch & Handover Configuration
 
-### ADR-002: Checkout Form and UI Enhancements
+### Production Domain
+- **Final Production Domain:** `classymart2024.com`
+- All hardcoded URLs in the codebase have been updated to use this domain:
+  - `src/app/sitemap.ts` - Sitemap base URL
+  - `src/app/robots.ts` - Robots.txt sitemap reference
+  - `src/app/layout.tsx` - Metadata base URL and OpenGraph URLs
 
--   **Status:** Implemented
--   **Context:** The checkout page required several updates to improve user experience and simplify the form. The email field was mandatory, the "division" field was redundant, the mobile back button was broken, and color swatches had inconsistent styling.
--   **Decision:**
-    1.  The email field on the checkout page was made optional to reduce friction during checkout. The backend was updated to handle `null` email values.
-    2.  The "division" field was removed from the checkout form and the backend logic to simplify the address input.
-    3.  The mobile back button on the checkout page was fixed to point to the homepage (`/`) instead of a non-existent `/products` page.
-    4.  The border style of color swatches was standardized across the application (checkout page, cart drawer, product details) to match the product card's border for a consistent UI.
--   **Consequences:**
-    -   **Pros:** Improved user experience during checkout, a cleaner and more consistent UI, and a more streamlined address form.
-    -   **Cons:** None.
+### Security Settings (Supabase)
+- **Row Level Security (RLS):** Enabled on all tables
+- **Email Confirmation:** Enabled for user authentication
+- **Admin Access:** Protected via middleware.ts with role-based access control
+
+### Environment Variables (Netlify)
+The following environment variables must be configured in Netlify:
+- `NEXT_PUBLIC_BASE_URL` - Set to `https://classymart2024.com`
+- `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anonymous key
+- `SUPABASE_SERVICE_ROLE_KEY` - Supabase service role key (server-side only)
+- `CONTENTFUL_SPACE_ID` - Contentful space ID
+- `CONTENTFUL_DELIVERY_API_ACCESS_TOKEN` - Contentful delivery API token
+- `CONTENTFUL_MANAGEMENT_API_ACCESS_TOKEN` - Contentful management API token
+- `CLOUDINARY_CLOUD_NAME` - Cloudinary cloud name
+- `CLOUDINARY_API_KEY` - Cloudinary API key
+- `CLOUDINARY_API_SECRET` - Cloudinary API secret
+
+### Payment Methods
+- **Cash on Delivery (COD):** Fully enabled and functional
+- **bKash:** Visually present but disabled with "Coming Soon" tooltip
+- **Nagad:** Visually present but disabled with "Coming Soon" tooltip
+
+### Final Codebase State
+- ✅ All dynamic pages include `export const dynamic = 'force-dynamic'`
+- ✅ All API routes include `export const dynamic = 'force-dynamic'` and Cache-Control headers
+- ✅ All server actions include comprehensive `try...catch` error handling
+- ✅ All admin CSR pages use `{ cache: 'no-store' }` in fetch calls
+- ✅ All URLs updated to production domain
+- ✅ Payment method selector refactored with disabled states and tooltips
+
+### Pre-Launch Checklist
+- [ ] Verify all environment variables are set in Netlify
+- [ ] Test admin login and role-based access
+- [ ] Verify email confirmation flow in Supabase
+- [ ] Test order placement and stock reduction
+- [ ] Verify RLS policies are active in Supabase
+- [ ] Test payment method selector (COD should work, bKash/Nagad should show "Coming Soon")
+- [ ] Verify sitemap.xml is accessible at `/sitemap.xml`
+- [ ] Verify robots.txt is accessible at `/robots.txt`
+- [ ] Test all admin CRUD operations (products, offers, social posts, lookbook)
+- [ ] Verify all revalidatePath calls are working correctly
+
+# -----------------------------------------------------------
+#           END OF PROJECT CONSTITUTION
+# -----------------------------------------------------------

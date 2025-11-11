@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/admin/', '/checkout/', '/account/'],
     },
-    sitemap: 'https://classymart-com.netlify.app//sitemap.xml', // Replace with your actual production domain
+    sitemap: 'https://classymart2024.com/sitemap.xml',
   };
 }

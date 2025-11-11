@@ -5,54 +5,67 @@ import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 
 export async function signInAdmin(prevState: any, formData: FormData) {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
+  try {
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
 
-  if (!email || !password) {
+    if (!email || !password) {
+      return {
+        error: "Email and password are required",
+      };
+    }
+
+    const cookieStore = await cookies();
+    const supabase = createClient(cookieStore);
+
+    // Sign in with Supabase
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (authError) {
+      return {
+        error: authError.message,
+      };
+    }
+
+    // Check if user has admin role
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", authData.user.id)
+      .single();
+
+    if (profileError || profile?.role !== "admin") {
+      // Sign out the user if they're not an admin
+      await supabase.auth.signOut();
+      return {
+        error: "Access denied. Admin privileges required.",
+      };
+    }
+
+    // Success - redirect to admin dashboard
+    redirect("/admin");
+  } catch (error: any) {
+    console.error("Error in signInAdmin:", error);
     return {
-      error: "Email and password are required",
+      error: error.message || "An unexpected error occurred. Please try again.",
     };
   }
-
-  const cookieStore = await cookies();
-  const supabase = createClient(cookieStore);
-
-  // Sign in with Supabase
-  const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-
-  if (authError) {
-    return {
-      error: authError.message,
-    };
-  }
-
-  // Check if user has admin role
-  const { data: profile, error: profileError } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", authData.user.id)
-    .single();
-
-  if (profileError || profile?.role !== "admin") {
-    // Sign out the user if they're not an admin
-    await supabase.auth.signOut();
-    return {
-      error: "Access denied. Admin privileges required.",
-    };
-  }
-
-  // Success - redirect to admin dashboard
-  redirect("/admin");
 }
 
 export async function signOut() {
-  const cookieStore = await cookies();
-  const supabase = createClient(cookieStore);
-  await supabase.auth.signOut();
-  redirect("/");
+  try {
+    const cookieStore = await cookies();
+    const supabase = createClient(cookieStore);
+    await supabase.auth.signOut();
+    redirect("/");
+  } catch (error: any) {
+    console.error("Error in signOut:", error);
+    // Even if sign out fails, redirect to home
+    redirect("/");
+  }
 }
 
 export async function login(prevState: any, formData: FormData) {

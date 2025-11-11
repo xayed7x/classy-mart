@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTiktok, faFacebookF, faInstagram } from '@fortawesome/free-brands-svg-icons';
+import { Mail, MessageSquareText, Link as LinkIcon } from 'lucide-react';
 
 const contactDetails = {
   customerSupport: {
@@ -184,15 +185,14 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Copyright Section */}
+        {/* Copyright, Payments, and Developer Info Section */}
         <hr className="mt-12 border-border" />
+
+        {/* Copyright & Payments */}
         <div className="mt-8 flex flex-col items-center justify-between gap-4 sm:flex-row">
-          {/* Copyright Notice */}
           <p className="font-sans text-sm text-muted-foreground">
             © {currentYear} Classy Mart. All Rights Reserved.
           </p>
-
-          {/* Payment Methods */}
           <div className="flex items-center gap-3">
             <span className="font-sans text-xs text-muted-foreground">
               We Accept:
@@ -205,6 +205,49 @@ export function Footer() {
                 <Image src="/icons/nagod.png" alt="Nagad" fill className="object-contain" />
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Developer Info */}
+        <div className="border-t border-muted-gold/20 mt-6 pt-6 flex flex-col md:flex-row justify-between items-center text-xs text-muted-foreground">
+          <p>
+            Designed & Developed by{' '}
+            <a 
+              href="https://www.linkedin.com/in/zayed-web-developer" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="font-semibold hover:text-soft-white transition-colors"
+            >
+              Zayed Bin Hamid
+            </a>
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mt-4 md:mt-0 md:justify-end">
+                          <a 
+                            href="mailto:zayed.b.hamid@gmail.com" 
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-soft-white transition-colors flex items-center gap-2"
+                          >              <Mail className="h-4 w-4" />
+              zayed.b.hamid@gmail.com
+            </a>
+            <a 
+              href="https://wa.me/8801977994057" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-soft-white transition-colors flex items-center gap-2"
+            >
+              <MessageSquareText className="h-4 w-4" />
+              WhatsApp
+            </a>
+            <a 
+              href="https://code-and-cortex.vercel.app/" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-soft-white transition-colors flex items-center gap-2"
+            >
+              <LinkIcon className="h-4 w-4" />
+              Website
+            </a>
           </div>
         </div>
       </div>

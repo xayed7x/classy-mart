@@ -29,11 +29,18 @@ export async function GET(
       );
     }
 
-    return NextResponse.json({ 
-      success: true, 
-      data: product,
-      isNew: false 
-    });
+    return NextResponse.json(
+      { 
+        success: true, 
+        data: product,
+        isNew: false 
+      },
+      {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        },
+      }
+    );
   } catch (error: any) {
     console.error("API Error fetching product:", error);
     return NextResponse.json(
