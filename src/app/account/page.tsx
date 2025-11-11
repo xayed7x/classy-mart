@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import { OrderHistoryCard } from "@/components/account/OrderHistoryCard";
 import { Package } from "lucide-react";
-import { signOut } from "@/actions/authActions";
+import { signOutUser } from "@/actions/authActions";
 
 export const dynamic = 'force-dynamic';
 
@@ -40,7 +40,7 @@ export default async function AccountPage() {
               </p>
             )}
           </div>
-          <form action={signOut} className="mt-6">
+          <form action={signOutUser} className="mt-6">
             <button
               type="submit"
               className="bg-primary text-primary-foreground dark:bg-primary dark:text-rich-black font-bold uppercase tracking-wider font-heading py-2 px-4 rounded-lg transition-transform hover:scale-105 disabled:opacity-50 text-sm"

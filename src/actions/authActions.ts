@@ -55,17 +55,32 @@ export async function signInAdmin(prevState: any, formData: FormData) {
   }
 }
 
-export async function signOut() {
+export async function signOutUser() {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+
   try {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
-    await supabase.auth.signOut();
-    redirect("/");
-  } catch (error: any) {
-    console.error("Error in signOut:", error);
-    // Even if sign out fails, redirect to home
-    redirect("/");
+    // First, tell Supabase to sign the user out
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error('Error signing out:', error);
+      // Still proceed to clear cookies
+    }
+
+    // Manually find and remove all Supabase auth cookies
+    const allCookies = cookieStore.getAll();
+    allCookies.forEach((cookie) => {
+      if (cookie.name.startsWith('sb-') && cookie.name.includes('-auth-token')) {
+        cookieStore.delete(cookie.name);
+      }
+    });
+
+  } catch (err) {
+    console.error('Unexpected error during sign out:', err);
   }
+  
+  // Finally, redirect to the homepage to complete the process
+  return redirect('/');
 }
 
 export async function login(prevState: any, formData: FormData) {
