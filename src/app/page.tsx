@@ -1,4 +1,33 @@
+import type { Metadata } from 'next';
+
 export const dynamic = 'force-dynamic';
+
+const siteUrl = 'https://classymart2024.com';
+
+export const metadata: Metadata = {
+  title: 'Classy Mart | Premium Men\'s Fashion & Clothing in Bangladesh',
+  description: 'Discover authentic, premium quality men\'s clothing at Classy Mart. Shop the latest collection of shirts, t-shirts, pants, jackets, and Panjabis online in Bangladesh. Cash on delivery available.',
+  openGraph: {
+    title: 'Classy Mart | Premium Men\'s Fashion & Clothing in Bangladesh',
+    description: 'The new standard for men\'s fashion in Bangladesh. Shop our latest collection of premium apparel.',
+    images: [
+      {
+        url: `${siteUrl}/logo.png`, // Absolute URL
+        width: 1200,
+        height: 630,
+        alt: 'Classy Mart Logo',
+      },
+    ],
+    type: 'website',
+    url: siteUrl,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Classy Mart | Premium Men\'s Fashion & Clothing in Bangladesh',
+    description: 'The new standard for men\'s fashion in Bangladesh. Shop our latest collection of premium apparel.',
+    images: [`${siteUrl}/Screenshot 2025-10-17 115959.png`], // Absolute URL
+  },
+};
 
 import { Suspense } from 'react';
 import { getFeaturedProducts, getAllFeaturedOffers, getLookbookData, getJustForYouProducts, getAllSocialPosts } from '@/lib/contentful';

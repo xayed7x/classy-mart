@@ -172,14 +172,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product }) => {
               defaultValue={product?.fields.sizes?.join(", ") || ""}
             />
           </div>
-          <div>
-            <Label htmlFor="colors">Colors (comma-separated)</Label>
-            <AdminInput
-              id="colors"
-              name="colors"
-              defaultValue={product?.fields.colors?.join(", ") || ""}
-            />
-          </div>
+
           <div className="md:col-span-2">
             <ColorSwatchManager
               value={colorSwatches}
