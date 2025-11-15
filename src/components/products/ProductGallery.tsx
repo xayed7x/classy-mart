@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import useEmblaCarousel from 'embla-carousel-react';
-import { cn } from '@/lib/utils';
+import { cn, getOptimizedCloudinaryUrl } from '@/lib/utils';
 import Lightbox from 'yet-another-react-lightbox';
 import 'yet-another-react-lightbox/styles.css';
 import { ZoomIn } from 'lucide-react';
@@ -137,7 +137,7 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product, selecte
         open={isLightboxOpen}
         close={() => setIsLightboxOpen(false)}
         index={lightboxIndex}
-        slides={allImages.map((src: string) => ({ src }))}
+        slides={allImages.map((src: string) => ({ src: getOptimizedCloudinaryUrl(src) }))}
         on={{
           view: ({ index }) => setLightboxIndex(index),
         }}
