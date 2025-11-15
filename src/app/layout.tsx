@@ -74,6 +74,17 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${satoshi.variable}`}>
         <RootLayoutClient>{children}</RootLayoutClient>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: 'Classy Mart',
+              url: 'https://classymart2024.com',
+            }),
+          }}
+        />
       </body>
     </html>
   );
