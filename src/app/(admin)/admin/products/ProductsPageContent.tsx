@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ProductListItem } from "./ProductListItem";
+import { MobileProductCard } from "./MobileProductCard";
 
 export default function ProductsPageContent() {
   const searchParams = useSearchParams();
@@ -108,7 +109,16 @@ export default function ProductsPageContent() {
         </div>
       ) : (
         <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          
+          {/* Mobile Card View */}
+          <div className="md:hidden space-y-4 p-4">
+            {products.map((product) => (
+              <MobileProductCard key={product.id} product={product} />
+            ))}
+          </div>
+
+          {/* Desktop Table View */}
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 hidden md:table">
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">

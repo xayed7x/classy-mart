@@ -97,15 +97,15 @@ export function ImmersiveSearch() {
           </button>
         </div>
         <div className="p-4">
-          {isLoading && <div className="text-muted-foreground">Searching...</div>}
+          {isLoading && <div className="text-muted-foreground font-sans">Searching...</div>}
           {!isLoading && results.length === 0 && query.length > 1 && (
-            <div className="text-muted-foreground">No results found for "{query}"</div>
+            <div className="text-muted-foreground font-sans">No results found for "{query}"</div>
           )}
           <ul className="space-y-2">
             {results.map((product, index) => (
               <li
                 key={product.id}
-                className={`p-2 rounded-md cursor-pointer ${selectedIndex === index ? 'bg-accent' : ''}`}
+                className={`p-3 rounded-md cursor-pointer transition-colors ${selectedIndex === index ? 'bg-white/10' : 'hover:bg-white/5'}`}
                 onMouseEnter={() => setSelectedIndex(index)}
                 onClick={() => {
                   router.push(`/products/${product.slug}`);
@@ -121,8 +121,8 @@ export function ImmersiveSearch() {
                     className="rounded-md mr-4"
                   />
                   <div>
-                    <div className="text-foreground font-bold">{product.name}</div>
-                    <div className="text-muted-foreground">{product.category}</div>
+                    <div className="text-foreground font-bold font-heading">{product.name}</div>
+                    <div className="text-muted-gold/80 font-sans text-xs uppercase tracking-wide">{product.category}</div>
                   </div>
                 </div>
               </li>

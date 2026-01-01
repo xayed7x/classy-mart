@@ -78,7 +78,64 @@ function AdminOrdersPageContent() {
       <h1 className="text-3xl font-bold mb-6">Orders</h1>
       <OrderFilter />
       <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        
+        {/* Mobile Card View */}
+        <div className="md:hidden divide-y divide-gray-200 dark:divide-gray-700">
+          {orders && orders.length > 0 ? (
+            orders.map((order) => (
+              <div 
+                key={order.id} 
+                className="p-4 active:bg-gray-50 dark:active:bg-gray-700/50 transition-colors"
+                onClick={() => setSelectedOrder(order)}
+              >
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <p className="font-semibold text-gray-900 dark:text-white">{order.customer_name}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      {new Date(order.created_at).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold text-primary">৳&nbsp;{order.total_amount.toFixed(2)}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">#{order.id.substring(0, 6)}</p>
+                  </div>
+                </div>
+                
+                <div className="flex justify-between items-center mt-3">
+                  <div onClick={(e) => e.stopPropagation()} className="flex-1 mr-4">
+                    <OrderStatusSelector 
+                      orderId={order.id} 
+                      currentStatus={order.order_status}
+                      onStatusUpdate={fetchOrders}
+                    />
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedOrder(order);
+                    }}
+                    className="p-2 text-muted-gold hover:text-primary transition-colors"
+                  >
+                    <Eye size={20} />
+                  </button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+              No orders found
+            </div>
+          )}
+        </div>
+
+        {/* Desktop Table View */}
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 hidden md:table">
           <thead className="bg-gray-50 dark:bg-gray-700">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Order ID</th>

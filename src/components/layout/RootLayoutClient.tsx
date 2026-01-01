@@ -14,6 +14,7 @@ export function RootLayoutClient({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isProductPage = pathname.startsWith("/products");
   const isCheckoutPage = pathname.startsWith("/checkout");
+  const isAdminPage = pathname.startsWith("/admin");
 
   const [isDesktop, setIsDesktop] = useState(false);
 
@@ -37,10 +38,10 @@ export function RootLayoutClient({ children }: { children: React.ReactNode }) {
       <ParallaxProviderWrapper>
         <CartController />
         <ImmersiveSearch />
-        {(!((isProductPage || isCheckoutPage) && !isDesktop)) && <Header />}
+        {(!((isProductPage || isCheckoutPage) && !isDesktop) && !isAdminPage) && <Header />}
         {children}
         <Footer />
-        {!isProductPage && !isCheckoutPage && !isDesktop && <BottomNavBar />}
+        {!isProductPage && !isCheckoutPage && !isAdminPage && !isDesktop && <BottomNavBar />}
       </ParallaxProviderWrapper>
     </ThemeProvider>
   );

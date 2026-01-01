@@ -21,12 +21,25 @@ export function BottomNavBar() {
   const { cartItems } = useCartStore();
   const { open } = useCartDrawerStore();
   const [user, setUser] = useState<any>(null);
+  const [profile, setProfile] = useState<any>(null);
   const supabase = createClient();
+
+  const fetchProfile = async (userId: string) => {
+    const { data } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', userId)
+      .single();
+    setProfile(data);
+  };
 
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchProfile(session.user.id);
+      }
     });
 
     // Listen for auth changes
@@ -34,6 +47,11 @@ export function BottomNavBar() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchProfile(session.user.id);
+      } else {
+        setProfile(null);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -81,12 +99,12 @@ export function BottomNavBar() {
       {/* Account */}
       {user ? (
         <Link
-          href="/account"
-          aria-label="Account"
+          href={profile?.role === 'admin' ? '/admin' : '/account'}
+          aria-label={profile?.role === 'admin' ? 'Admin Dashboard' : 'Account'}
           className="flex flex-col items-center gap-1 text-foreground dark:text-foreground/60 hover:text-foreground dark:hover:text-foreground active:text-foreground dark:active:text-foreground"
         >
           <User strokeWidth={1.5} size={24} />
-          <span className="text-xs font-medium">Account</span>
+          <span className="text-xs font-medium">{profile?.role === 'admin' ? 'Admin' : 'Account'}</span>
         </Link>
       ) : (
         <CustomerAuthModal>

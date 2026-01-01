@@ -34,15 +34,15 @@ export function SocialPostListItem({ post }: SocialPostListItemProps) {
   }, [deleteState, router]);
 
   return (
-    <div className="flex justify-between items-center p-4 border rounded bg-white shadow-sm dark:bg-zinc-800 dark:border-zinc-700">
-      <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+    <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 rounded-lg shadow-sm border border-muted-gold/10 bg-rich-black mb-4 transition-all hover:bg-white/5 gap-4">
+      <h2 className="text-base font-semibold text-soft-white font-heading break-all line-clamp-2 md:line-clamp-1 flex-1 mr-4">
         {post.postLink}
       </h2>
-      <div className="flex gap-4">
-        <Link href={`/admin/homepage/social/${post.id}`}>
+      <div className="flex gap-3 w-full md:w-auto mt-2 md:mt-0">
+        <Link href={`/admin/homepage/social/${post.id}`} className="flex-1 md:flex-none">
           <Button
             variant="outline"
-            className="text-green-500 border-green-500 hover:bg-green-50 dark:text-green-400 dark:border-green-400"
+            className="w-full md:w-auto text-green-400 border-green-500/50 hover:bg-green-500/10 hover:text-green-300 font-sans h-9"
           >
             Edit
           </Button>
@@ -52,12 +52,12 @@ export function SocialPostListItem({ post }: SocialPostListItemProps) {
           const form = document.getElementById(`delete-form-${post.id}`) as HTMLFormElement;
           form.requestSubmit();
         }}>
-          <form id={`delete-form-${post.id}`} action={deleteAction}>
+          <form id={`delete-form-${post.id}`} action={deleteAction} className="flex-1 md:flex-none">
             <input type="hidden" name="postId" value={post.id} />
             <Button
               type="button"
               variant="destructive"
-              className="bg-red-500 text-white hover:bg-red-600"
+              className="w-full md:w-auto bg-red-600/90 text-white hover:bg-red-600 font-sans border border-red-500/50 h-9"
             >
               Delete
             </Button>

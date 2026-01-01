@@ -47,7 +47,7 @@ interface OrderDetailsModalProps {
 export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
   return (
     <Sheet open={true} onOpenChange={onClose}>
-      <SheetContent size="lg" className="overflow-y-auto">
+      <SheetContent size="lg" className="overflow-y-auto w-[95%] sm:max-w-lg">
         <SheetHeader>
           <SheetTitle className="text-2xl font-bold font-heading">Order Details</SheetTitle>
           <SheetDescription className="font-heading">

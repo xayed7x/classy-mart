@@ -145,8 +145,8 @@ export function Header() {
           <div className="hidden md:flex">
             {user ? (
               <Link
-                href="/account"
-                aria-label="Account"
+                href={profile?.role === 'admin' ? '/admin' : '/account'}
+                aria-label={profile?.role === 'admin' ? 'Admin Dashboard' : 'Account'}
                 className="text-foreground dark:text-foreground/60 hover:text-foreground dark:hover:text-foreground"
               >
                 <User strokeWidth={1.5} size={20} />

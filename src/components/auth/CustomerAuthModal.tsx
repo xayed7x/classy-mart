@@ -11,7 +11,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/Sheet";
 import { Input } from "@/components/ui/input";
-import { User } from "lucide-react";
+import { User, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { AuthSubmitButton } from "@/components/auth/AuthSubmitButton";
 import { useRouter } from "next/navigation";
@@ -40,6 +40,7 @@ export function CustomerAuthModal({ children }: CustomerAuthModalProps) {
     password: "",
     fullName: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const supabase = createClient();
   const router = useRouter();
@@ -81,8 +82,7 @@ export function CustomerAuthModal({ children }: CustomerAuthModalProps) {
       );
       setIsOpen(false);
       setFormData({ email: "", password: "", fullName: "" });
-      // You would typically close the modal and show a "success" message here
-      // or automatically log them in. For now, let's just confirm it works.
+      router.push("/account");
     } catch (err) {
       // This will catch any other unexpected JS errors
 
@@ -243,18 +243,28 @@ export function CustomerAuthModal({ children }: CustomerAuthModalProps) {
             >
               Password
             </label>
-            <Input
-              id="password"
-              type="password"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-              required
-              placeholder="••••••••"
-              minLength={6}
-              className="w-full p-3 bg-white/10 text-foreground border border-muted-gold/20 rounded-lg backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-primary font-heading"
-            />
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+                required
+                placeholder="••••••••"
+                minLength={6}
+                className="w-full p-3 pr-12 bg-white/10 text-foreground border border-muted-gold/20 rounded-lg backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-primary font-heading"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-gold/60 hover:text-muted-gold transition-colors"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
           </div>
 
           {error && <p className="text-red-500 text-sm mb-4 dark:text-soft-white">{error}</p>}
