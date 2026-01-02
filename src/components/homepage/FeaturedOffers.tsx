@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
+import { getOptimizedCloudinaryUrl } from "@/lib/utils";
 
 interface FeaturedOffersProps {
   offers: any[];
@@ -21,7 +22,7 @@ export function FeaturedOffers({ offers }: FeaturedOffersProps) {
       <Link href={offer.ctaLink || "#"}>
         <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
           <Image
-            src={offer.image}
+            src={getOptimizedCloudinaryUrl(offer.image, { width: 500 })}
             alt={offer.title}
             fill
             className="object-cover"

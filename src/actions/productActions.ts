@@ -5,8 +5,14 @@ import { redirect } from "next/navigation";
 import cloudinary from "@/lib/cloudinary"; // Assuming image uploads are involved
 import { contentfulManagementClient } from "@/lib/contentful";
 
-// Helper function to upload an image to Cloudinary (re-using from offerActions)
-async function uploadImage(file: File): Promise<string> {
+// Interface for upload result with publicId for rollback capability
+interface UploadResult {
+  url: string;
+  publicId: string;
+}
+
+// Helper function to upload an image to Cloudinary and return both URL and publicId
+async function uploadImageWithId(file: File): Promise<UploadResult> {
   const arrayBuffer = await file.arrayBuffer();
   const buffer = new Uint8Array(arrayBuffer);
   const uploadResult: any = await new Promise((resolve, reject) => {
@@ -18,7 +24,26 @@ async function uploadImage(file: File): Promise<string> {
       resolve(result);
     }).end(buffer);
   });
-  return uploadResult.secure_url;
+  return { url: uploadResult.secure_url, publicId: uploadResult.public_id };
+}
+
+// Extract publicId from Cloudinary URL
+// URL format: https://res.cloudinary.com/xxx/image/upload/v123/folder/abc123.jpg
+function extractPublicId(url: string): string | null {
+  if (!url || !url.includes('cloudinary.com')) return null;
+  const match = url.match(/\/upload\/(?:v\d+\/)?(.+?)(?:\.[^.]+)?$/);
+  return match ? match[1] : null;
+}
+
+// Delete images from Cloudinary by publicIds
+async function deleteCloudinaryImages(publicIds: string[]): Promise<void> {
+  for (const publicId of publicIds) {
+    try {
+      await cloudinary.uploader.destroy(publicId);
+    } catch (error) {
+      console.error(`Failed to delete Cloudinary image ${publicId}:`, error);
+    }
+  }
 }
 
 export async function createOrUpdateProduct(prevState: any, formData: FormData) {
@@ -58,17 +83,23 @@ export async function createOrUpdateProduct(prevState: any, formData: FormData) 
   const galleryImageFiles = formData.getAll("galleryImages") as File[];
   const currentGalleryImageUrls = JSON.parse(formData.get("currentGalleryImageUrls") as string || "[]");
 
+  // Track newly uploaded images for rollback on error
+  const newlyUploadedPublicIds: string[] = [];
+
   try {
     let mainImageUrl: string | null = currentMainImageUrl;
     if (mainImageFile && mainImageFile.size > 0) {
-      mainImageUrl = await uploadImage(mainImageFile);
+      const result = await uploadImageWithId(mainImageFile);
+      mainImageUrl = result.url;
+      newlyUploadedPublicIds.push(result.publicId);
     }
 
     let galleryImageUrls: string[] = [...currentGalleryImageUrls];
     for (const file of galleryImageFiles) {
       if (file && file.size > 0) {
-        const url = await uploadImage(file);
-        galleryImageUrls.push(url);
+        const result = await uploadImageWithId(file);
+        galleryImageUrls.push(result.url);
+        newlyUploadedPublicIds.push(result.publicId);
       }
     }
 
@@ -124,6 +155,13 @@ export async function createOrUpdateProduct(prevState: any, formData: FormData) 
     return { success: true, message: "Product saved successfully!" };
   } catch (error: any) {
     console.error("Contentful API Error:", error);
+    
+    // ROLLBACK: Delete newly uploaded images from Cloudinary
+    if (newlyUploadedPublicIds.length > 0) {
+      console.log("Rolling back Cloudinary uploads:", newlyUploadedPublicIds);
+      await deleteCloudinaryImages(newlyUploadedPublicIds);
+    }
+    
     return { error: error.message || "Failed to save product. Please check server logs." };
   }
 }
@@ -142,13 +180,32 @@ export async function deleteProduct(prevState: any, formData: FormData) {
     const productSlug = entry.fields.slug?.['en-US'];
     const productCategory = entry.fields.category?.['en-US'];
     
+    // Extract image URLs for Cloudinary cleanup
+    const mainImageUrl = entry.fields.mainImage?.['en-US'] as string | undefined;
+    const galleryImageUrls = (entry.fields.galleryImages?.['en-US'] || []) as string[];
+    
     // Unpublish first if published
     if (entry.isPublished()) {
       await entry.unpublish();
     }
     
-    // Then delete
+    // Then delete from Contentful
     await entry.delete();
+    
+    // Delete images from Cloudinary
+    const publicIdsToDelete: string[] = [];
+    if (mainImageUrl) {
+      const id = extractPublicId(mainImageUrl);
+      if (id) publicIdsToDelete.push(id);
+    }
+    for (const url of galleryImageUrls) {
+      const id = extractPublicId(url);
+      if (id) publicIdsToDelete.push(id);
+    }
+    if (publicIdsToDelete.length > 0) {
+      console.log("Deleting Cloudinary images:", publicIdsToDelete);
+      await deleteCloudinaryImages(publicIdsToDelete);
+    }
 
     // Comprehensive revalidation for all affected pages
     revalidatePath("/"); // Homepage

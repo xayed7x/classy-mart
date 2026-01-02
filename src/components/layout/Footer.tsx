@@ -1,18 +1,22 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTiktok, faFacebookF, faInstagram } from '@fortawesome/free-brands-svg-icons';
+import { faTiktok, faFacebookF, faInstagram, faWhatsapp, faTelegram } from '@fortawesome/free-brands-svg-icons';
 import { Mail, MessageSquareText, Link as LinkIcon } from 'lucide-react';
 
 const contactDetails = {
   customerSupport: {
       phoneNumbers: ['+8801626985454', '+8801621518538', '+8801635814979'],
       email: 'classymart.com@gmail.com',
+      whatsapp: '+8801304561370',
+      telegram: '+8801304561370',
   },
   socialMedia: {
       facebook: 'https://www.facebook.com/share/16AYxJpL1d/?mibextid=wwXIfr',
       instagram: 'https://www.instagram.com/classymart2024?igsh=bXAyZm95Z2tramRo&utm_source=qr',
       tiktok: 'https://www.tiktok.com/@classymart3?_t=ZS-90oiQSAg4FJ&_r=1',
+      whatsapp: 'https://wa.me/8801304561370',
+      telegram: 'https://t.me/+8801304561370',
   },
 };
 
@@ -77,6 +81,24 @@ export function Footer() {
                 aria-label="TikTok"
               >
                 <FontAwesomeIcon icon={faTiktok} strokeWidth={1.5} size="lg" />
+              </Link>
+              <Link
+                href={contactDetails.socialMedia.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-foreground/60 hover:text-green-500"
+                aria-label="WhatsApp"
+              >
+                <FontAwesomeIcon icon={faWhatsapp} strokeWidth={1.5} size="lg" />
+              </Link>
+              <Link
+                href={contactDetails.socialMedia.telegram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-foreground/60 hover:text-blue-500"
+                aria-label="Telegram"
+              >
+                <FontAwesomeIcon icon={faTelegram} strokeWidth={1.5} size="lg" />
               </Link>
             </div>
           </div>
@@ -176,6 +198,28 @@ export function Footer() {
                         </a>
                     </li>
                 ))}
+                {/* WhatsApp & Telegram */}
+                <li className="flex items-center space-x-2">
+                    <Link
+                        href={contactDetails.socialMedia.whatsapp}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-green-500 hover:scale-110 transition-transform"
+                        title="Chat on WhatsApp"
+                    >
+                        <FontAwesomeIcon icon={faWhatsapp} size="sm" />
+                    </Link>
+                    <Link
+                        href={contactDetails.socialMedia.telegram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 hover:scale-110 transition-transform"
+                        title="Chat on Telegram"
+                    >
+                        <FontAwesomeIcon icon={faTelegram} size="sm" />
+                    </Link>
+                    <span className="font-sans text-sm text-foreground/60">+8801304561370</span>
+                </li>
                 <li>
                     <a href={`mailto:${contactDetails.customerSupport.email}`} className="font-sans text-sm text-foreground/60 hover:text-foreground">
                         {contactDetails.customerSupport.email}

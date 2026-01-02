@@ -100,9 +100,9 @@ export function Header() {
           {user && (
             <div className="lg:hidden">
               {user && profile ? (
-                <p className="font-bold text-foreground dark:text-foreground">Welcome back, {profile.full_name || user.email}</p>
+                <p className="text-sm font-medium font-sans text-foreground dark:text-foreground/60">Welcome back, {profile.full_name || user.email}</p>
               ) : (
-                <p className="font-bold text-foreground dark:text-foreground">Welcome back, Guest</p>
+                <p className="text-sm font-medium font-sans text-foreground dark:text-foreground/60">Welcome back, Guest</p>
               )}
             </div>
           )}

@@ -9,6 +9,7 @@ interface Order {
   total_amount: number;
   order_status: string;
   ordered_products: any[];
+  order_number: number;
 }
 
 interface OrderHistoryCardProps {
@@ -51,7 +52,7 @@ export function OrderHistoryCard({ order }: OrderHistoryCardProps) {
         <div className="flex items-center gap-3">
           <div>
             <p className="text-sm text-muted-foreground mb-1">
-              ORDER #{order.id.slice(0, 8).toUpperCase()}
+              ORDER #{order.order_number}
             </p>
             <p className="text-sm text-muted-foreground">
               {totalItems} {totalItems === 1 ? "item" : "items"}

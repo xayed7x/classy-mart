@@ -11,6 +11,7 @@ import { getOrderDetails } from '@/actions/orderActions';
 interface OrderData {
   cart: CartItem[];
   total: number;
+  order_number: number;
 }
 
 export default function PaymentSuccessContent() {
@@ -52,14 +53,20 @@ export default function PaymentSuccessContent() {
       <div className="max-w-2xl w-full bg-white/10 border border-muted-gold/20 rounded-2xl p-8">
         <div className="text-center">
           <div className="flex justify-center mb-4">
-            <CheckCircle className="w-16 h-16 text-green-500" />
+            <CheckCircle className="w-16 h-16 text-amber-500" />
           </div>
-          <h1 className="font-heading text-3xl dark:text-soft-white mb-4">
-            Thank You! Your Order is Confirmed.
+          <h1 className="font-heading text-3xl dark:text-soft-white mb-2">
+            Thank You! Your Order is Received.
           </h1>
-          {orderId && (
-            <p className="text-muted-foreground mb-6">
-              Your Order ID is: <span className="font-bold text-foreground">{orderId}</span>
+          <p className="text-muted-gold/80 font-sans text-base mb-4">
+            Your order is <span className="text-amber-400 font-semibold">awaiting confirmation</span>. Our representative will call you shortly to verify and confirm your order.
+          </p>
+          <p className="text-muted-foreground/70 text-sm font-sans">
+            Thank you for your patience! 🙏
+          </p>
+          {orderData?.order_number && (
+            <p className="text-muted-foreground mt-4">
+              Your Order Number: <span className="font-bold text-foreground text-xl">#{orderData.order_number}</span>
             </p>
           )}
         </div>

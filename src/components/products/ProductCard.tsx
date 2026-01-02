@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Star, Heart } from "lucide-react";
 import { Product } from "@/types/product";
-import { cn } from "@/lib/utils";
+import { cn, getOptimizedCloudinaryUrl } from "@/lib/utils";
 
 interface ProductCardProps {
   product: Product;
@@ -17,8 +17,12 @@ export function ProductCard({ product, className }: ProductCardProps) {
   }
 
   const { name, slug, price, originalPrice, images, rating, reviewCount, salePercentage } = product;
-  const mainImage = images?.main || "/images/placeholder.png";
-  const hoverImage = images?.gallery?.[0] || mainImage; // Use first gallery image for hover, or mainImage
+  const mainImage = images?.main 
+    ? getOptimizedCloudinaryUrl(images.main, { width: 400 }) 
+    : "/images/placeholder.png";
+  const hoverImage = images?.gallery?.[0] 
+    ? getOptimizedCloudinaryUrl(images.gallery[0], { width: 400 }) 
+    : mainImage;
   const hasHoverImage = hoverImage && hoverImage !== mainImage;
 
   return (

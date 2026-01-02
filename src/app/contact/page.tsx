@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Facebook, Instagram, Phone, Mail, MapPin, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTiktok } from '@fortawesome/free-brands-svg-icons';
+import { faTiktok, faWhatsapp, faTelegram } from '@fortawesome/free-brands-svg-icons';
 
 export const metadata: Metadata = {
   title: 'Contact Us',
@@ -54,6 +54,8 @@ const contactDetails = {
         facebook: 'https://www.facebook.com/share/16AYxJpL1d/?mibextid=wwXIfr',
         instagram: 'https://www.instagram.com/classymart2024?igsh=bXAyZm95Z2tramRo&utm_source=qr',
         tiktok: 'https://www.tiktok.com/@classymart3?_t=ZS-90oiQSAg4FJ&_r=1',
+        whatsapp: 'https://wa.me/8801304561370',
+        telegram: 'https://t.me/+8801304561370',
     },
 };
 
@@ -91,6 +93,32 @@ export default function ContactPage() {
                                     </a>
                                 ))}
                             </div>
+                            
+                            {/* WhatsApp & Telegram Contact */}
+                            <div className="flex items-center space-x-3 py-2">
+                                <div className="flex items-center space-x-2">
+                                    <a 
+                                        href={contactDetails.socialMedia.whatsapp} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-green-500 hover:scale-110 transition-transform"
+                                        title="Chat on WhatsApp"
+                                    >
+                                        <FontAwesomeIcon icon={faWhatsapp} className="h-6 w-6" />
+                                    </a>
+                                    <a 
+                                        href={contactDetails.socialMedia.telegram} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-blue-500 hover:scale-110 transition-transform"
+                                        title="Chat on Telegram"
+                                    >
+                                        <FontAwesomeIcon icon={faTelegram} className="h-6 w-6" />
+                                    </a>
+                                </div>
+                                <span className="text-foreground">+8801304561370</span>
+                            </div>
+                            
                             <div>
                                 <a href={`mailto:${contactDetails.customerSupport.email}`} target="_blank" className="flex items-center space-x-3 group">
                                     <Mail size={20} className="text-muted-foreground group-hover:text-primary transition-colors" />
@@ -117,9 +145,16 @@ export default function ContactPage() {
                         <a href={contactDetails.socialMedia.instagram} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-transform duration-300 hover:scale-110">
                             <Instagram size={32} />
                         </a>
-                            <a href={contactDetails.socialMedia.tiktok} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-transform duration-300 hover:scale-110">
+                        <a href={contactDetails.socialMedia.tiktok} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-transform duration-300 hover:scale-110">
                                 <FontAwesomeIcon icon={faTiktok} className="h-8 w-8" />
-                            </a>                    </div>
+                            </a>
+                        <a href={contactDetails.socialMedia.whatsapp} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-green-500 transition-transform duration-300 hover:scale-110">
+                            <FontAwesomeIcon icon={faWhatsapp} className="h-8 w-8" />
+                        </a>
+                        <a href={contactDetails.socialMedia.telegram} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-blue-500 transition-transform duration-300 hover:scale-110">
+                            <FontAwesomeIcon icon={faTelegram} className="h-8 w-8" />
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

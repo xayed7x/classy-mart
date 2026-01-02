@@ -49,7 +49,7 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
           </Badge>
         </div>
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-muted-foreground">
-          <span>Order #{order.id.slice(0, 8).toUpperCase()}</span>
+          <span>Order #{order.order_number}</span>
           <span className="hidden sm:inline">•</span>
           <span>Placed on {orderDate}</span>
         </div>

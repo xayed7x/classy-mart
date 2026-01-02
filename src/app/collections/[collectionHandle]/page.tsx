@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { getProductsByCollection } from '@/lib/contentful';
 import { CollectionPageClient } from '@/components/collections/CollectionPageClient';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60; // ISR: Revalidate every 60 seconds
 
 interface CollectionPageProps {
   params: {

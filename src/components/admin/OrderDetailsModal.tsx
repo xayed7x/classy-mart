@@ -37,6 +37,7 @@ interface Order {
   payment_status: string;
   order_status: string;
   created_at: string;
+  order_number: number;
 }
 
 interface OrderDetailsModalProps {
@@ -51,7 +52,7 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
         <SheetHeader>
           <SheetTitle className="text-2xl font-bold font-heading">Order Details</SheetTitle>
           <SheetDescription className="font-heading">
-            Order ID: {order.id.substring(0, 8)}...
+            Order #{order.order_number}
           </SheetDescription>
         </SheetHeader>
 

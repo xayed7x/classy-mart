@@ -168,6 +168,7 @@ export async function getOrderDetails(orderId: string) {
     return {
       cart: data.ordered_products,
       total: data.total_amount,
+      order_number: data.order_number,
     };
   } catch (error) {
     console.error("Failed to fetch order details:", error);

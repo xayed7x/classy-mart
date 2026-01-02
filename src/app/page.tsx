@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60; // ISR: Revalidate every 60 seconds
 
 const siteUrl = 'https://classymart2024.com';
 

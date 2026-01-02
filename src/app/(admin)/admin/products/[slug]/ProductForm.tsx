@@ -101,6 +101,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product }) => {
             <AdminInput
               id="name"
               name="name"
+              placeholder="e.g., Premium Tailored Formal Pant"
               defaultValue={product?.fields.name || ""}
               required
             />
@@ -113,6 +114,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product }) => {
               type="number"
               step="1"
               min="0"
+              placeholder="e.g., 1200"
               defaultValue={product?.fields.price?.toString() || ""}
               required
             />
@@ -125,6 +127,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product }) => {
               type="number"
               step="1"
               min="0"
+              placeholder="e.g., 1500 (for showing discount)"
               defaultValue={product?.fields.originalPrice?.toString() || ""}
             />
           </div>
@@ -149,6 +152,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product }) => {
             <AdminInput
               id="subcategory"
               name="subcategory"
+              placeholder="e.g., Formal, Casual, Slim Fit"
               defaultValue={product?.fields.subcategory || ""}
             />
           </div>
@@ -160,6 +164,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product }) => {
               type="number"
               step="1"
               min="0"
+              placeholder="e.g., 100"
               defaultValue={product?.fields.stock?.toString() || ""}
               required
             />
@@ -169,6 +174,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product }) => {
             <AdminInput
               id="sizes"
               name="sizes"
+              placeholder="e.g., M, L, XL, XXL"
               defaultValue={product?.fields.sizes?.join(", ") || ""}
             />
           </div>
@@ -189,6 +195,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product }) => {
             <AdminInput
               id="shortDescription"
               name="shortDescription"
+              placeholder="Brief summary (max 256 characters)"
               defaultValue={product?.fields.shortDescription || ""}
             />
           </div>
@@ -197,6 +204,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product }) => {
             <AdminTextarea
               id="longDescription"
               name="longDescription"
+              placeholder="Detailed product description including features, benefits, and unique selling points..."
               defaultValue={product?.fields.longDescription || ""}
               rows={5}
             />
@@ -206,6 +214,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product }) => {
             <AdminTextarea
               id="sizingAndFit"
               name="sizingAndFit"
+              placeholder="e.g., Slim fit, true to size."
               defaultValue={product?.fields.sizingAndFit || ""}
               rows={5}
             />
@@ -215,6 +224,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product }) => {
             <AdminTextarea
               id="materialsAndCare"
               name="materialsAndCare"
+              placeholder="e.g., 100% Premium Cotton. Machine wash cold. Tumble dry low."
               defaultValue={product?.fields.materialsAndCare || ""}
               rows={5}
             />
@@ -296,6 +306,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product }) => {
                 name="rating"
                 type="number"
                 step="0.1"
+                placeholder="e.g., 4.5"
                 defaultValue={product?.fields.rating?.toString() || ""}
               />
             </div>
@@ -307,6 +318,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product }) => {
                 type="number"
                 step="1"
                 min="0"
+                placeholder="e.g., 100"
                 defaultValue={product?.fields.reviewCount?.toString() || ""}
               />
             </div>

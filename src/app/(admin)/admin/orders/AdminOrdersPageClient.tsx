@@ -24,6 +24,7 @@ interface Order {
   payment_status: string;
   order_status: string;
   created_at: string;
+  order_number: number;
 }
 
 function AdminOrdersPageContent() {
@@ -103,7 +104,7 @@ function AdminOrdersPageContent() {
                   </div>
                   <div className="text-right">
                     <p className="font-bold text-primary">৳&nbsp;{order.total_amount.toFixed(2)}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">#{order.id.substring(0, 6)}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Order #{order.order_number}</p>
                   </div>
                 </div>
                 
@@ -157,7 +158,7 @@ function AdminOrdersPageContent() {
                   onClick={() => setSelectedOrder(order)}
                 >
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                    {order.id.substring(0, 8)}...
+                    #{order.order_number}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                     {order.customer_name}

@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { getProductBySlug } from '@/lib/contentful';
 import { ProductPageClient } from '@/components/products/ProductPageClient';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60; // ISR: Revalidate every 60 seconds
 
 interface ProductPageProps {
   params: {

@@ -59,7 +59,7 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product, selecte
                 onClick={() => handleMobileImageClick(index)}
               >
                 <Image
-                  src={src}
+                  src={getOptimizedCloudinaryUrl(src, { width: 800 })}
                   alt={`${productName} image ${index + 1}`}
                   fill
                   className="object-cover"
@@ -94,7 +94,7 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product, selecte
           }}
         >
           <Image
-            src={selectedImage}
+            src={getOptimizedCloudinaryUrl(selectedImage, { width: 800 })}
             alt={`Featured image of ${productName}`}
             fill
             className="object-cover transition-opacity duration-300"
@@ -121,7 +121,7 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product, selecte
               )}
             >
               <Image
-                src={src}
+                src={getOptimizedCloudinaryUrl(src, { width: 200 })}
                 alt={`${productName} thumbnail ${index + 1}`}
                 fill
                 className="object-cover"
@@ -137,7 +137,7 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product, selecte
         open={isLightboxOpen}
         close={() => setIsLightboxOpen(false)}
         index={lightboxIndex}
-        slides={allImages.map((src: string) => ({ src: getOptimizedCloudinaryUrl(src) }))}
+        slides={allImages.map((src: string) => ({ src: getOptimizedCloudinaryUrl(src, { width: 1200 }) }))}
         on={{
           view: ({ index }) => setLightboxIndex(index),
         }}
