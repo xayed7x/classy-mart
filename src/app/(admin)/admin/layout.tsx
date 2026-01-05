@@ -43,7 +43,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Sidebar Navigation */}
       <aside 
         className={`
-          fixed md:sticky top-0 left-0 h-screen w-64 bg-rich-black text-soft-white shadow-xl 
+          fixed md:sticky top-0 left-0 h-screen w-52 bg-rich-black text-soft-white shadow-xl 
           border-r border-muted-gold/10 z-50 transition-transform duration-300 ease-in-out
           ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0
         `}

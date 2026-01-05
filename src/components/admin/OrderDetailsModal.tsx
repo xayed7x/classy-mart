@@ -123,9 +123,9 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
                         <span>
                           {item.size && `Size: ${item.size}`}
                           {item.size && item.color && ' • '}
-                          {item.color && `Color: ${typeof item.color === 'string' ? item.color : item.color.name}`}
+                          {item.color && `Color: ${typeof item.color === 'string' ? item.color : (item.color?.name || 'N/A')}`}
                         </span>
-                        {typeof item.color === 'object' && item.color.hex && (
+                        {item.color && typeof item.color === 'object' && item.color !== null && item.color.hex && (
                           <span
                             className="inline-block w-4 h-4 rounded-full border border-gray-300 dark:border-gray-600"
                             style={{ backgroundColor: item.color.hex }}
@@ -139,9 +139,9 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
                     </p>
                   </div>
                   <div className="text-right font-heading">
-                    <p className="font-semibold">৳&nbsp;{item.price.toFixed(2)}</p>
+                    <p className="font-semibold">৳&nbsp;{(item.price ?? 0).toFixed(2)}</p>
                     <p className="text-xs text-muted-foreground">
-                      Total: ৳&nbsp;{(item.price * item.quantity).toFixed(2)}
+                      Total: ৳&nbsp;{((item.price ?? 0) * (item.quantity ?? 1)).toFixed(2)}
                     </p>
                   </div>
                 </div>
@@ -182,16 +182,16 @@ export function OrderDetailsModal({ order, onClose }: OrderDetailsModalProps) {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Subtotal:</span>
-                <span className="font-medium font-heading">৳&nbsp;{order.subtotal.toFixed(2)}</span>
+                <span className="font-medium font-heading">৳&nbsp;{(order.subtotal ?? 0).toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Shipping Cost:</span>
-                <span className="font-medium font-heading">৳&nbsp;{order.shipping_cost.toFixed(2)}</span>
+                <span className="font-medium font-heading">৳&nbsp;{(order.shipping_cost ?? 0).toFixed(2)}</span>
               </div>
               <div className="flex justify-between pt-2 border-t border-gray-300 dark:border-gray-600">
                 <span className="font-semibold text-base font-heading">Total Amount:</span>
                 <span className="font-bold text-lg text-primary font-heading">
-                  ৳&nbsp;{order.total_amount.toFixed(2)}
+                  ৳&nbsp;{(order.total_amount ?? 0).toFixed(2)}
                 </span>
               </div>
             </div>

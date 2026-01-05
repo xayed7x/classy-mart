@@ -103,7 +103,7 @@ function AdminOrdersPageContent() {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold text-primary">৳&nbsp;{order.total_amount.toFixed(2)}</p>
+                    <p className="font-bold text-primary">৳&nbsp;{(order.total_amount ?? 0).toFixed(2)}</p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">Order #{order.order_number}</p>
                   </div>
                 </div>
@@ -136,17 +136,18 @@ function AdminOrdersPageContent() {
         </div>
 
         {/* Desktop Table View */}
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 hidden md:table">
+        <div className="hidden md:block overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead className="bg-gray-50 dark:bg-gray-700">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Order ID</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Customer</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Total</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Phone</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Email</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-16">ID</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Customer</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-24">Date</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Total</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider max-w-[120px]">Phone</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider max-w-[150px]">Email</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-32">Status</th>
+              <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-16">View</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -157,45 +158,44 @@ function AdminOrdersPageContent() {
                   className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
                   onClick={() => setSelectedOrder(order)}
                 >
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                  <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                     #{order.order_number}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300 font-medium">
                     {order.customer_name}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                     {new Date(order.created_at).toLocaleDateString('en-US', {
-                      year: 'numeric',
                       month: 'short',
                       day: 'numeric'
                     })}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                    ৳&nbsp;{order.total_amount.toFixed(2)}
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300 font-medium">
+                    ৳&nbsp;{(order.total_amount ?? 0).toFixed(0)}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300 max-w-[120px] truncate" title={order.customer_phone}>
                     {order.customer_phone}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300 max-w-[150px] truncate" title={order.customer_email}>
                     {order.customer_email}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300" onClick={(e) => e.stopPropagation()}>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300" onClick={(e) => e.stopPropagation()}>
                     <OrderStatusSelector 
                       orderId={order.id} 
                       currentStatus={order.order_status}
                       onStatusUpdate={fetchOrders}
                     />
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300 text-center">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         setSelectedOrder(order);
                       }}
-                      className="text-primary hover:text-primary/80 transition-colors"
+                      className="p-1.5 bg-primary/10 hover:bg-primary/20 text-primary rounded-md transition-colors"
                       title="View Details"
                     >
-                      <Eye size={18} />
+                      <Eye size={16} />
                     </button>
                   </td>
                 </tr>
@@ -209,6 +209,7 @@ function AdminOrdersPageContent() {
             )}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* Order Details Modal */}
