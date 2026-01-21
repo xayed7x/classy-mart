@@ -1,15 +1,51 @@
+/**
+ * CONTENTFUL INTEGRATION
+ * ======================
+ * 
+ * এই ফাইলটি Contentful CMS থেকে ডাটা ফেচ করে।
+ * 
+ * DEMO_MODE = true হলে → হার্ডকোড ডাটা রিটার্ন করবে
+ * DEMO_MODE = false হলে → Contentful API কল করবে
+ * 
+ * [INTEGRATION POINT] মার্ক করা জায়গাগুলো dynamic mode এ API ব্যবহার করে
+ */
+
 import { createClient } from "contentful";
 import { createClient as createManagementClient } from "contentful-management";
 import { Product } from "@/types/product";
+import { DEMO_MODE } from "./demo-mode";
+import { ALL_PRODUCTS } from "@/data/products";
+import { DEMO_OFFERS } from "@/data/demo-offers";
+import { getDemoLookbookData } from "@/data/demo-lookbook";
+import { DEMO_SOCIAL_POSTS } from "@/data/demo-social";
 
-export const contentfulClient = createClient({
-  space: process.env.CONTENTFUL_SPACE_ID!,
-  accessToken: process.env.CONTENTFUL_DELIVERY_API_ACCESS_TOKEN!,
-});
+// ============================================
+// [INTEGRATION POINT] Contentful Clients
+// Dynamic মোডে এই clients ব্যবহার হয়
+// ============================================
+let contentfulClient: ReturnType<typeof createClient> | null = null;
+let contentfulManagementClient: ReturnType<typeof createManagementClient> | null = null;
 
-export const contentfulManagementClient = createManagementClient({
-  accessToken: process.env.CONTENTFUL_MANAGEMENT_API_ACCESS_TOKEN!,
-});
+// Only initialize clients when not in demo mode and env vars exist
+if (!DEMO_MODE && process.env.CONTENTFUL_SPACE_ID && process.env.CONTENTFUL_DELIVERY_API_ACCESS_TOKEN) {
+  contentfulClient = createClient({
+    space: process.env.CONTENTFUL_SPACE_ID,
+    accessToken: process.env.CONTENTFUL_DELIVERY_API_ACCESS_TOKEN,
+  });
+}
+
+if (!DEMO_MODE && process.env.CONTENTFUL_MANAGEMENT_API_ACCESS_TOKEN) {
+  contentfulManagementClient = createManagementClient({
+    accessToken: process.env.CONTENTFUL_MANAGEMENT_API_ACCESS_TOKEN,
+  });
+}
+
+// Export for use in other files (may be null in demo mode)
+export { contentfulClient, contentfulManagementClient };
+
+// ============================================
+// Helper Functions
+// ============================================
 
 function transformContentfulProduct(entry: any): Product {
   if (!entry || !entry.fields) {
@@ -52,8 +88,39 @@ function transformContentfulProduct(entry: any): Product {
   };
 }
 
+function transformContentfulOffer(entry: any) {
+  if (!entry || !entry.fields) return null;
+  return {
+    id: entry.sys.id,
+    title: entry.fields.title || "",
+    ctaButtonText: entry.fields.ctaButtonText || "",
+    ctaLink: entry.fields.ctaLink || "",
+    image: entry.fields.image || "",
+  };
+}
+
+function transformContentfulSocialPost(entry: any) {
+  if (!entry || !entry.fields) return null;
+  return {
+    id: entry.sys.id,
+    image: entry.fields.image || "",
+    postLink: entry.fields.postLink || "",
+  };
+}
+
+// ============================================
+// PRODUCT FUNCTIONS
+// ============================================
+
 export async function getFeaturedProducts(): Promise<Product[]> {
+  // 🎯 DEMO MODE: Return hardcoded featured products
+  if (DEMO_MODE) {
+    return ALL_PRODUCTS.filter(p => p.isFeatured).slice(0, 8);
+  }
+
+  // [INTEGRATION POINT] Dynamic Mode: Fetch from Contentful
   try {
+    if (!contentfulClient) throw new Error("Contentful client not initialized");
     const entries = await contentfulClient.getEntries({
       content_type: "product",
       "fields.isFeatured": true,
@@ -68,7 +135,15 @@ export async function getFeaturedProducts(): Promise<Product[]> {
 }
 
 export async function getJustForYouProducts(): Promise<Product[]> {
+  // 🎯 DEMO MODE: Return a random subset of products
+  if (DEMO_MODE) {
+    // Return products that are not featured (simulating "just for you")
+    return ALL_PRODUCTS.filter(p => !p.isFeatured).slice(0, 8);
+  }
+
+  // [INTEGRATION POINT] Dynamic Mode: Fetch from Contentful
   try {
+    if (!contentfulClient) throw new Error("Contentful client not initialized");
     const entries = await contentfulClient.getEntries({
       content_type: "product",
       "fields.displayOnHomepage": true,
@@ -82,7 +157,14 @@ export async function getJustForYouProducts(): Promise<Product[]> {
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
+  // 🎯 DEMO MODE: Find product in hardcoded data
+  if (DEMO_MODE) {
+    return ALL_PRODUCTS.find(p => p.slug === slug) || null;
+  }
+
+  // [INTEGRATION POINT] Dynamic Mode: Fetch from Contentful
   try {
+    if (!contentfulClient) throw new Error("Contentful client not initialized");
     const entries = await contentfulClient.getEntries({
       content_type: "product",
       "fields.slug": slug,
@@ -97,7 +179,14 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
 }
 
 export async function getAllProducts(): Promise<Product[]> {
+  // 🎯 DEMO MODE: Return all hardcoded products
+  if (DEMO_MODE) {
+    return ALL_PRODUCTS;
+  }
+
+  // [INTEGRATION POINT] Dynamic Mode: Fetch from Contentful
   try {
+    if (!contentfulClient) throw new Error("Contentful client not initialized");
     const entries = await contentfulClient.getEntries({
       content_type: "product",
     });
@@ -114,7 +203,19 @@ interface ProductCollectionQuery {
 }
 
 export async function getProductsByCollection(collectionHandle: string): Promise<Product[]> {
+  // 🎯 DEMO MODE: Filter hardcoded products by category
+  if (DEMO_MODE) {
+    if (collectionHandle === 'all') {
+      return ALL_PRODUCTS;
+    }
+    return ALL_PRODUCTS.filter(
+      p => p.category.toLowerCase() === collectionHandle.toLowerCase()
+    );
+  }
+
+  // [INTEGRATION POINT] Dynamic Mode: Fetch from Contentful
   try {
+    if (!contentfulClient) throw new Error("Contentful client not initialized");
     const query: ProductCollectionQuery = {
       content_type: "product",
       'fields.category': collectionHandle.toLowerCase(),
@@ -134,7 +235,20 @@ export async function getProductsByCollection(collectionHandle: string): Promise
 }
 
 export async function searchProducts(query: string): Promise<Product[]> {
+  // 🎯 DEMO MODE: Search in hardcoded products
+  if (DEMO_MODE) {
+    const lowerQuery = query.toLowerCase();
+    return ALL_PRODUCTS.filter(p => 
+      p.name.toLowerCase().includes(lowerQuery) ||
+      p.category.toLowerCase().includes(lowerQuery) ||
+      p.shortDescription?.toLowerCase().includes(lowerQuery) ||
+      p.longDescription?.toLowerCase().includes(lowerQuery)
+    );
+  }
+
+  // [INTEGRATION POINT] Dynamic Mode: Search via Contentful
   try {
+    if (!contentfulClient) throw new Error("Contentful client not initialized");
     const entries = await contentfulClient.getEntries({
       content_type: "product",
       query: query,
@@ -148,7 +262,38 @@ export async function searchProducts(query: string): Promise<Product[]> {
 }
 
 export async function getProductBySlugRaw(slug: string): Promise<any | null> {
+  // 🎯 DEMO MODE: Return product with simulated Contentful structure
+  if (DEMO_MODE) {
+    const product = ALL_PRODUCTS.find(p => p.slug === slug);
+    if (!product) return null;
+    return {
+      sys: { id: product.id },
+      fields: {
+        name: product.name,
+        slug: product.slug,
+        price: product.price,
+        originalPrice: product.originalPrice,
+        mainImage: product.images.main,
+        galleryImages: product.images.gallery,
+        category: product.category,
+        subcategory: product.subcategory,
+        sizes: product.sizes,
+        colors: product.colors,
+        shortDescription: product.shortDescription,
+        longDescription: product.longDescription,
+        sizingAndFit: product.sizingAndFit,
+        materialsAndCare: product.materialsAndCare,
+        stock: product.stock,
+        isFeatured: product.isFeatured,
+        rating: product.rating,
+        reviewCount: product.reviewCount,
+      },
+    };
+  }
+
+  // [INTEGRATION POINT] Dynamic Mode: Fetch raw from Contentful
   try {
+    if (!contentfulClient) throw new Error("Contentful client not initialized");
     const entries = await contentfulClient.getEntries({
       content_type: "product",
       "fields.slug": slug,
@@ -162,31 +307,59 @@ export async function getProductBySlugRaw(slug: string): Promise<any | null> {
   }
 }
 
-function transformContentfulOffer(entry: any) {
-  if (!entry || !entry.fields) return null;
-  return {
-    id: entry.sys.id,
-    title: entry.fields.title || "",
-    ctaButtonText: entry.fields.ctaButtonText || "",
-    ctaLink: entry.fields.ctaLink || "",
-    image: entry.fields.image || "",
-  };
-}
+// ============================================
+// OFFERS FUNCTIONS
+// ============================================
 
 export async function getAllFeaturedOffers() {
-  const entries = await contentfulClient.getEntries({
-    content_type: "featuredOffer",
-  });
-  return entries.items.map(transformContentfulOffer);
+  // 🎯 DEMO MODE: Return hardcoded offers
+  if (DEMO_MODE) {
+    return DEMO_OFFERS;
+  }
+
+  // [INTEGRATION POINT] Dynamic Mode: Fetch from Contentful
+  try {
+    if (!contentfulClient) throw new Error("Contentful client not initialized");
+    const entries = await contentfulClient.getEntries({
+      content_type: "featuredOffer",
+    });
+    return entries.items.map(transformContentfulOffer);
+  } catch (error) {
+    console.error("Error fetching featured offers:", error);
+    return [];
+  }
 }
 
 export async function getFeaturedOfferById(id: string) {
-  const entry = await contentfulClient.getEntry(id);
-  return transformContentfulOffer(entry);
+  // 🎯 DEMO MODE: Find offer by ID
+  if (DEMO_MODE) {
+    return DEMO_OFFERS.find(offer => offer.id === id) || null;
+  }
+
+  // [INTEGRATION POINT] Dynamic Mode: Fetch from Contentful
+  try {
+    if (!contentfulClient) throw new Error("Contentful client not initialized");
+    const entry = await contentfulClient.getEntry(id);
+    return transformContentfulOffer(entry);
+  } catch (error) {
+    console.error(`Error fetching offer by id ${id}:`, error);
+    return null;
+  }
 }
 
+// ============================================
+// LOOKBOOK FUNCTIONS
+// ============================================
+
 export async function getLookbookData() {
+  // 🎯 DEMO MODE: Return hardcoded lookbook data
+  if (DEMO_MODE) {
+    return getDemoLookbookData();
+  }
+
+  // [INTEGRATION POINT] Dynamic Mode: Fetch from Contentful
   try {
+    if (!contentfulClient) throw new Error("Contentful client not initialized");
     const entries = await contentfulClient.getEntries({
       content_type: 'lookbook',
       limit: 1,
@@ -205,7 +378,14 @@ export async function getLookbookData() {
 }
 
 export async function getLookbookEntryRAW(): Promise<any | null> {
+  // 🎯 DEMO MODE: Return hardcoded lookbook
+  if (DEMO_MODE) {
+    return getDemoLookbookData();
+  }
+
+  // [INTEGRATION POINT] Dynamic Mode: Fetch from Contentful
   try {
+    if (!contentfulClient) throw new Error("Contentful client not initialized");
     const entries = await contentfulClient.getEntries({
       content_type: "lookbook",
       limit: 1,
@@ -219,17 +399,19 @@ export async function getLookbookEntryRAW(): Promise<any | null> {
   }
 }
 
-function transformContentfulSocialPost(entry: any) {
-  if (!entry || !entry.fields) return null;
-  return {
-    id: entry.sys.id,
-    image: entry.fields.image || "",
-    postLink: entry.fields.postLink || "",
-  };
-}
+// ============================================
+// SOCIAL POSTS FUNCTIONS
+// ============================================
 
 export async function getAllSocialPosts() {
+  // 🎯 DEMO MODE: Return hardcoded social posts
+  if (DEMO_MODE) {
+    return DEMO_SOCIAL_POSTS;
+  }
+
+  // [INTEGRATION POINT] Dynamic Mode: Fetch from Contentful
   try {
+    if (!contentfulClient) throw new Error("Contentful client not initialized");
     const entries = await contentfulClient.getEntries({
       content_type: "socialPost",
       order: ["-sys.createdAt"],
@@ -242,7 +424,14 @@ export async function getAllSocialPosts() {
 }
 
 export async function getSocialPostById(id: string) {
+  // 🎯 DEMO MODE: Find social post by ID
+  if (DEMO_MODE) {
+    return DEMO_SOCIAL_POSTS.find(post => post.id === id) || null;
+  }
+
+  // [INTEGRATION POINT] Dynamic Mode: Fetch from Contentful
   try {
+    if (!contentfulClient) throw new Error("Contentful client not initialized");
     const entry = await contentfulClient.getEntry(id);
     return transformContentfulSocialPost(entry);
   } catch (error) {
@@ -251,7 +440,23 @@ export async function getSocialPostById(id: string) {
   }
 }
 
+// ============================================
+// COLLECTIONS FUNCTIONS
+// ============================================
+
 export async function getAllCollections(): Promise<string[]> {
+  // 🎯 DEMO MODE: Get unique categories from hardcoded products
+  if (DEMO_MODE) {
+    const categories = new Set<string>();
+    ALL_PRODUCTS.forEach(product => {
+      if (product.category) {
+        categories.add(product.category.toLowerCase());
+      }
+    });
+    return Array.from(categories);
+  }
+
+  // [INTEGRATION POINT] Dynamic Mode: Get from Contentful
   try {
     const products = await getAllProducts();
     const categories = new Set<string>();
@@ -266,4 +471,3 @@ export async function getAllCollections(): Promise<string[]> {
     return [];
   }
 }
-

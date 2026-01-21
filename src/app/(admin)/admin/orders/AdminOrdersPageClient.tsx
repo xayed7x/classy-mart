@@ -7,7 +7,7 @@ import OrderFilter from '@/components/admin/OrderFilter';
 import { AdminTableSkeleton } from '@/components/skeletons/AdminTableSkeleton';
 import { Eye } from 'lucide-react';
 import { OrderDetailsModal } from '@/components/admin/OrderDetailsModal';
-import { createClient } from '@/lib/supabase/client';
+import { getAllOrders } from '@/actions/orderActions';
 
 interface Order {
   id: string;
@@ -24,7 +24,7 @@ interface Order {
   payment_status: string;
   order_status: string;
   created_at: string;
-  order_number: number;
+  order_number: number | string;
 }
 
 function AdminOrdersPageContent() {
@@ -40,21 +40,16 @@ function AdminOrdersPageContent() {
     setIsLoading(true);
     setError(null);
     try {
+      // 🎯 Use server action which handles demo/dynamic mode
+      const allOrders = await getAllOrders();
+      
+      // Filter by status if specified
       const status = currentStatus || 'all';
-      const supabase = createClient();
+      const filteredOrders = status === 'all' 
+        ? allOrders 
+        : allOrders.filter((order: Order) => order.order_status === status);
 
-      let query = supabase.from('orders').select('*');
-      if (status && status !== 'all') {
-        query = query.eq('order_status', status);
-      }
-
-      const { data: orders, error } = await query.order('created_at', { ascending: false });
-
-      if (error) {
-        throw error;
-      }
-
-      setOrders(orders || []);
+      setOrders(filteredOrders || []);
     } catch (err: any) {
       setError(err.message);
     } finally {

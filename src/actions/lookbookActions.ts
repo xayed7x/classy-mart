@@ -1,24 +1,40 @@
+/**
+ * LOOKBOOK ACTIONS
+ * ================
+ * 
+ * DEMO_MODE = true → Mock success
+ * DEMO_MODE = false → Contentful + Cloudinary
+ */
+
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-import cloudinary from "@/lib/cloudinary";
-import { contentfulManagementClient, contentfulClient } from "@/lib/contentful"; // Import contentfulClient for getLookbookData
+import { DEMO_MODE } from "@/lib/demo-mode";
 
-// Helper function to upload an image to Cloudinary (re-using from offerActions)
+let cloudinary: any = null;
+let contentfulManagementClient: any = null;
+let contentfulClient: any = null;
+
+if (!DEMO_MODE) {
+  try {
+    cloudinary = require("@/lib/cloudinary").default;
+    const contentful = require("@/lib/contentful");
+    contentfulManagementClient = contentful.contentfulManagementClient;
+    contentfulClient = contentful.contentfulClient;
+  } catch (error) {
+    console.warn("Cloudinary/Contentful not configured");
+  }
+}
+
 async function uploadImage(file: File): Promise<string> {
+  if (!cloudinary) throw new Error("Cloudinary not configured");
   const arrayBuffer = await file.arrayBuffer();
   const buffer = new Uint8Array(arrayBuffer);
   const uploadResult: any = await new Promise((resolve, reject) => {
-    cloudinary.uploader
-      .upload_stream({}, (error, result) => {
-        if (error) {
-          reject(error);
-          return;
-        }
-        resolve(result);
-      })
-      .end(buffer);
+    cloudinary.uploader.upload_stream({}, (error: any, result: any) => {
+      if (error) reject(error);
+      else resolve(result);
+    }).end(buffer);
   });
   return uploadResult.secure_url;
 }
@@ -28,7 +44,17 @@ export async function updateLookbook(prevState: any, formData: FormData) {
   const subtitle = formData.get("subtitle") as string;
   const ctaButtonText = formData.get("ctaButtonText") as string;
   const ctaLink = formData.get("ctaLink") as string;
-  const image = formData.get("backgroundImage") as File; // Assuming field name is backgroundImage
+
+  // 🎯 DEMO MODE
+  if (DEMO_MODE) {
+    console.log('🎯 DEMO MODE: Mock lookbook update:', title);
+    await new Promise(resolve => setTimeout(resolve, 300));
+    revalidatePath("/");
+    return { success: true, message: "DEMO MODE: Lookbook updated! (Not persisted)" };
+  }
+
+  // [INTEGRATION POINT] Dynamic Mode
+  const image = formData.get("backgroundImage") as File;
   const currentImageUrl = formData.get("currentImageUrl") as string | null;
 
   try {
@@ -39,19 +65,16 @@ export async function updateLookbook(prevState: any, formData: FormData) {
       imageUrl = currentImageUrl;
     }
 
-    const space = await contentfulManagementClient.getSpace(
-      process.env.CONTENTFUL_SPACE_ID!
-    );
+    const space = await contentfulManagementClient.getSpace(process.env.CONTENTFUL_SPACE_ID!);
     const environment = await space.getEnvironment("master");
 
-    // Fetch the single lookbook entry
     const entries = await contentfulClient.getEntries({
       content_type: "lookbook",
       limit: 1,
     });
 
     if (!entries.items || entries.items.length === 0) {
-      return { error: "No Lookbook entry found in Contentful. Please create one." };
+      return { error: "No Lookbook entry found in Contentful." };
     }
 
     const lookbookEntryId = entries.items[0].sys.id;
@@ -61,11 +84,10 @@ export async function updateLookbook(prevState: any, formData: FormData) {
     entry.fields.subtitle["en-US"] = subtitle;
     entry.fields.ctaButtonText["en-US"] = ctaButtonText;
     entry.fields.ctaLink["en-US"] = ctaLink;
-    entry.fields.backgroundImage["en-US"] = imageUrl; // Assuming backgroundImage is localized
+    entry.fields.backgroundImage["en-US"] = imageUrl;
 
-    // Correct update/publish sequence
-    const updatedEntry = await entry.update(); // Save the draft and get the NEW version
-    await updatedEntry.publish(); // Publish using the NEW version
+    const updatedEntry = await entry.update();
+    await updatedEntry.publish();
 
     revalidatePath("/");
     revalidatePath("/admin/homepage/lookbook");
@@ -73,6 +95,6 @@ export async function updateLookbook(prevState: any, formData: FormData) {
     return { success: true, message: "Lookbook updated successfully!" };
   } catch (error: any) {
     console.error("Contentful API Error:", error);
-    return { error: error.message || "Failed to update lookbook. Please check server logs." };
+    return { error: error.message || "Failed to update lookbook." };
   }
 }

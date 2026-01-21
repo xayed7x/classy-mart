@@ -43,7 +43,7 @@ export function Footer() {
             <Link href="/" className="inline-block">
               <Image
                 src="/logo.png"
-                alt="Classy Mart"
+                alt="Velora"
                 width={120}
                 height={40}
                 className="h-8 w-auto"
@@ -235,7 +235,7 @@ export function Footer() {
         {/* Copyright & Payments */}
         <div className="mt-8 flex flex-col items-center justify-between gap-4 sm:flex-row">
           <p className="font-sans text-sm text-muted-foreground">
-            © {currentYear} Classy Mart. All Rights Reserved.
+            © {currentYear} Velora. All Rights Reserved.
           </p>
           <div className="flex items-center gap-3">
             <span className="font-sans text-xs text-muted-foreground">

@@ -17,6 +17,12 @@ export const getOptimizedCloudinaryUrl = (
   url: string, 
   options?: { width?: number; quality?: number | 'auto' }
 ): string => {
+  // 🎯 DEMO MODE: Handle local images
+  // If it's a local image (starts with /), return as-is
+  if (!url || url.startsWith('/images/') || url.startsWith('/')) {
+    return url;
+  }
+
   // Find the '/upload/' part of the URL
   const uploadIndex = url.indexOf('/upload/');
 

@@ -45,16 +45,22 @@ export function CustomerAuthModal({ children }: CustomerAuthModalProps) {
   const supabase = createClient();
   const router = useRouter();
 
+  // 🎯 DEMO MODE: Show helpful message when Supabase not available
+  const isDemoMode = !supabase;
+
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(null); // Reset error on new submission
+    setError(null);
+
+    // 🎯 DEMO MODE: Show message instead of trying auth
+    if (isDemoMode) {
+      toast.info("Demo Mode: Authentication is disabled. Contact admin for access.");
+      return;
+    }
 
     const email = formData.email;
     const password = formData.password;
     const fullName = formData.fullName;
-
-    // Log the data you are about to send
-
 
     try {
       const { data, error } = await supabase.auth.signUp({
@@ -67,15 +73,10 @@ export function CustomerAuthModal({ children }: CustomerAuthModalProps) {
         },
       });
 
-      // --- THIS IS THE KEY DIAGNOSTIC ---
       if (error) {
-
-        setError(error.message); // Set the error state to display it
-        return; // Stop the function here
+        setError(error.message);
+        return;
       }
-      // ------------------------------------
-
-      // If successful, you can log the success and maybe close the modal
 
       toast.success(
         "Account created! Please check your email to verify your account."
@@ -84,17 +85,19 @@ export function CustomerAuthModal({ children }: CustomerAuthModalProps) {
       setFormData({ email: "", password: "", fullName: "" });
       router.push("/account");
     } catch (err) {
-      // This will catch any other unexpected JS errors
-
       setError("An unexpected error occurred. Please try again.");
-    } finally {
-      
     }
   };
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    // 🎯 DEMO MODE: Show message
+    if (isDemoMode) {
+      toast.info("Demo Mode: Authentication is disabled. Contact admin for access.");
+      return;
+    }
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -109,16 +112,19 @@ export function CustomerAuthModal({ children }: CustomerAuthModalProps) {
 
       toast.success("Welcome back!");
       setIsOpen(false);
-      // Refresh the page to update the UI
       router.push("/account");
     } catch (error: any) {
       toast.error(error.message || "An error occurred");
-    } finally {
-      
     }
   };
 
   const handleGoogleSignIn = async () => {
+    // 🎯 DEMO MODE: Show message
+    if (isDemoMode) {
+      toast.info("Demo Mode: Google auth is disabled.");
+      return;
+    }
+
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -130,7 +136,6 @@ export function CustomerAuthModal({ children }: CustomerAuthModalProps) {
       if (error) {
         toast.error(error.message || "Failed to sign in with Google");
       }
-      // Note: User will be redirected to Google, so we don't need to handle success here
     } catch (error: any) {
       toast.error(error.message || "An error occurred");
     }

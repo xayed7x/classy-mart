@@ -1,22 +1,52 @@
+/**
+ * PRODUCT ACTIONS
+ * ===============
+ * 
+ * এই ফাইলটি Product CRUD operations পরিচালনা করে।
+ * 
+ * DEMO_MODE = true হলে → মক সাকসেস রিটার্ন (no database write)
+ * DEMO_MODE = false হলে → Contentful + Cloudinary API ব্যবহার হবে
+ */
+
 "use server";
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import cloudinary from "@/lib/cloudinary"; // Assuming image uploads are involved
-import { contentfulManagementClient } from "@/lib/contentful";
+import { DEMO_MODE } from "@/lib/demo-mode";
 
-// Interface for upload result with publicId for rollback capability
+// ============================================
+// [INTEGRATION POINT] Cloudinary & Contentful
+// Dynamic মোডে এই clients ব্যবহার হয়
+// ============================================
+let cloudinary: any = null;
+let contentfulManagementClient: any = null;
+
+if (!DEMO_MODE) {
+  try {
+    cloudinary = require("@/lib/cloudinary").default;
+    const contentful = require("@/lib/contentful");
+    contentfulManagementClient = contentful.contentfulManagementClient;
+  } catch (error) {
+    console.warn("Cloudinary/Contentful not configured");
+  }
+}
+
+// ============================================
+// Types & Helpers
+// ============================================
+
 interface UploadResult {
   url: string;
   publicId: string;
 }
 
-// Helper function to upload an image to Cloudinary and return both URL and publicId
 async function uploadImageWithId(file: File): Promise<UploadResult> {
+  if (!cloudinary) throw new Error("Cloudinary not configured");
+  
   const arrayBuffer = await file.arrayBuffer();
   const buffer = new Uint8Array(arrayBuffer);
   const uploadResult: any = await new Promise((resolve, reject) => {
-    cloudinary.uploader.upload_stream({}, (error, result) => {
+    cloudinary.uploader.upload_stream({}, (error: any, result: any) => {
       if (error) {
         reject(error);
         return;
@@ -27,16 +57,15 @@ async function uploadImageWithId(file: File): Promise<UploadResult> {
   return { url: uploadResult.secure_url, publicId: uploadResult.public_id };
 }
 
-// Extract publicId from Cloudinary URL
-// URL format: https://res.cloudinary.com/xxx/image/upload/v123/folder/abc123.jpg
 function extractPublicId(url: string): string | null {
   if (!url || !url.includes('cloudinary.com')) return null;
   const match = url.match(/\/upload\/(?:v\d+\/)?(.+?)(?:\.[^.]+)?$/);
   return match ? match[1] : null;
 }
 
-// Delete images from Cloudinary by publicIds
 async function deleteCloudinaryImages(publicIds: string[]): Promise<void> {
+  if (!cloudinary) return;
+  
   for (const publicId of publicIds) {
     try {
       await cloudinary.uploader.destroy(publicId);
@@ -46,15 +75,35 @@ async function deleteCloudinaryImages(publicIds: string[]): Promise<void> {
   }
 }
 
+// ============================================
+// CREATE / UPDATE PRODUCT
+// ============================================
+
 export async function createOrUpdateProduct(prevState: any, formData: FormData) {
   const productId = formData.get("productId") as string | null;
   const name = formData.get("name") as string;
 
-  // Server-side validation
   if (!name) {
     return { error: "Product name is required." };
   }
 
+  // 🎯 DEMO MODE: Return mock success
+  if (DEMO_MODE) {
+    console.log('🎯 DEMO MODE: Mock product save for:', name);
+    
+    // Simulate some processing delay
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    revalidatePath("/");
+    revalidatePath("/admin/products");
+    
+    return { 
+      success: true, 
+      message: "DEMO MODE: Product saved successfully! (Changes not persisted)" 
+    };
+  }
+
+  // [INTEGRATION POINT] Dynamic Mode: Save to Contentful
   const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '-');
   const data = {
     price: parseInt(formData.get('price') as string || '0', 10),
@@ -71,10 +120,9 @@ export async function createOrUpdateProduct(prevState: any, formData: FormData) 
   const longDescription = formData.get("longDescription") as string;
   const sizingAndFit = formData.get("sizingAndFit") as string;
   const materialsAndCare = formData.get("materialsAndCare") as string;
-  const isFeatured = formData.get("isFeatured") === "on"; // Checkbox value
-  const displayOnHomepage = formData.get("displayOnHomepage") === "on"; // Checkbox value
+  const isFeatured = formData.get("isFeatured") === "on";
+  const displayOnHomepage = formData.get("displayOnHomepage") === "on";
   
-  // Parse color swatches JSON
   const colorSwatchesJSON = formData.get("colorSwatches") as string;
   const colorSwatches = colorSwatchesJSON ? JSON.parse(colorSwatchesJSON) : [];
 
@@ -83,7 +131,6 @@ export async function createOrUpdateProduct(prevState: any, formData: FormData) 
   const galleryImageFiles = formData.getAll("galleryImages") as File[];
   const currentGalleryImageUrls = JSON.parse(formData.get("currentGalleryImageUrls") as string || "[]");
 
-  // Track newly uploaded images for rollback on error
   const newlyUploadedPublicIds: string[] = [];
 
   try {
@@ -144,19 +191,17 @@ export async function createOrUpdateProduct(prevState: any, formData: FormData) 
       await newEntry.publish();
     }
 
-    // Comprehensive revalidation for all affected pages
-    revalidatePath("/"); // Homepage (featured products, just for you)
-    revalidatePath("/products"); // All products page
-    revalidatePath(`/products/${slug}`); // Individual product page
-    revalidatePath("/collections/all"); // All products collection
-    revalidatePath(`/collections/${category}`); // Specific category page
-    revalidatePath("/admin/products"); // Admin products page
+    revalidatePath("/");
+    revalidatePath("/products");
+    revalidatePath(`/products/${slug}`);
+    revalidatePath("/collections/all");
+    revalidatePath(`/collections/${category}`);
+    revalidatePath("/admin/products");
 
     return { success: true, message: "Product saved successfully!" };
   } catch (error: any) {
     console.error("Contentful API Error:", error);
     
-    // ROLLBACK: Delete newly uploaded images from Cloudinary
     if (newlyUploadedPublicIds.length > 0) {
       console.log("Rolling back Cloudinary uploads:", newlyUploadedPublicIds);
       await deleteCloudinaryImages(newlyUploadedPublicIds);
@@ -166,33 +211,48 @@ export async function createOrUpdateProduct(prevState: any, formData: FormData) 
   }
 }
 
+// ============================================
+// DELETE PRODUCT
+// ============================================
+
 export async function deleteProduct(prevState: any, formData: FormData) {
   const productId = formData.get("productId") as string;
 
+  // 🎯 DEMO MODE: Return mock success
+  if (DEMO_MODE) {
+    console.log('🎯 DEMO MODE: Mock product delete for ID:', productId);
+    
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    revalidatePath("/");
+    revalidatePath("/admin/products");
+    
+    redirect(
+      "/admin/products?success=" +
+        encodeURIComponent("DEMO MODE: Product deleted! (Not actually removed)")
+    );
+  }
+
+  // [INTEGRATION POINT] Dynamic Mode: Delete from Contentful
   try {
     const space = await contentfulManagementClient.getSpace(
       process.env.CONTENTFUL_SPACE_ID!
     );
     const environment = await space.getEnvironment("master");
 
-    // Get product details before deletion to know which paths to revalidate
     const entry = await environment.getEntry(productId);
     const productSlug = entry.fields.slug?.['en-US'];
     const productCategory = entry.fields.category?.['en-US'];
     
-    // Extract image URLs for Cloudinary cleanup
     const mainImageUrl = entry.fields.mainImage?.['en-US'] as string | undefined;
     const galleryImageUrls = (entry.fields.galleryImages?.['en-US'] || []) as string[];
     
-    // Unpublish first if published
     if (entry.isPublished()) {
       await entry.unpublish();
     }
     
-    // Then delete from Contentful
     await entry.delete();
     
-    // Delete images from Cloudinary
     const publicIdsToDelete: string[] = [];
     if (mainImageUrl) {
       const id = extractPublicId(mainImageUrl);
@@ -207,17 +267,16 @@ export async function deleteProduct(prevState: any, formData: FormData) {
       await deleteCloudinaryImages(publicIdsToDelete);
     }
 
-    // Comprehensive revalidation for all affected pages
-    revalidatePath("/"); // Homepage
-    revalidatePath("/products"); // All products page
+    revalidatePath("/");
+    revalidatePath("/products");
     if (productSlug) {
-      revalidatePath(`/products/${productSlug}`); // Individual product page
+      revalidatePath(`/products/${productSlug}`);
     }
-    revalidatePath("/collections/all"); // All products collection
+    revalidatePath("/collections/all");
     if (productCategory) {
-      revalidatePath(`/collections/${productCategory}`); // Specific category page
+      revalidatePath(`/collections/${productCategory}`);
     }
-    revalidatePath("/admin/products"); // Admin products page
+    revalidatePath("/admin/products");
   } catch (error: any) {
     console.error("Delete Product Error:", error);
     redirect(
@@ -226,7 +285,6 @@ export async function deleteProduct(prevState: any, formData: FormData) {
     );
   }
 
-  // Success redirect - only reached if try block completes without errors
   redirect(
     "/admin/products?success=" +
       encodeURIComponent("Product deleted successfully!")

@@ -25,13 +25,13 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
   return {
     title: product.name,
-    description: product.shortDescription || `${product.name} - ${price}. ${product.longDescription?.substring(0, 150) || 'Premium quality men\'s clothing from Classy Mart.'}`,
+    description: product.shortDescription || `${product.name} - ${price}. ${product.longDescription?.substring(0, 150) || 'Premium quality men\'s clothing from Velora.'}`,
     keywords: [
       product.name,
       product.category,
       product.subcategory || '',
       'buy online',
-      'Classy Mart',
+      'Velora',
       'Bangladesh',
       'mens fashion',
       'premium clothing',

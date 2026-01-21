@@ -3,10 +3,10 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Our Story',
-  description: 'Discover the story behind Classy Mart - redefining authentic luxury in Bangladesh. Learn about our passion for premium quality men\'s clothing and our commitment to excellence.',
-  keywords: ['Classy Mart story', 'about Classy Mart', 'premium clothing Bangladesh', 'authentic fashion', 'luxury menswear BD'],
+  description: 'Discover the story behind Velora - redefining authentic luxury in Bangladesh. Learn about our passion for premium quality men\'s clothing and our commitment to excellence.',
+  keywords: ['Velora story', 'about Velora', 'premium clothing Bangladesh', 'authentic fashion', 'luxury menswear BD'],
   openGraph: {
-    title: 'Our Story | Classy Mart',
+    title: 'Our Story | Velora',
     description: 'Redefining authentic luxury in Bangladesh. Discover our passion for premium quality and commitment to excellence.',
     type: 'website',
     images: [
@@ -14,13 +14,13 @@ export const metadata: Metadata = {
         url: '/logo.png',
         width: 1200,
         height: 630,
-        alt: 'Classy Mart - Our Story',
+        alt: 'Velora - Our Story',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Our Story | Classy Mart',
+    title: 'Our Story | Velora',
     description: 'Redefining authentic luxury in Bangladesh. Discover our passion for premium quality and commitment to excellence.',
     images: ['/logo.png'],
   },
@@ -37,7 +37,7 @@ export default function OurStoryPage() {
 
         {/* Introduction */}
         <p className="text-lg md:text-xl text-center mb-16 text-muted-gold">
-          Welcome to Classy Mart, where passion meets precision in every stitch and design.
+          Welcome to Velora, where passion meets precision in every stitch and design.
         </p>
 
         {/* Section 1: The Spark (The "Why") */}
@@ -61,7 +61,7 @@ export default function OurStoryPage() {
             The Craft <span className="text-muted-gold">(The "How")</span>
           </h2>
           <p className="text-base md:text-lg leading-relaxed mb-4">
-            <span className="text-muted-gold font-semibold">"Classy Mart" is not just a store; it's a curation.</span> 
+            <span className="text-muted-gold font-semibold">"Velora" is not just a store; it's a curation.</span> 
             We don't just "import products"; we hand-select pieces that meet our rigorous standards. 
             From the weight of our cotton to the precision of every stitch, 
             we are <span className="text-muted-gold font-semibold">obsessed with the details.</span> 

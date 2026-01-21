@@ -25,6 +25,7 @@ export function BottomNavBar() {
   const supabase = createClient();
 
   const fetchProfile = async (userId: string) => {
+    if (!supabase) return;
     const { data } = await supabase
       .from('profiles')
       .select('role')
@@ -34,6 +35,12 @@ export function BottomNavBar() {
   };
 
   useEffect(() => {
+    // 🎯 DEMO MODE: Skip auth if Supabase not available
+    if (!supabase) {
+      console.log('🎯 DEMO MODE: Supabase not available, skipping auth');
+      return;
+    }
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);

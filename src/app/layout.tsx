@@ -20,25 +20,25 @@ const siteUrl = 'https://classymart2024.com';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    template: '%s | Classy Mart',
-    default: 'Classy Mart | Premium Men\'s Fashion & Clothing in Bangladesh',
+    template: '%s | Velora',
+    default: 'Velora | Premium Men\'s Fashion & Clothing in Bangladesh',
   },
-  description: 'Discover authentic, premium quality men\'s clothing at Classy Mart. Shop the latest collection of shirts, t-shirts, pants, jackets, and Panjabis online in Bangladesh. Cash on delivery available.',
-  keywords: ['online shopping Bangladesh', 'mens fashion BD', 'premium clothing', 'Classy Mart', 'buy shirts online', 'polo t-shirt price BD', 'formal pants', 'panjabi collection', 'mens clothing Bangladesh', 'fashion BD'],
-  authors: [{ name: 'Classy Mart' }],
-  creator: 'Classy Mart',
-  publisher: 'Classy Mart',
+  description: 'Discover authentic, premium quality men\'s clothing at Velora. Shop the latest collection of shirts, t-shirts, pants, jackets, and Panjabis online in Bangladesh. Cash on delivery available.',
+  keywords: ['online shopping Bangladesh', 'mens fashion BD', 'premium clothing', 'Velora', 'buy shirts online', 'polo t-shirt price BD', 'formal pants', 'panjabi collection', 'mens clothing Bangladesh', 'fashion BD'],
+  authors: [{ name: 'Velora' }],
+  creator: 'Velora',
+  publisher: 'Velora',
   openGraph: {
-    title: 'Classy Mart | Premium Authentic Clothing',
+    title: 'Velora | Premium Authentic Clothing',
     description: 'The new standard for men\'s fashion in Bangladesh.',
     url: siteUrl,
-    siteName: 'Classy Mart',
+    siteName: 'Velora',
     images: [
       {
         url: '/logo.png',
         width: 1200,
         height: 630,
-        alt: 'Classy Mart Logo',
+        alt: 'Velora Logo',
       },
     ],
     locale: 'en_US',
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Classy Mart | Premium Authentic Clothing',
+    title: 'Velora | Premium Authentic Clothing',
     description: 'The new standard for men\'s fashion in Bangladesh.',
     images: ['/logo.png'],
   },
@@ -96,7 +96,7 @@ export default function RootLayout({
             __html: JSON.stringify({
               '@context': 'https://schema.org',
               '@type': 'WebSite',
-              name: 'Classy Mart',
+              name: 'Velora',
               url: 'https://classymart2024.com',
             }),
           }}

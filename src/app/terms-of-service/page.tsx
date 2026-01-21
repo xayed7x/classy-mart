@@ -6,7 +6,7 @@ export default function TermsOfServicePage() {
         <p>Last Updated: October 26, 2025</p>
         <h2 className="text-xl font-semibold pt-4 text-soft-white">1. Acceptance of Terms</h2>
         <p>
-          By accessing and using the Classy Mart website, you agree to be bound by
+          By accessing and using the Velora website, you agree to be bound by
           these Terms of Service. If you do not agree with any part of these terms,
           you must not use our services.
         </p>
@@ -24,7 +24,7 @@ export default function TermsOfServicePage() {
         </p>
          <h2 className="text-xl font-semibold pt-4 text-soft-white">4. Limitation of Liability</h2>
         <p>
-          Classy Mart will not be liable for any damages that arise from the use of,
+          Velora will not be liable for any damages that arise from the use of,
           or the inability to use, the materials on this site or the performance of
           the products.
         </p>

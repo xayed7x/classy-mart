@@ -14,7 +14,7 @@ interface CollectionPageProps {
 const COLLECTION_INFO: Record<string, { name: string; description: string }> = {
   all: {
     name: 'All Products',
-    description: 'Browse our complete collection of premium men\'s clothing. From casual wear to formal attire, find everything you need at Classy Mart.',
+    description: 'Browse our complete collection of premium men\'s clothing. From casual wear to formal attire, find everything you need at Velora.',
   },
   't-shirts': {
     name: 'T-Shirts Collection',
@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: CollectionPageProps): Promise
   const handle = params.collectionHandle;
   const info = COLLECTION_INFO[handle] || {
     name: `${handle.charAt(0).toUpperCase() + handle.slice(1)} Collection`,
-    description: `Shop our exclusive collection of premium ${handle} for men at Classy Mart. Online shopping in Bangladesh with cash on delivery.`,
+    description: `Shop our exclusive collection of premium ${handle} for men at Velora. Online shopping in Bangladesh with cash on delivery.`,
   };
 
   return {
@@ -61,7 +61,7 @@ export async function generateMetadata({ params }: CollectionPageProps): Promise
       'mens fashion',
       'Bangladesh',
       'online shopping',
-      'Classy Mart',
+      'Velora',
       'premium clothing',
       'buy online BD',
       'cash on delivery',
@@ -75,7 +75,7 @@ export async function generateMetadata({ params }: CollectionPageProps): Promise
           url: '/logo.png',
           width: 1200,
           height: 630,
-          alt: `${info.name} - Classy Mart`,
+          alt: `${info.name} - Velora`,
         },
       ],
     },

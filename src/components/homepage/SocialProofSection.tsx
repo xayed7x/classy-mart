@@ -57,7 +57,7 @@ export function SocialProofSection({ socialPosts }: SocialProofSectionProps) {
             {/* Post Image */}
             <Image
               src={post.image}
-              alt="Classy Mart Social Media Post"
+              alt="Velora Social Media Post"
               fill
               className="object-cover transition-transform duration-300 group-hover:scale-110"
               sizes="(max-width: 640px) 50vw, (max-width: 768px) 25vw, 20vw"

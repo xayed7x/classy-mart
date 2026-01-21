@@ -1,21 +1,40 @@
+/**
+ * MIDDLEWARE
+ * ==========
+ * 
+ * Edge-compatible middleware for route protection.
+ * 
+ * DEMO_MODE = true হলে → demo-admin-auth cookie চেক হয়
+ * DEMO_MODE = false হলে → Supabase session cookie চেক হয়
+ * 
+ * Note: Detailed authorization (role checks) handled in server components.
+ */
+
 import { NextResponse, type NextRequest } from 'next/server';
 
-/**
- * Edge-Safe Middleware
- * 
- * This middleware performs ONLY basic cookie-based session checks.
- * It does NOT import @supabase/ssr to remain compatible with Edge Runtime.
- * 
- * Detailed authorization (role checks, etc.) is handled in the actual
- * server components and API routes ("Defense in Depth").
- */
+// Check if we're in demo mode by environment or default to true
+const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE !== 'false';
+
 export async function middleware(request: NextRequest) {
   try {
     const pathname = request.nextUrl.pathname;
 
-    // Check for Supabase session cookie
-    // The cookie name pattern is typically: sb-<project-ref>-auth-token
-    // We'll check for any cookie starting with 'sb-' and containing 'auth-token'
+    // 🎯 DEMO MODE: Check for demo auth cookie
+    if (DEMO_MODE) {
+      const hasDemoAuth = request.cookies.get('demo-admin-auth')?.value === 'true';
+      
+      // Protect admin routes (except login page)
+      if (pathname.startsWith('/admin') && pathname !== '/admin/login' && !hasDemoAuth) {
+        return NextResponse.redirect(new URL('/admin/login', request.url));
+      }
+
+      // In demo mode, allow access to account routes (no user system)
+      // Just pass through
+      
+      return NextResponse.next();
+    }
+
+    // [INTEGRATION POINT] Dynamic Mode: Check Supabase session
     const hasSessionCookie = Array.from(request.cookies.getAll()).some(
       cookie => cookie.name.includes('sb-') && cookie.name.includes('auth-token')
     );
@@ -32,9 +51,6 @@ export async function middleware(request: NextRequest) {
 
     return NextResponse.next();
   } catch (e) {
-    // If ANY error occurs during the middleware execution,
-    // invalidate the response and force a clean redirect to the login page.
-    // This is a safe fallback.
     console.error("Error in middleware:", e);
     const response = NextResponse.next({
       request: {
@@ -45,6 +61,7 @@ export async function middleware(request: NextRequest) {
     // Attempt to clear potentially bad cookies
     response.cookies.delete('sb-access-token');
     response.cookies.delete('sb-refresh-token');
+    response.cookies.delete('demo-admin-auth');
     
     // Clear any auth-token cookies
     const authCookies = Array.from(request.cookies.getAll()).filter(

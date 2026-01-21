@@ -1,11 +1,61 @@
+/**
+ * ORDER ACTIONS
+ * =============
+ * 
+ * এই ফাইলটি Order placement এবং management পরিচালনা করে।
+ * 
+ * DEMO_MODE = true হলে → Mock orders তৈরি হবে (Supabase ছাড়া)
+ * DEMO_MODE = false হলে → Supabase API ব্যবহার হবে
+ * 
+ * [INTEGRATION POINT] মার্ক করা জায়গাগুলো dynamic mode এ API ব্যবহার করে
+ */
+
 "use server";
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { supabaseAdmin } from "@/lib/supabase";
-import { createClient } from "@/lib/supabase/server"; // Corrected import
 import { cookies } from "next/headers";
-import * as contentfulManagement from 'contentful-management';
+import { DEMO_MODE } from "@/lib/demo-mode";
+import { 
+  addDemoOrder, 
+  getDemoOrders, 
+  getDemoOrderById, 
+  updateDemoOrderStatus,
+  getUserDemoOrders 
+} from "@/data/demo-orders";
+
+// ============================================
+// [INTEGRATION POINT] Supabase Clients
+// Dynamic মোডে এই clients ব্যবহার হয়
+// ============================================
+let supabaseAdmin: any = null;
+let createSupabaseClient: any = null;
+
+// Only import Supabase when not in demo mode
+if (!DEMO_MODE) {
+  try {
+    const supabaseLib = require("@/lib/supabase");
+    supabaseAdmin = supabaseLib.supabaseAdmin;
+    const serverLib = require("@/lib/supabase/server");
+    createSupabaseClient = serverLib.createClient;
+  } catch (error) {
+    console.warn("Supabase not configured - running in demo mode");
+  }
+}
+
+// Contentful Management for stock reduction (only in dynamic mode)
+let contentfulManagement: any = null;
+if (!DEMO_MODE) {
+  try {
+    contentfulManagement = require('contentful-management');
+  } catch (error) {
+    console.warn("Contentful Management not configured");
+  }
+}
+
+// ============================================
+// Types
+// ============================================
 
 interface CartItem {
   id: string;
@@ -24,35 +74,62 @@ interface CartDetails {
   totalAmount: number;
 }
 
+// ============================================
+// ORDER PLACEMENT
+// ============================================
+
 export async function placeOrder(
   cartDetails: CartDetails,
   formData: FormData
 ) {
   let orderId = null;
-  const cookieStore = await cookies();
-  const supabase = createClient(cookieStore);
 
+  // Extract form data
+  const firstName = formData.get("firstName") as string;
+  const lastName = formData.get("lastName") as string;
+  const customerName = `${firstName} ${lastName}`.trim();
+  const customerPhone = formData.get("phone") as string;
+  const streetAddress = formData.get("address") as string;
+  const upazila = formData.get("upazila") as string;
+  const district = formData.get("district") as string;
+  const customerAddress = `${streetAddress}, ${upazila}, ${district}`.trim();
+  const customerCity = district;
+  const customerEmail = (formData.get("email") as string) || null;
+  const paymentMethod = formData.get("paymentMethod") as string;
+
+  // 🎯 DEMO MODE: Create mock order (no database)
+  if (DEMO_MODE) {
+    console.log('🎯 DEMO MODE: Creating mock order...');
+    
+    const demoOrder = addDemoOrder({
+      customer_name: customerName,
+      customer_phone: customerPhone,
+      customer_email: customerEmail,
+      customer_address: customerAddress,
+      customer_city: customerCity,
+      ordered_products: cartDetails.items,
+      subtotal: cartDetails.subtotal,
+      shipping_cost: cartDetails.shippingCost,
+      total_amount: cartDetails.totalAmount,
+      payment_method: paymentMethod,
+      payment_status: "pending",
+      order_status: "pending",
+      user_id: null,
+    });
+    
+    console.log('✅ DEMO MODE: Mock order created:', demoOrder.id);
+    redirect(`/payment/success?order_id=${demoOrder.id}`);
+  }
+
+  // [INTEGRATION POINT] Dynamic Mode: Use Supabase
+  const cookieStore = await cookies();
+  const supabase = createSupabaseClient(cookieStore);
   const { data: { user } } = await supabase.auth.getUser();
 
-
   try {
-    // Extract form data
-    const firstName = formData.get("firstName") as string;
-    const lastName = formData.get("lastName") as string;
-    const customerName = `${firstName} ${lastName}`.trim();
-    const customerPhone = formData.get("phone") as string;
-    const streetAddress = formData.get("address") as string;
-    const upazila = formData.get("upazila") as string;
-    const district = formData.get("district") as string;
-
-    const customerAddress = `${streetAddress}, ${upazila}, ${district}`.trim();
-    const customerCity = district;
-    const customerEmail = (formData.get("email") as string) || null;
-    const paymentMethod = formData.get("paymentMethod") as string;
-
     // Construct the order payload according to Supabase schema
     const orderPayload = {
-      user_id: user ? user.id : null, // This is the key line
+      user_id: user ? user.id : null,
       customer_name: customerName,
       customer_phone: customerPhone,
       customer_address: customerAddress,
@@ -90,51 +167,36 @@ export async function placeOrder(
 
     // --- AUTOMATED STOCK REDUCTION LOGIC ---
     // Reduce stock in Contentful for each ordered item
-    try {
-      const client = contentfulManagement.createClient({
-        accessToken: process.env.CONTENTFUL_MANAGEMENT_API_ACCESS_TOKEN!,
-      });
-      const space = await client.getSpace(process.env.CONTENTFUL_SPACE_ID!);
-      const environment = await space.getEnvironment('master');
+    if (contentfulManagement) {
+      try {
+        const client = contentfulManagement.createClient({
+          accessToken: process.env.CONTENTFUL_MANAGEMENT_API_ACCESS_TOKEN!,
+        });
+        const space = await client.getSpace(process.env.CONTENTFUL_SPACE_ID!);
+        const environment = await space.getEnvironment('master');
 
-      // Process each item in the cart
-      for (const item of cartDetails.items) {
-        if (!item.id) {
-          console.warn(`Skipping item without ID: ${item.name}`);
-          continue;
-        }
+        // Process each item in the cart
+        for (const item of cartDetails.items) {
+          if (!item.id) {
+            console.warn(`Skipping item without ID: ${item.name}`);
+            continue;
+          }
 
-        try {
-          // Get the product entry from Contentful
-          const entry = await environment.getEntry(item.id);
-          
-          // Get current stock (default to 0 if not set)
-          const currentStock = entry.fields.stock?.['en-US'] || 0;
-          
-          // Calculate new stock (reduce by ordered quantity)
-          const newStock = currentStock - item.quantity;
-          
-          // Update stock (ensure it doesn't go below 0)
-          entry.fields.stock = { 'en-US': Math.max(0, newStock) };
-          
-          // Save and publish the updated entry
-          const updatedEntry = await entry.update();
-          await updatedEntry.publish();
-          
-          console.log(`✅ Stock updated for ${item.name}: ${currentStock} → ${Math.max(0, newStock)} (reduced by ${item.quantity})`);
-        } catch (itemError) {
-          console.error(`Failed to update stock for item ${item.id} (${item.name}):`, itemError);
-          // Continue processing other items even if one fails
+          try {
+            const entry = await environment.getEntry(item.id);
+            const currentStock = entry.fields.stock?.['en-US'] || 0;
+            const newStock = currentStock - item.quantity;
+            entry.fields.stock = { 'en-US': Math.max(0, newStock) };
+            const updatedEntry = await entry.update();
+            await updatedEntry.publish();
+            console.log(`✅ Stock updated for ${item.name}: ${currentStock} → ${Math.max(0, newStock)}`);
+          } catch (itemError) {
+            console.error(`Failed to update stock for item ${item.id}:`, itemError);
+          }
         }
+      } catch (contentfulError) {
+        console.error('⚠️ Failed to update stock in Contentful:', contentfulError);
       }
-    } catch (contentfulError) {
-      // CRITICAL: Log error but don't fail the order
-      // The customer has already placed the order successfully
-      console.error('⚠️ CRITICAL: Order was placed successfully, but failed to update stock in Contentful.');
-      console.error('Order ID:', orderId);
-      console.error('Error:', contentfulError);
-      console.error('ACTION REQUIRED: Manually adjust stock levels in Contentful for this order.');
-      // Note: We don't throw here because the order is already saved
     }
     // --- END OF STOCK REDUCTION LOGIC ---
 
@@ -144,7 +206,6 @@ export async function placeOrder(
     revalidatePath("/");
 
   } catch (error: any) {
-    // This will now only catch REAL errors (database connection, etc.)
     console.error('Error in placeOrder:', error);
     return redirect(`/payment/fail?error=${encodeURIComponent(error.message)}`);
   }
@@ -153,7 +214,23 @@ export async function placeOrder(
   redirect(`/payment/success?order_id=${orderId}`);
 }
 
+// ============================================
+// ORDER DETAILS
+// ============================================
+
 export async function getOrderDetails(orderId: string) {
+  // 🎯 DEMO MODE: Get from mock data
+  if (DEMO_MODE) {
+    const order = getDemoOrderById(orderId);
+    if (!order) return null;
+    return {
+      cart: order.ordered_products,
+      total: order.total_amount,
+      order_number: order.order_number,
+    };
+  }
+
+  // [INTEGRATION POINT] Dynamic Mode: Fetch from Supabase
   try {
     const { data, error } = await supabaseAdmin
       .from("orders")
@@ -176,7 +253,20 @@ export async function getOrderDetails(orderId: string) {
   }
 }
 
+// ============================================
+// ORDER STATUS UPDATE
+// ============================================
+
 export async function updateOrderStatus(orderId: string, status: string) {
+  // 🎯 DEMO MODE: Update mock order
+  if (DEMO_MODE) {
+    console.log(`🎯 DEMO MODE: Updating order ${orderId} to ${status}`);
+    const success = updateDemoOrderStatus(orderId, status);
+    revalidatePath("/admin/orders");
+    return { success };
+  }
+
+  // [INTEGRATION POINT] Dynamic Mode: Update in Supabase
   try {
     console.log(`🔵 Updating order ${orderId.substring(0, 8)}... status to: ${status}`);
     
@@ -199,11 +289,21 @@ export async function updateOrderStatus(orderId: string, status: string) {
   }
 }
 
-export async function getUserOrders() {
-  const cookieStore = await cookies();
-  const supabase = createClient(cookieStore);
+// ============================================
+// USER ORDERS
+// ============================================
 
-  // Use secure getUser() method instead of getSession()
+export async function getUserOrders() {
+  // 🎯 DEMO MODE: Return empty (no user system in demo)
+  if (DEMO_MODE) {
+    console.log('🎯 DEMO MODE: Returning empty user orders');
+    return [];
+  }
+
+  // [INTEGRATION POINT] Dynamic Mode: Fetch from Supabase
+  const cookieStore = await cookies();
+  const supabase = createSupabaseClient(cookieStore);
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -229,27 +329,29 @@ export async function getUserOrders() {
 }
 
 export async function getUserOrderById(orderId: string) {
+  // 🎯 DEMO MODE: Return null (no user system in demo)
+  if (DEMO_MODE) {
+    console.log('🎯 DEMO MODE: getUserOrderById - returning null');
+    return null;
+  }
+
+  // [INTEGRATION POINT] Dynamic Mode: Fetch from Supabase
   const cookieStore = await cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = createSupabaseClient(cookieStore);
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Security check: user must be logged in
   if (!user) {
-
     return null;
   }
 
-
-
-  // Critical security measure: filter by BOTH order ID AND user ID
   const { data: order, error } = await supabase
     .from("orders")
     .select("*")
     .eq("id", orderId)
-    .eq("user_id", user.id) // Ensures user can only access their own orders
+    .eq("user_id", user.id)
     .single();
 
   if (error) {
@@ -257,6 +359,35 @@ export async function getUserOrderById(orderId: string) {
     return null;
   }
 
-
   return order;
+}
+
+// ============================================
+// ADMIN: GET ALL ORDERS
+// ============================================
+
+export async function getAllOrders() {
+  // 🎯 DEMO MODE: Return mock orders
+  if (DEMO_MODE) {
+    console.log('🎯 DEMO MODE: Returning demo orders');
+    return getDemoOrders();
+  }
+
+  // [INTEGRATION POINT] Dynamic Mode: Fetch from Supabase
+  try {
+    const { data: orders, error } = await supabaseAdmin
+      .from("orders")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Error fetching all orders:", error);
+      return [];
+    }
+
+    return orders;
+  } catch (error) {
+    console.error("Error in getAllOrders:", error);
+    return [];
+  }
 }

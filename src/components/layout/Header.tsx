@@ -41,6 +41,12 @@ export function Header() {
   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   useEffect(() => {
+    // 🎯 DEMO MODE: Skip auth if Supabase not available
+    if (!supabase) {
+      console.log('🎯 DEMO MODE: Supabase not available, skipping auth');
+      return;
+    }
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
@@ -65,6 +71,7 @@ export function Header() {
   }, []);
 
   const fetchProfile = async (userId: string) => {
+    if (!supabase) return;
     const { data } = await supabase
       .from('profiles')
       .select('*')
@@ -74,6 +81,7 @@ export function Header() {
   };
 
   const handleSignOut = async () => {
+    if (!supabase) return;
     await supabase.auth.signOut();
     toast.success("Signed out successfully");
     window.location.reload();
@@ -84,16 +92,16 @@ export function Header() {
         {/* Left Group: Logo + Welcome Message */}
         <div className="flex items-center gap-4">
           {/* Logo */}
-          <Link href="/" aria-label="Classy Mart Homepage" className="flex items-center gap-2 flex-shrink-0">
+          <Link href="/" aria-label="Velora Homepage" className="flex items-center gap-2 flex-shrink-0">
             <Image
               src="/logo.png"
-              alt="Classy Mart"
+              alt="Velora"
               width={120}
               height={40}
               priority
               className="h-8 w-auto"
             />
-            <span className="hidden lg:block font-heading text-xl font-bold text-foreground">Classy Mart</span>
+            <span className="hidden lg:block font-heading text-xl font-bold text-foreground">Velora</span>
           </Link>
 
           {/* Welcome Message (Mobile Only) */}

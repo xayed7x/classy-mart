@@ -1,15 +1,39 @@
 import { Product } from "@/types/product";
 
+/**
+ * DEMO PRODUCTS DATA
+ * ==================
+ * 
+ * Image Mapping:
+ * - T-shirts → /images/ChatGPT Image Oct 27, 2025, 08_13_31 PM.png
+ * - Shirts → /images/ChatGPT Image Oct 27, 2025, 09_08_04 PM.png
+ * - Hoodies → /images/Hoddie.png
+ * - Pants → /images/pant.avif
+ * - Panjabis → /images/panjabi.webp
+ */
+
+// Image constants for easy management
+const IMAGES = {
+  tshirt: '/images/ChatGPT Image Oct 27, 2025, 08_13_31 PM.png',
+  shirt: '/images/ChatGPT Image Oct 27, 2025, 09_08_04 PM.png',
+  hoodie: '/images/Hoddie.png',
+  pant: '/images/pant.avif',
+  panjabi: '/images/panjabi.webp',
+  polo: '/images/polo-tshirt.png',
+};
+
 export const ALL_PRODUCTS: Product[] = [
-  // T-Shirts (4)
+  // ============================================
+  // T-SHIRTS (4 products)
+  // ============================================
   {
     id: '1',
     name: 'Classic Crew Neck T-Shirt',
     slug: 'classic-crew-neck-t-shirt',
-    price: 25.00,
+    price: 850,
     images: {
-      main: '/images/tshirt2.png',
-      gallery: ['/images/tshirt2.png', '/images/shirt1.png', '/images/shirt2.png'],
+      main: IMAGES.tshirt,
+      gallery: [IMAGES.tshirt, IMAGES.polo, IMAGES.shirt],
     },
     category: 't-shirts',
     subcategory: 'Crew Neck',
@@ -17,7 +41,7 @@ export const ALL_PRODUCTS: Product[] = [
     colors: ['Black', 'White', 'Navy'],
     shortDescription: 'A timeless essential, crafted from premium soft cotton for ultimate comfort.',
     longDescription: 'Our Classic Crew Neck T-Shirt is a wardrobe staple. Made from 100% premium combed cotton, it offers a soft, breathable feel that lasts. Its classic fit is versatile enough to be worn on its own or as a layering piece. Available in a range of essential colors.',
-    sizingAndFit: 'Classic fit. True to size. Model is 6\'1\" and wearing a size M.',
+    sizingAndFit: 'Classic fit. True to size. Model is 6\'1" and wearing a size M.',
     materialsAndCare: '100% Combed Cotton. Machine wash cold, tumble dry low. Do not bleach.',
     stock: 150,
     isFeatured: false,
@@ -28,12 +52,12 @@ export const ALL_PRODUCTS: Product[] = [
     id: '2',
     name: 'Premium Polo T-Shirt',
     slug: 'premium-polo-t-shirt',
-    price: 45.00,
-    originalPrice: 55.00,
-    salePercentage: 18,
+    price: 1250,
+    originalPrice: 1500,
+    salePercentage: 17,
     images: {
-      main: '/images/polo-tshirt.png',
-      gallery: ['/images/polo-tshirt.png', '/images/shirt3.png', '/images/shirt.png'],
+      main: IMAGES.polo,
+      gallery: [IMAGES.polo, IMAGES.tshirt, IMAGES.shirt],
     },
     category: 't-shirts',
     subcategory: 'Polo T-Shirt',
@@ -41,7 +65,7 @@ export const ALL_PRODUCTS: Product[] = [
     colors: ['Forest Green', 'Burgundy', 'Charcoal'],
     shortDescription: 'Elevate your casual look with our sophisticated and comfortable polo.',
     longDescription: 'The Premium Polo T-Shirt combines classic styling with modern comfort. Featuring a textured pique knit, a two-button placket, and a ribbed collar and cuffs, this polo is perfect for a smart-casual look. The fabric is treated for a soft finish and reduced shrinkage.',
-    sizingAndFit: 'Modern fit. Slightly tapered through the waist. Model is 6\'0\" and wearing a size L.',
+    sizingAndFit: 'Modern fit. Slightly tapered through the waist. Model is 6\'0" and wearing a size L.',
     materialsAndCare: '95% Cotton, 5% Elastane. Machine wash warm. Do not tumble dry.',
     stock: 85,
     isFeatured: true,
@@ -52,10 +76,10 @@ export const ALL_PRODUCTS: Product[] = [
     id: '3',
     name: 'Essential V-Neck T-Shirt',
     slug: 'essential-v-neck-t-shirt',
-    price: 28.00,
+    price: 750,
     images: {
-      main: '/images/shirt1.png',
-      gallery: ['/images/shirt1.png', '/images/tshirt2.png', '/images/shirt2.png'],
+      main: IMAGES.tshirt,
+      gallery: [IMAGES.tshirt, IMAGES.polo, IMAGES.hoodie],
     },
     category: 't-shirts',
     subcategory: 'V-Neck',
@@ -63,7 +87,7 @@ export const ALL_PRODUCTS: Product[] = [
     colors: ['Heather Grey', 'White', 'Sky Blue'],
     shortDescription: 'A soft, lightweight V-neck that\'s perfect for layering or wearing solo.',
     longDescription: 'Crafted from a lightweight cotton blend, our Essential V-Neck T-Shirt offers a flattering drape and a luxuriously soft hand-feel. The refined V-neckline adds a touch of modern style, making it a versatile piece for any occasion.',
-    sizingAndFit: 'Slim fit. Designed to be more fitted. Consider sizing up for a relaxed fit. Model is 5\'11\" and wearing a size M.',
+    sizingAndFit: 'Slim fit. Designed to be more fitted. Consider sizing up for a relaxed fit. Model is 5\'11" and wearing a size M.',
     materialsAndCare: '60% Cotton, 40% Modal. Machine wash cold. Lay flat to dry.',
     stock: 200,
     isFeatured: false,
@@ -74,10 +98,10 @@ export const ALL_PRODUCTS: Product[] = [
     id: '4',
     name: 'Urban Graphic Print T-Shirt',
     slug: 'urban-graphic-print-t-shirt',
-    price: 35.00,
+    price: 950,
     images: {
-      main: '/images/shirt2.png',
-      gallery: ['/images/shirt2.png', '/images/polo-tshirt.png', '/images/shirt.png'],
+      main: IMAGES.tshirt,
+      gallery: [IMAGES.tshirt, IMAGES.hoodie, IMAGES.polo],
     },
     category: 't-shirts',
     subcategory: 'Graphic Tee',
@@ -85,21 +109,25 @@ export const ALL_PRODUCTS: Product[] = [
     colors: ['Washed Black', 'Off-White'],
     shortDescription: 'Make a statement with this bold, vintage-inspired graphic print tee.',
     longDescription: 'The Urban Graphic Print T-Shirt features a unique, retro-inspired design printed on our signature soft cotton. The vintage wash gives it a perfectly worn-in feel from the very first wear. It\'s a standout piece that adds personality to any outfit.',
-    sizingAndFit: 'Relaxed fit. Dropped shoulders for a modern silhouette. Model is 6\'2\" and wearing a size L.',
+    sizingAndFit: 'Relaxed fit. Dropped shoulders for a modern silhouette. Model is 6\'2" and wearing a size L.',
     materialsAndCare: '100% Pigment-Dyed Cotton. Machine wash cold with like colors. Tumble dry low.',
     stock: 120,
     isFeatured: true,
     rating: 4.8,
     reviewCount: 98,
   },
+
+  // ============================================
+  // SHIRTS (4 products)
+  // ============================================
   {
     id: '5',
     name: 'Classic Oxford Button-Down Shirt',
     slug: 'classic-oxford-button-down-shirt',
-    price: 75.00,
+    price: 1800,
     images: {
-      main: '/images/shirt.png',
-      gallery: ['/images/shirt.png', '/images/shirt1.png', '/images/shirt3.png'],
+      main: IMAGES.shirt,
+      gallery: [IMAGES.shirt, IMAGES.polo, IMAGES.tshirt],
     },
     category: 'shirts',
     subcategory: 'Formal Shirt',
@@ -107,7 +135,7 @@ export const ALL_PRODUCTS: Product[] = [
     colors: ['White', 'Light Blue', 'Pink Stripe'],
     shortDescription: 'A timeless Oxford shirt for a sharp, professional look.',
     longDescription: 'No wardrobe is complete without a Classic Oxford Button-Down. Made from durable, high-quality Oxford cloth, this shirt features a button-down collar, a chest pocket, and a box pleat for ease of movement. It softens with every wash, becoming a true personal favorite.',
-    sizingAndFit: 'Regular fit. A classic silhouette with comfortable room. Model is 6\'1\" and wearing a size M.',
+    sizingAndFit: 'Regular fit. A classic silhouette with comfortable room. Model is 6\'1" and wearing a size M.',
     materialsAndCare: '100% Cotton Oxford. Machine wash warm, tumble dry low. Warm iron if needed.',
     stock: 90,
     isFeatured: false,
@@ -118,12 +146,12 @@ export const ALL_PRODUCTS: Product[] = [
     id: '6',
     name: 'Casual Linen Shirt',
     slug: 'casual-linen-shirt',
-    price: 68.00,
-    originalPrice: 80.00,
-    salePercentage: 15,
+    price: 1650,
+    originalPrice: 2000,
+    salePercentage: 18,
     images: {
-      main: '/images/shirt3.png',
-      gallery: ['/images/shirt3.png', '/images/shirt.png', '/images/shirt1.png'],
+      main: IMAGES.shirt,
+      gallery: [IMAGES.shirt, IMAGES.tshirt, IMAGES.polo],
     },
     category: 'shirts',
     subcategory: 'Casual Shirt',
@@ -131,7 +159,7 @@ export const ALL_PRODUCTS: Product[] = [
     colors: ['Natural', 'Navy', 'Olive Green'],
     shortDescription: 'Stay cool and stylish in this breathable, lightweight linen shirt.',
     longDescription: 'Perfect for warm weather, our Casual Linen Shirt is made from 100% pure linen, known for its exceptional coolness and fresh feel. It has a relaxed vibe with a classic point collar and mother-of-pearl buttons, making it effortlessly stylish for beach trips or city strolls.',
-    sizingAndFit: 'Relaxed fit. Designed for a comfortable, airy feel. Model is 6\'0\" and wearing a size L.',
+    sizingAndFit: 'Relaxed fit. Designed for a comfortable, airy feel. Model is 6\'0" and wearing a size L.',
     materialsAndCare: '100% Linen. Machine wash cold, hang to dry. Iron while damp for a crisp look.',
     stock: 110,
     isFeatured: true,
@@ -142,10 +170,10 @@ export const ALL_PRODUCTS: Product[] = [
     id: '7',
     name: 'Flannel Checkered Shirt',
     slug: 'flannel-checkered-shirt',
-    price: 85.00,
+    price: 2100,
     images: {
-      main: '/images/shirt1.png',
-      gallery: ['/images/shirt1.png', '/images/shirt2.png', '/images/shirt3.png'],
+      main: IMAGES.shirt,
+      gallery: [IMAGES.shirt, IMAGES.hoodie, IMAGES.pant],
     },
     category: 'shirts',
     subcategory: 'Flannel Shirt',
@@ -153,7 +181,7 @@ export const ALL_PRODUCTS: Product[] = [
     colors: ['Red/Black Plaid', 'Green/Blue Plaid'],
     shortDescription: 'A rugged yet incredibly soft flannel for ultimate comfort and warmth.',
     longDescription: 'Our Flannel Checkered Shirt is crafted from ultra-soft, double-brushed cotton flannel. It\'s the perfect companion for chilly days, offering both warmth and timeless style. Features two chest pockets with button flaps and a classic plaid pattern.',
-    sizingAndFit: 'Classic fit. Generously cut for layering. Model is 6\'2\" and wearing a size L.',
+    sizingAndFit: 'Classic fit. Generously cut for layering. Model is 6\'2" and wearing a size L.',
     materialsAndCare: '100% Cotton Flannel. Machine wash cold. Tumble dry low.',
     stock: 70,
     isFeatured: false,
@@ -164,10 +192,10 @@ export const ALL_PRODUCTS: Product[] = [
     id: '8',
     name: 'Short-Sleeve Denim Shirt',
     slug: 'short-sleeve-denim-shirt',
-    price: 65.00,
+    price: 1550,
     images: {
-      main: '/images/shirt2.png',
-      gallery: ['/images/shirt2.png', '/images/shirt.png', '/images/shirt3.png'],
+      main: IMAGES.shirt,
+      gallery: [IMAGES.shirt, IMAGES.tshirt, IMAGES.hoodie],
     },
     category: 'shirts',
     subcategory: 'Denim Shirt',
@@ -175,21 +203,25 @@ export const ALL_PRODUCTS: Product[] = [
     colors: ['Light Wash', 'Dark Indigo'],
     shortDescription: 'A versatile and stylish short-sleeve shirt in lightweight denim.',
     longDescription: 'A modern take on a classic workwear staple. Our Short-Sleeve Denim Shirt is made from lightweight denim that\'s comfortable enough for all-day wear. It features a snap-button front and a western-style yoke for a touch of authentic charm.',
-    sizingAndFit: 'Slim fit. Tapered at the chest and waist. Model is 5\'11\" and wearing a size M.',
+    sizingAndFit: 'Slim fit. Tapered at the chest and waist. Model is 5\'11" and wearing a size M.',
     materialsAndCare: '100% Cotton Denim. Machine wash cold. Tumble dry medium.',
     stock: 95,
     isFeatured: false,
     rating: 4.7,
     reviewCount: 130,
   },
+
+  // ============================================
+  // PANTS (4 products)
+  // ============================================
   {
     id: '9',
     name: 'Modern Slim-Fit Chinos',
     slug: 'modern-slim-fit-chinos',
-    price: 88.00,
+    price: 2200,
     images: {
-      main: '/images/pant.avif',
-      gallery: ['/images/pant.avif', '/images/shirt1.png', '/images/shirt2.png'],
+      main: IMAGES.pant,
+      gallery: [IMAGES.pant, IMAGES.shirt, IMAGES.polo],
     },
     category: 'pants',
     subcategory: 'Chinos',
@@ -197,7 +229,7 @@ export const ALL_PRODUCTS: Product[] = [
     colors: ['Khaki', 'Navy', 'Olive', 'Charcoal'],
     shortDescription: 'The perfect do-it-all pants, blending comfort, stretch, and style.',
     longDescription: 'Our Modern Slim-Fit Chinos are engineered for movement. Made with a high-quality cotton twill with a hint of stretch, they provide comfort and flexibility without sacrificing style. They are garment-dyed for a soft, lived-in feel and a rich, nuanced color.',
-    sizingAndFit: 'Slim fit. Sits below the waist, slim through the thigh and leg. Model is 6\'0\" and wearing a size M (32W).',
+    sizingAndFit: 'Slim fit. Sits below the waist, slim through the thigh and leg. Model is 6\'0" and wearing a size M (32W).',
     materialsAndCare: '98% Cotton, 2% Spandex. Machine wash cold. Tumble dry low.',
     stock: 180,
     isFeatured: true,
@@ -208,10 +240,10 @@ export const ALL_PRODUCTS: Product[] = [
     id: '10',
     name: 'Utility Cargo Pants',
     slug: 'utility-cargo-pants',
-    price: 95.00,
+    price: 2400,
     images: {
-      main: '/images/pant.avif',
-      gallery: ['/images/pant.avif', '/images/shirt3.png', '/images/shirt.png'],
+      main: IMAGES.pant,
+      gallery: [IMAGES.pant, IMAGES.hoodie, IMAGES.shirt],
     },
     category: 'pants',
     subcategory: 'Cargo Pants',
@@ -219,7 +251,7 @@ export const ALL_PRODUCTS: Product[] = [
     colors: ['Olive Drab', 'Black', 'Camo'],
     shortDescription: 'Durable and functional cargo pants with a modern, tapered fit.',
     longDescription: 'Inspired by military gear, our Utility Cargo Pants are built to last. Constructed from tough ripstop cotton, they feature multiple pockets for all your essentials. The fit is updated with a slight taper from the knee down for a clean, contemporary look.',
-    sizingAndFit: 'Tapered fit. Roomy in the seat and thigh, tapered leg. Model is 6\'1\" and wearing a size L (34W).',
+    sizingAndFit: 'Tapered fit. Roomy in the seat and thigh, tapered leg. Model is 6\'1" and wearing a size L (34W).',
     materialsAndCare: '100% Cotton Ripstop. Machine wash warm. Tumble dry medium.',
     stock: 105,
     isFeatured: false,
@@ -230,10 +262,10 @@ export const ALL_PRODUCTS: Product[] = [
     id: '11',
     name: 'Performance Formal Trousers',
     slug: 'performance-formal-trousers',
-    price: 120.00,
+    price: 3000,
     images: {
-      main: '/images/pant.avif',
-      gallery: ['/images/pant.avif', '/images/shirt.png', '/images/shirt1.png'],
+      main: IMAGES.pant,
+      gallery: [IMAGES.pant, IMAGES.shirt, IMAGES.polo],
     },
     category: 'pants',
     subcategory: 'Formal Trousers',
@@ -241,7 +273,7 @@ export const ALL_PRODUCTS: Product[] = [
     colors: ['Black', 'Charcoal Grey', 'Navy'],
     shortDescription: 'Wrinkle-resistant and comfortable trousers for the modern professional.',
     longDescription: 'Look sharp and stay comfortable all day long. Our Performance Formal Trousers are made from a technical wool-blend fabric that resists wrinkles, wicks moisture, and has just the right amount of stretch. A true game-changer for your work wardrobe.',
-    sizingAndFit: 'Slim Straight fit. Sits below the waist, slim in the thigh, straight to the ankle. Model is 6\'2\" and wearing a size M (32W).',
+    sizingAndFit: 'Slim Straight fit. Sits below the waist, slim in the thigh, straight to the ankle. Model is 6\'2" and wearing a size M (32W).',
     materialsAndCare: '60% Wool, 38% Polyester, 2% Spandex. Dry clean only.',
     stock: 80,
     isFeatured: true,
@@ -252,10 +284,10 @@ export const ALL_PRODUCTS: Product[] = [
     id: '12',
     name: 'Relaxed Fit Selvedge Jeans',
     slug: 'relaxed-fit-selvedge-jeans',
-    price: 150.00,
+    price: 3500,
     images: {
-      main: '/images/pant.avif',
-      gallery: ['/images/pant.avif', '/images/shirt2.png', '/images/shirt3.png'],
+      main: IMAGES.pant,
+      gallery: [IMAGES.pant, IMAGES.tshirt, IMAGES.hoodie],
     },
     category: 'pants',
     subcategory: 'Jeans',
@@ -263,21 +295,119 @@ export const ALL_PRODUCTS: Product[] = [
     colors: ['Raw Indigo', 'Washed Black'],
     shortDescription: 'Premium Japanese selvedge denim in a comfortable, relaxed fit.',
     longDescription: 'For the denim aficionado. These jeans are crafted from 14oz Japanese selvedge denim that will break in beautifully and develop a unique patina over time. The fit is relaxed for comfort, with a slight taper to keep it looking clean. Features classic five-pocket styling and a button fly.',
-    sizingAndFit: 'Relaxed Tapered fit. Sits at the waist, relaxed through the thigh, tapered from knee to ankle. Model is 5\'11\" and wearing a size L (34W).',
+    sizingAndFit: 'Relaxed Tapered fit. Sits at the waist, relaxed through the thigh, tapered from knee to ankle. Model is 5\'11" and wearing a size L (34W).',
     materialsAndCare: '100% Cotton Selvedge Denim. Wash as infrequently as possible. Soak in cold water, hang dry.',
     stock: 60,
     isFeatured: false,
     rating: 5.0,
     reviewCount: 85,
   },
+
+  // ============================================
+  // HOODIES & SWEATSHIRTS (4 products)
+  // ============================================
   {
     id: '13',
+    name: 'Premium Pullover Hoodie',
+    slug: 'premium-pullover-hoodie',
+    price: 2800,
+    images: {
+      main: IMAGES.hoodie,
+      gallery: [IMAGES.hoodie, IMAGES.tshirt, IMAGES.pant],
+    },
+    category: 'hoodies',
+    subcategory: 'Pullover Hoodie',
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Burgundy', 'Black', 'Heather Grey', 'Navy'],
+    shortDescription: 'Ultra-soft premium hoodie with a relaxed fit for everyday comfort.',
+    longDescription: 'Our Premium Pullover Hoodie is crafted from heavyweight French terry cotton for a luxuriously soft feel. Features include a spacious kangaroo pocket, ribbed cuffs and hem, and a lined drawstring hood. Perfect for layering or wearing on its own.',
+    sizingAndFit: 'Relaxed fit. Dropped shoulders for a modern silhouette. Model is 6\'0" and wearing a size L.',
+    materialsAndCare: '100% Cotton French Terry. Machine wash cold. Tumble dry low.',
+    stock: 130,
+    isFeatured: true,
+    rating: 4.9,
+    reviewCount: 325,
+  },
+  {
+    id: '14',
+    name: 'Zip-Up Athletic Hoodie',
+    slug: 'zip-up-athletic-hoodie',
+    price: 2500,
+    originalPrice: 3000,
+    salePercentage: 17,
+    images: {
+      main: IMAGES.hoodie,
+      gallery: [IMAGES.hoodie, IMAGES.pant, IMAGES.tshirt],
+    },
+    category: 'hoodies',
+    subcategory: 'Zip-Up Hoodie',
+    sizes: ['M', 'L', 'XL'],
+    colors: ['Charcoal', 'Black', 'Forest Green'],
+    shortDescription: 'A performance zip-up hoodie perfect for workouts or casual wear.',
+    longDescription: 'The Zip-Up Athletic Hoodie combines style and functionality. Made from a moisture-wicking technical fabric, it keeps you dry during workouts while looking great for everyday wear. Features include a full-length zipper, split kangaroo pockets, and a fitted hood.',
+    sizingAndFit: 'Athletic fit. Contoured through the body for a streamlined look. Model is 6\'1" and wearing a size L.',
+    materialsAndCare: '85% Polyester, 15% Spandex. Machine wash cold. Hang to dry.',
+    stock: 95,
+    isFeatured: false,
+    rating: 4.8,
+    reviewCount: 180,
+  },
+  {
+    id: '15',
+    name: 'Classic Crewneck Sweatshirt',
+    slug: 'classic-crewneck-sweatshirt',
+    price: 2200,
+    images: {
+      main: IMAGES.hoodie,
+      gallery: [IMAGES.hoodie, IMAGES.polo, IMAGES.shirt],
+    },
+    category: 'hoodies',
+    subcategory: 'Sweatshirt',
+    sizes: ['S', 'M', 'L', 'XL'],
+    colors: ['Oatmeal', 'Navy', 'Burgundy', 'Black'],
+    shortDescription: 'A timeless crewneck sweatshirt for effortless everyday style.',
+    longDescription: 'The Classic Crewneck Sweatshirt is a wardrobe essential. Made from a soft cotton-polyester blend, it offers the perfect balance of warmth and breathability. The clean, minimal design features ribbed trim at the cuffs, hem, and neckline.',
+    sizingAndFit: 'Regular fit. True to size for a comfortable, classic look. Model is 5\'11" and wearing a size M.',
+    materialsAndCare: '80% Cotton, 20% Polyester. Machine wash cold. Tumble dry low.',
+    stock: 150,
+    isFeatured: false,
+    rating: 4.7,
+    reviewCount: 220,
+  },
+  {
+    id: '16',
+    name: 'Oversized Graphic Hoodie',
+    slug: 'oversized-graphic-hoodie',
+    price: 3200,
+    images: {
+      main: IMAGES.hoodie,
+      gallery: [IMAGES.hoodie, IMAGES.tshirt, IMAGES.pant],
+    },
+    category: 'hoodies',
+    subcategory: 'Street Hoodie',
+    sizes: ['M', 'L', 'XL', 'XXL'],
+    colors: ['Vintage Black', 'Off-White'],
+    shortDescription: 'Bold oversized hoodie with statement graphics for street-style looks.',
+    longDescription: 'Make a statement with our Oversized Graphic Hoodie. Features a bold, screen-printed graphic on heavyweight cotton fleece. The intentionally oversized fit with dropped shoulders gives it a contemporary streetwear aesthetic. Perfect for layering over tees or under jackets.',
+    sizingAndFit: 'Oversized fit. Designed to be worn loose. Size down for a more fitted look. Model is 6\'2" and wearing a size L.',
+    materialsAndCare: '100% Cotton Fleece. Machine wash cold inside out. Tumble dry low.',
+    stock: 75,
+    isFeatured: true,
+    rating: 4.9,
+    reviewCount: 145,
+  },
+
+  // ============================================
+  // PANJABIS (4 products)
+  // ============================================
+  {
+    id: '17',
     name: 'Classic Cotton Panjabi',
     slug: 'classic-cotton-panjabi',
-    price: 50.00,
+    price: 1500,
     images: {
-      main: '/images/panjabi.webp',
-      gallery: ['/images/panjabi.webp', '/images/shirt1.png', '/images/shirt2.png'],
+      main: IMAGES.panjabi,
+      gallery: [IMAGES.panjabi, IMAGES.shirt, IMAGES.polo],
     },
     category: 'panjabis',
     subcategory: 'Classic Panjabi',
@@ -285,7 +415,7 @@ export const ALL_PRODUCTS: Product[] = [
     colors: ['White', 'Cream', 'Light Blue'],
     shortDescription: 'An elegant and comfortable Panjabi for everyday grace and special occasions.',
     longDescription: 'Embrace timeless elegance with our Classic Cotton Panjabi. Made from fine, breathable cotton, it features a clean, minimalist design with a traditional band collar and a concealed placket. Perfect for religious ceremonies, cultural events, or comfortable daily wear.',
-    sizingAndFit: 'Regular fit. Designed for comfort and ease of movement. Model is 5\'10\" and wearing a size M.',
+    sizingAndFit: 'Regular fit. Designed for comfort and ease of movement. Model is 5\'10" and wearing a size M.',
     materialsAndCare: '100% Fine Cotton. Machine wash cold on gentle cycle. Hang to dry in shade.',
     stock: 130,
     isFeatured: false,
@@ -293,15 +423,15 @@ export const ALL_PRODUCTS: Product[] = [
     reviewCount: 250,
   },
   {
-    id: '14',
+    id: '18',
     name: 'Embroidered Silk Panjabi',
     slug: 'embroidered-silk-panjabi',
-    price: 150.00,
-    originalPrice: 175.00,
-    salePercentage: 14,
+    price: 4500,
+    originalPrice: 5000,
+    salePercentage: 10,
     images: {
-      main: '/images/panjabi.webp',
-      gallery: ['/images/panjabi.webp', '/images/shirt3.png', '/images/shirt.png'],
+      main: IMAGES.panjabi,
+      gallery: [IMAGES.panjabi, IMAGES.polo, IMAGES.shirt],
     },
     category: 'panjabis',
     subcategory: 'Luxury Panjabi',
@@ -309,7 +439,7 @@ export const ALL_PRODUCTS: Product[] = [
     colors: ['Royal Blue', 'Maroon', 'Deep Green'],
     shortDescription: 'Exquisite silk Panjabi with intricate embroidery for a truly regal look.',
     longDescription: 'Make a grand entrance with our Embroidered Silk Panjabi. Crafted from lustrous raw silk, this piece features intricate, tonal embroidery along the collar, placket, and cuffs. It\'s a statement piece designed for weddings, formal dinners, and celebratory events.',
-    sizingAndFit: 'Tailored fit. A modern silhouette that is shaped but not tight. Model is 6\'0\" and wearing a size L.',
+    sizingAndFit: 'Tailored fit. A modern silhouette that is shaped but not tight. Model is 6\'0" and wearing a size L.',
     materialsAndCare: '100% Raw Silk. Dry clean only.',
     stock: 50,
     isFeatured: true,
@@ -317,13 +447,13 @@ export const ALL_PRODUCTS: Product[] = [
     reviewCount: 120,
   },
   {
-    id: '15',
+    id: '19',
     name: 'Printed Cotton Panjabi',
     slug: 'printed-cotton-panjabi',
-    price: 65.00,
+    price: 1800,
     images: {
-      main: '/images/panjabi.webp',
-      gallery: ['/images/panjabi.webp', '/images/shirt.png', '/images/shirt1.png'],
+      main: IMAGES.panjabi,
+      gallery: [IMAGES.panjabi, IMAGES.tshirt, IMAGES.hoodie],
     },
     category: 'panjabis',
     subcategory: 'Printed Panjabi',
@@ -331,7 +461,7 @@ export const ALL_PRODUCTS: Product[] = [
     colors: ['Navy/White Print', 'Black/Gold Print'],
     shortDescription: 'A stylish and modern Panjabi featuring a subtle all-over print.',
     longDescription: 'This Panjabi offers a contemporary twist on a traditional garment. Made from soft, comfortable cotton, it features a sophisticated geometric print that adds a touch of modern flair. It\'s versatile enough for casual gatherings or semi-formal events.',
-    sizingAndFit: 'Slim fit. A more contemporary, closer-to-the-body fit. Model is 5\'11\" and wearing a size M.',
+    sizingAndFit: 'Slim fit. A more contemporary, closer-to-the-body fit. Model is 5\'11" and wearing a size M.',
     materialsAndCare: '100% Cotton. Machine wash cold. Tumble dry low.',
     stock: 115,
     isFeatured: false,
@@ -339,13 +469,13 @@ export const ALL_PRODUCTS: Product[] = [
     reviewCount: 95,
   },
   {
-    id: '16',
+    id: '20',
     name: 'Luxury Panjabi Set',
     slug: 'luxury-panjabi-set',
-    price: 200.00,
+    price: 6000,
     images: {
-      main: '/images/panjabi.webp',
-      gallery: ['/images/panjabi.webp', '/images/shirt2.png', '/images/shirt3.png'],
+      main: IMAGES.panjabi,
+      gallery: [IMAGES.panjabi, IMAGES.pant, IMAGES.shirt],
     },
     category: 'panjabis',
     subcategory: 'Panjabi Set',
@@ -353,7 +483,7 @@ export const ALL_PRODUCTS: Product[] = [
     colors: ['Golden Beige', 'Silver Grey'],
     shortDescription: 'A complete set featuring a jacquard Panjabi and matching trousers.',
     longDescription: 'The ultimate in traditional luxury. This set includes a stunning Panjabi crafted from self-patterned jacquard fabric, paired with matching straight-leg trousers. The Panjabi features ornate buttons and a sharp, tailored cut, making it the perfect choice for the most formal occasions.',
-    sizingAndFit: 'Tailored fit. Panjabi and trousers are designed to complement each other. Model is 6\'1\" and wearing a size L.',
+    sizingAndFit: 'Tailored fit. Panjabi and trousers are designed to complement each other. Model is 6\'1" and wearing a size L.',
     materialsAndCare: 'Jacquard Fabric (Polyester/Viscose Blend). Dry clean only.',
     stock: 40,
     isFeatured: false,
@@ -370,4 +500,9 @@ export function getAllSizes() {
 export function getAllColors() {
   const allColors = ALL_PRODUCTS.flatMap(p => p.colors);
   return [...new Set(allColors)];
+}
+
+export function getAllCategories() {
+  const allCategories = ALL_PRODUCTS.map(p => p.category);
+  return [...new Set(allCategories)];
 }

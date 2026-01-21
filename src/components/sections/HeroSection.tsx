@@ -33,7 +33,7 @@ export function HeroSection({
       <div className="absolute inset-0">
         <Image
           src="/images/shirt.png"// Ensure this image exists in the public/images directory
-          alt="Promotional banner for Classy Mart's new collection"
+          alt="Promotional banner for Velora's new collection"
           fill
           className="object-cover object-center"
           priority // This is the new LCP element, so 'priority' is essential.

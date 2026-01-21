@@ -52,7 +52,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold flex items-center gap-2 font-heading text-primary">
-                Classy Mart
+                Velora
               </h2>
               <p className="text-xs text-muted-gold mt-1 uppercase tracking-widest">Admin Control</p>
             </div>

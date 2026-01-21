@@ -6,10 +6,10 @@ import { faTiktok, faWhatsapp, faTelegram } from '@fortawesome/free-brands-svg-i
 
 export const metadata: Metadata = {
   title: 'Contact Us',
-  description: 'Get in touch with Classy Mart. Visit our outlets in Cumilla, call our customer support, or reach us via email. We\'re here to help you 24/7.',
-  keywords: ['contact Classy Mart', 'Classy Mart outlets', 'customer support Bangladesh', 'Cumilla clothing store', 'Lalmai Bazar', 'Ananda City Center'],
+  description: 'Get in touch with Velora. Visit our outlets in Cumilla, call our customer support, or reach us via email. We\'re here to help you 24/7.',
+  keywords: ['contact Velora', 'Velora outlets', 'customer support Bangladesh', 'Cumilla clothing store', 'Lalmai Bazar', 'Ananda City Center'],
   openGraph: {
-    title: 'Contact Us | Classy Mart',
+    title: 'Contact Us | Velora',
     description: 'Visit our outlets in Cumilla or contact our 24/7 customer support. We\'re here to help you find the perfect outfit.',
     type: 'website',
     images: [
@@ -17,13 +17,13 @@ export const metadata: Metadata = {
         url: '/logo.png',
         width: 1200,
         height: 630,
-        alt: 'Contact Classy Mart',
+        alt: 'Contact Velora',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Contact Us | Classy Mart',
+    title: 'Contact Us | Velora',
     description: 'Visit our outlets in Cumilla or contact our 24/7 customer support.',
     images: ['/logo.png'],
   },
