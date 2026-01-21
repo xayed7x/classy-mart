@@ -11,6 +11,11 @@ export default async function LookbookPage() {
   const supabase = createClient(cookieStore);
 
   // Defense in Depth: Verify user is authenticated (SECURE METHOD)
+  if (!supabase) {
+    redirect('/admin/login');
+  }
+
+  // Defense in Depth: Verify user is authenticated (SECURE METHOD)
   const { data: { user } } = await supabase.auth.getUser();
   
   if (!user) {

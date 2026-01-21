@@ -12,6 +12,10 @@ export default async function OrdersPage() {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
+  if (!supabase) {
+    redirect('/');
+  }
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -60,7 +64,7 @@ export default async function OrdersPage() {
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          {orders.map((order) => (
+          {orders.map((order: any) => (
             <OrderHistoryCard key={order.id} order={order} />
           ))}
         </div>

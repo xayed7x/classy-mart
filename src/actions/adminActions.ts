@@ -8,6 +8,10 @@ export async function updateOrderStatus(formData: FormData) {
   const status = formData.get("status") as string;
 
   try {
+    if (!supabaseAdmin) {
+      throw new Error("Supabase admin client not available");
+    }
+    
     const { error } = await supabaseAdmin
       .from("orders")
       .update({ order_status: status })

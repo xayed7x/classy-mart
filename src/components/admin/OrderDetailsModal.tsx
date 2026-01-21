@@ -37,7 +37,7 @@ interface Order {
   payment_status: string;
   order_status: string;
   created_at: string;
-  order_number: number;
+  order_number: number | string;
 }
 
 interface OrderDetailsModalProps {

@@ -13,6 +13,10 @@ export default async function AccountPage() {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
+  if (!supabase) {
+    redirect('/');
+  }
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -86,7 +90,7 @@ export default async function AccountPage() {
         ) : (
           <div className="space-y-4">
             {/* Show only the 3 most recent orders */}
-            {orders.slice(0, 3).map((order) => (
+            {orders.slice(0, 3).map((order: any) => (
               <OrderHistoryCard key={order.id} order={order} />
             ))}
           </div>

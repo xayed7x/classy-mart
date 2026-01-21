@@ -15,6 +15,10 @@ export default async function OfferEditorPage({ params }: OfferEditorPageProps) 
   const supabase = createClient(cookieStore);
 
   // Defense in Depth: Verify user is authenticated (SECURE METHOD)
+  if (!supabase) {
+    redirect('/admin/login');
+  }
+
   const { data: { user } } = await supabase.auth.getUser();
   
   if (!user) {
